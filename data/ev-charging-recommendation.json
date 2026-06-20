@@ -1,0 +1,193 @@
+{
+  "schema_version": "0.1.0",
+  "household_id": "hh_de_berlin_001",
+  "recommendation_id": "rec_ev_charge_2026-06-20_1042",
+  "profile_type": "synthetic_demo",
+  "created_at": "2026-06-20T10:42:00+02:00",
+  "status": "ready_for_demo",
+  "decision": {
+    "title": "Delay EV charging and use solar plus the low-price window",
+    "plain_english": "Do not charge the car at full power right now. Wait for solar surplus from 14:00, then finish during the 22:00-01:00 low-price window. The car still reaches 80% before the 08:00 departure.",
+    "recommended_action": "start_smart_charging",
+    "deadline_met": true,
+    "confidence": 0.78
+  },
+  "ev_request": {
+    "required_energy_kwh": 24.0,
+    "current_soc_percent": 40,
+    "target_soc_percent": 80,
+    "departure_deadline": "2026-06-21T08:00:00+02:00",
+    "wallbox_max_power_kw": 11
+  },
+  "naive_plan": {
+    "description": "Charge immediately at the current final import price.",
+    "start": "2026-06-20T10:42:00+02:00",
+    "energy_kwh": 24.0,
+    "grid_energy_kwh": 24.0,
+    "solar_energy_kwh": 0.0,
+    "price_eur_per_kwh": 0.35,
+    "cash_cost_eur": 8.4,
+    "formula": "24.0 kWh x 0.35 EUR/kWh = 8.40 EUR"
+  },
+  "smart_plan": {
+    "description": "Use 6 kWh of expected solar surplus and 18 kWh of low-price grid electricity.",
+    "total_energy_kwh": 24.0,
+    "solar_surplus_used_kwh": 6.0,
+    "low_price_grid_energy_kwh": 18.0,
+    "fallback_grid_energy_kwh": 0.0,
+    "solar_cash_cost_eur_per_kwh": 0.0,
+    "solar_opportunity_cost_eur_per_kwh": 0.081,
+    "low_price_grid_price_eur_per_kwh": 0.18,
+    "cash_cost_eur": 3.24,
+    "solar_opportunity_cost_eur": 0.49,
+    "economic_cost_including_solar_opportunity_eur": 3.73,
+    "schedule": [
+      {
+        "start": "2026-06-20T14:00:00+02:00",
+        "end": "2026-06-20T15:00:00+02:00",
+        "source": "solar_surplus",
+        "energy_kwh": 1.2,
+        "cash_price_eur_per_kwh": 0.0
+      },
+      {
+        "start": "2026-06-20T15:00:00+02:00",
+        "end": "2026-06-20T16:00:00+02:00",
+        "source": "solar_surplus",
+        "energy_kwh": 1.8,
+        "cash_price_eur_per_kwh": 0.0
+      },
+      {
+        "start": "2026-06-20T16:00:00+02:00",
+        "end": "2026-06-20T17:00:00+02:00",
+        "source": "solar_surplus",
+        "energy_kwh": 1.7,
+        "cash_price_eur_per_kwh": 0.0
+      },
+      {
+        "start": "2026-06-20T17:00:00+02:00",
+        "end": "2026-06-20T18:00:00+02:00",
+        "source": "solar_surplus",
+        "energy_kwh": 1.3,
+        "cash_price_eur_per_kwh": 0.0
+      },
+      {
+        "start": "2026-06-20T22:00:00+02:00",
+        "end": "2026-06-20T23:00:00+02:00",
+        "source": "grid_low_price",
+        "energy_kwh": 6.0,
+        "cash_price_eur_per_kwh": 0.18
+      },
+      {
+        "start": "2026-06-20T23:00:00+02:00",
+        "end": "2026-06-21T00:00:00+02:00",
+        "source": "grid_low_price",
+        "energy_kwh": 6.0,
+        "cash_price_eur_per_kwh": 0.18
+      },
+      {
+        "start": "2026-06-21T00:00:00+02:00",
+        "end": "2026-06-21T01:00:00+02:00",
+        "source": "grid_low_price",
+        "energy_kwh": 6.0,
+        "cash_price_eur_per_kwh": 0.18
+      }
+    ],
+    "formula": "(6.0 kWh x 0.00 EUR/kWh solar cash cost) + (18.0 kWh x 0.18 EUR/kWh grid) = 3.24 EUR"
+  },
+  "savings": {
+    "cash_savings_eur": 5.16,
+    "cash_savings_percent": 61.4,
+    "economic_savings_including_solar_opportunity_eur": 4.67,
+    "economic_savings_percent": 55.6,
+    "headline_metric": "cash_savings_eur",
+    "display_text": "Smart charging saves 5.16 EUR versus charging immediately."
+  },
+  "kwh_explanation": {
+    "plain_english": "A kWh is one kilowatt of power used for one hour. Here, 24 kWh is roughly 120-160 km of driving for this demo EV.",
+    "formula": "kWh = kW x hours",
+    "demo_translation": "24 kWh at today's current 0.35 EUR/kWh price would cost 8.40 EUR."
+  },
+  "trust": {
+    "why_trust_this": "The amount is calculated from the contract price, the EV charging need, the solar surplus forecast, and the wallbox power limit. The AI should explain the result, not invent the number.",
+    "last_updated": "2026-06-20T10:42:00+02:00",
+    "source_of_truth": [
+      {
+        "field": "current final import price",
+        "source": "data/tariff-contract.json",
+        "value": "0.35 EUR/kWh",
+        "status": "contract"
+      },
+      {
+        "field": "required EV energy",
+        "source": "data/device-state.json",
+        "value": "24.0 kWh",
+        "status": "mock_actual"
+      },
+      {
+        "field": "solar surplus forecast",
+        "source": "data/forecasts-24h.json",
+        "value": "6.0 kWh",
+        "status": "forecast"
+      },
+      {
+        "field": "low-price grid window",
+        "source": "data/forecasts-24h.json",
+        "value": "22:00-01:00 at 0.18 EUR/kWh",
+        "status": "forecast"
+      },
+      {
+        "field": "wallbox maximum power",
+        "source": "data/device-state.json",
+        "value": "11 kW",
+        "status": "mock_actual"
+      }
+    ],
+    "limitations": [
+      "Solar output can change if cloud cover changes.",
+      "The recommendation assumes the EV remains plugged in until departure.",
+      "Cash savings treat solar surplus as zero out-of-pocket cost; economic savings also show the missed feed-in credit."
+    ],
+    "auditability": {
+      "calculation_engine": "mock-backend-ev-optimizer-v0",
+      "input_files": [
+        "data/household-profile.json",
+        "data/tariff-contract.json",
+        "data/forecasts-24h.json",
+        "data/device-state.json"
+      ],
+      "rounding": "Currency values are rounded to two decimals for display; internal kWh values are rounded to one decimal in this fixture."
+    }
+  },
+  "audit_steps": [
+    {
+      "step": 1,
+      "name": "Read EV charging need",
+      "calculation": "target_soc 80% - current_soc 40% = 40% of 60 kWh = 24.0 kWh"
+    },
+    {
+      "step": 2,
+      "name": "Calculate naive cost",
+      "calculation": "24.0 kWh x 0.35 EUR/kWh = 8.40 EUR"
+    },
+    {
+      "step": 3,
+      "name": "Allocate solar surplus",
+      "calculation": "1.2 + 1.8 + 1.7 + 1.3 = 6.0 kWh solar surplus allocated to EV"
+    },
+    {
+      "step": 4,
+      "name": "Allocate low-price grid energy",
+      "calculation": "24.0 kWh required - 6.0 kWh solar = 18.0 kWh grid energy"
+    },
+    {
+      "step": 5,
+      "name": "Calculate smart cash cost",
+      "calculation": "(6.0 kWh x 0.00 EUR/kWh) + (18.0 kWh x 0.18 EUR/kWh) = 3.24 EUR"
+    },
+    {
+      "step": 6,
+      "name": "Calculate headline savings",
+      "calculation": "8.40 EUR - 3.24 EUR = 5.16 EUR"
+    }
+  ]
+}

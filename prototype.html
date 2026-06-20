@@ -1,0 +1,2512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enpal Smart Energy Companion Prototype</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17211f;
+      --muted: #66716d;
+      --soft: #f4f6ef;
+      --panel: #ffffff;
+      --panel-strong: #eef6f0;
+      --line: #dce3dd;
+      --green: #0a7a55;
+      --green-dark: #07533c;
+      --mint: #cfeedd;
+      --amber: #f4a73b;
+      --amber-soft: #fff1d7;
+      --sky: #4e9fd1;
+      --sky-soft: #e0f1fb;
+      --coral: #d8614f;
+      --coral-soft: #fde3dc;
+      --violet: #5e628f;
+      --shadow: 0 18px 50px rgba(20, 35, 30, 0.12);
+      --radius: 8px;
+      --radius-sm: 6px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, rgba(207, 238, 221, 0.44), rgba(244, 246, 239, 0.1) 360px),
+        var(--soft);
+      color: var(--ink);
+      min-width: 320px;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app-shell {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 18px clamp(16px, 3vw, 34px) 40px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 58px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, var(--green), #14a06d 58%, var(--amber) 59%),
+        var(--green);
+      display: grid;
+      place-items: center;
+      color: white;
+      box-shadow: 0 10px 24px rgba(10, 122, 85, 0.24);
+      flex: 0 0 auto;
+    }
+
+    .brand-mark svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .brand-title {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .brand-title strong {
+      font-size: 1rem;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .brand-title span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .status-pill,
+    .mini-select {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(10, 122, 85, 0.18);
+      background: rgba(255, 255, 255, 0.72);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: var(--green-dark);
+      font-size: 0.86rem;
+      box-shadow: 0 10px 28px rgba(23, 33, 31, 0.06);
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(10, 122, 85, 0.12);
+      flex: 0 0 auto;
+    }
+
+    .mini-select {
+      appearance: none;
+      color: var(--ink);
+      padding-right: 32px;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-position:
+        calc(100% - 17px) 15px,
+        calc(100% - 12px) 15px;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+      gap: 20px;
+      align-items: stretch;
+      margin-top: 18px;
+    }
+
+    .intro {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+      min-width: 0;
+    }
+
+    .intro-copy {
+      max-width: 790px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--green-dark);
+      font-weight: 750;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 9px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 26px;
+      height: 2px;
+      background: var(--amber);
+      border-radius: 999px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 5vw, 5.4rem);
+      line-height: 0.94;
+      letter-spacing: 0;
+      max-width: 880px;
+    }
+
+    .intro-copy p {
+      max-width: 690px;
+      margin: 18px 0 0;
+      color: #43504c;
+      font-size: clamp(1rem, 1.7vw, 1.2rem);
+      line-height: 1.56;
+    }
+
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(130px, 1fr));
+      gap: 10px;
+    }
+
+    .snapshot {
+      border: 1px solid rgba(220, 227, 221, 0.92);
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius);
+      padding: 13px;
+      min-height: 108px;
+      display: grid;
+      align-content: space-between;
+      box-shadow: 0 14px 36px rgba(23, 33, 31, 0.06);
+    }
+
+    .snapshot span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.3;
+    }
+
+    .snapshot strong {
+      display: block;
+      margin-top: 10px;
+      font-size: clamp(1.36rem, 2.2vw, 1.9rem);
+      letter-spacing: 0;
+    }
+
+    .snapshot small {
+      color: var(--green-dark);
+      font-weight: 700;
+      font-size: 0.76rem;
+    }
+
+    .home-visual {
+      min-height: 470px;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.4)),
+        linear-gradient(140deg, rgba(224, 241, 251, 0.9), rgba(207, 238, 221, 0.75) 56%, rgba(255, 241, 215, 0.72));
+      border: 1px solid rgba(220, 227, 221, 0.84);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      align-content: end;
+      padding: 22px;
+    }
+
+    .sky-band {
+      position: absolute;
+      inset: 0 0 42%;
+      background:
+        radial-gradient(circle at 72% 28%, rgba(244, 167, 59, 0.96) 0 44px, rgba(244, 167, 59, 0.18) 45px 78px, transparent 79px),
+        linear-gradient(180deg, rgba(78, 159, 209, 0.12), rgba(255, 255, 255, 0));
+    }
+
+    .house-scene {
+      position: relative;
+      z-index: 1;
+      min-height: 295px;
+      display: grid;
+      align-items: end;
+    }
+
+    .house {
+      width: min(88%, 520px);
+      margin: 0 auto;
+      position: relative;
+      height: 238px;
+    }
+
+    .roof {
+      position: absolute;
+      left: 7%;
+      right: 7%;
+      top: 10px;
+      height: 90px;
+      background: linear-gradient(135deg, #334741, #23342f);
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      box-shadow: 0 16px 28px rgba(23, 33, 31, 0.2);
+    }
+
+    .solar-row {
+      position: absolute;
+      left: 34%;
+      top: 67px;
+      width: 41%;
+      height: 45px;
+      transform: skewX(-28deg);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      z-index: 2;
+    }
+
+    .solar-row span {
+      background: linear-gradient(150deg, #1d5465, #52a6bd);
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      box-shadow: inset 0 0 0 1px rgba(23, 33, 31, 0.16);
+    }
+
+    .house-body {
+      position: absolute;
+      left: 15%;
+      right: 15%;
+      bottom: 0;
+      height: 150px;
+      background: linear-gradient(180deg, #ffffff, #ecf2ec);
+      border: 1px solid rgba(23, 33, 31, 0.08);
+      border-radius: 8px 8px 4px 4px;
+      box-shadow: 0 20px 34px rgba(23, 33, 31, 0.12);
+      display: grid;
+      grid-template-columns: 1fr 0.75fr 1fr;
+      gap: 18px;
+      padding: 42px 28px 0;
+    }
+
+    .window {
+      height: 54px;
+      border-radius: 6px 6px 2px 2px;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.45) 0 2px, transparent 2px 50%, rgba(255, 255, 255, 0.45) calc(50% + 1px) calc(50% + 3px), transparent calc(50% + 3px)),
+        linear-gradient(180deg, var(--sky-soft), #a7d7e8);
+      border: 1px solid rgba(78, 159, 209, 0.34);
+    }
+
+    .door {
+      align-self: end;
+      height: 92px;
+      border-radius: 7px 7px 0 0;
+      background: linear-gradient(180deg, var(--green), var(--green-dark));
+      position: relative;
+    }
+
+    .door::after {
+      content: "";
+      position: absolute;
+      right: 12px;
+      top: 45px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--amber);
+    }
+
+    .battery {
+      position: absolute;
+      right: 6%;
+      bottom: 20px;
+      width: 78px;
+      height: 112px;
+      border-radius: 8px;
+      background: #263b35;
+      padding: 8px;
+      box-shadow: 0 18px 24px rgba(23, 33, 31, 0.2);
+    }
+
+    .battery::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 29px;
+      width: 20px;
+      height: 8px;
+      border-radius: 5px 5px 0 0;
+      background: #263b35;
+    }
+
+    .battery-fill {
+      height: 72%;
+      margin-top: 25%;
+      border-radius: 5px;
+      background: linear-gradient(180deg, var(--amber), var(--green));
+    }
+
+    .visual-caption {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: end;
+      padding-top: 8px;
+    }
+
+    .caption-text strong {
+      display: block;
+      font-size: 1.1rem;
+    }
+
+    .caption-text span {
+      color: var(--muted);
+      display: block;
+      margin-top: 4px;
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .flow-meter {
+      width: 156px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .flow-row {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .flow-track {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.76);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(23, 33, 31, 0.08);
+    }
+
+    .flow-fill {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--green);
+    }
+
+    .flow-fill.amber {
+      background: var(--amber);
+    }
+
+    .flow-fill.sky {
+      background: var(--sky);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(330px, 0.92fr) minmax(0, 1.58fr);
+      gap: 20px;
+      align-items: start;
+      margin-top: 20px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(220, 227, 221, 0.95);
+      border-radius: var(--radius);
+      box-shadow: 0 14px 38px rgba(23, 33, 31, 0.07);
+      padding: clamp(16px, 2vw, 22px);
+      min-width: 0;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    h2,
+    h3 {
+      margin: 0;
+      letter-spacing: 0;
+      color: var(--ink);
+    }
+
+    h2 {
+      font-size: clamp(1.1rem, 1.7vw, 1.45rem);
+      line-height: 1.12;
+    }
+
+    h3 {
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .panel-title span,
+    .small-muted {
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.35;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(10, 122, 85, 0.18);
+      background: var(--panel-strong);
+      color: var(--green-dark);
+      padding: 5px 10px;
+      font-weight: 750;
+      font-size: 0.76rem;
+      white-space: nowrap;
+    }
+
+    .tag.amber {
+      color: #7c4b05;
+      border-color: rgba(244, 167, 59, 0.24);
+      background: var(--amber-soft);
+    }
+
+    .tag.sky {
+      color: #1d5779;
+      border-color: rgba(78, 159, 209, 0.22);
+      background: var(--sky-soft);
+    }
+
+    .energy-check {
+      position: sticky;
+      top: 16px;
+    }
+
+    .progress-shell {
+      display: grid;
+      gap: 9px;
+      margin-bottom: 18px;
+    }
+
+    .progress-track {
+      height: 8px;
+      border-radius: 999px;
+      background: #e8eee8;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 25%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), var(--amber));
+      transition: width 180ms ease;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .wizard-card {
+      display: grid;
+      gap: 15px;
+    }
+
+    .wizard-question {
+      display: grid;
+      gap: 7px;
+    }
+
+    .wizard-question strong {
+      font-size: 1.08rem;
+      line-height: 1.24;
+    }
+
+    .wizard-options {
+      display: grid;
+      gap: 8px;
+    }
+
+    .option-button,
+    .prompt-button,
+    .chip-button,
+    .seg-button,
+    .timeline-button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: var(--radius-sm);
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
+    }
+
+    .option-button:hover,
+    .prompt-button:hover,
+    .chip-button:hover,
+    .seg-button:hover,
+    .timeline-button:hover,
+    .icon-button:hover,
+    .primary-button:hover,
+    .ghost-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .option-button {
+      min-height: 54px;
+      text-align: left;
+      padding: 11px 12px;
+      display: grid;
+      gap: 3px;
+    }
+
+    .option-button strong {
+      font-size: 0.95rem;
+    }
+
+    .option-button span {
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.28;
+    }
+
+    .option-button.active,
+    .chip-button.active,
+    .seg-button.active,
+    .timeline-button.active,
+    .prompt-button.active {
+      border-color: rgba(10, 122, 85, 0.54);
+      background: var(--panel-strong);
+      box-shadow: inset 0 0 0 1px rgba(10, 122, 85, 0.08);
+    }
+
+    .wizard-actions {
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .icon-button,
+    .primary-button,
+    .ghost-button {
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(10, 122, 85, 0.24);
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+    }
+
+    .icon-button {
+      width: 42px;
+      padding: 0;
+      background: #fff;
+      color: var(--green-dark);
+    }
+
+    .icon-button:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .primary-button {
+      background: var(--green);
+      color: #fff;
+      border-color: var(--green);
+      padding: 0 15px;
+      font-weight: 760;
+    }
+
+    .ghost-button {
+      background: #fff;
+      color: var(--green-dark);
+      padding: 0 13px;
+      font-weight: 720;
+    }
+
+    .icon-button svg,
+    .primary-button svg,
+    .ghost-button svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .readout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 17px;
+    }
+
+    .readout-item {
+      background: #f8faf7;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      min-height: 84px;
+    }
+
+    .readout-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.74rem;
+      margin-bottom: 8px;
+    }
+
+    .readout-item strong {
+      font-size: 1.2rem;
+      letter-spacing: 0;
+    }
+
+    .move-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .move-main {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .move-time {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .time-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 36px;
+      border-radius: 999px;
+      background: #17211f;
+      color: #fff;
+      padding: 7px 12px;
+      font-weight: 780;
+      font-size: 0.88rem;
+    }
+
+    .move-main h2 {
+      font-size: clamp(1.35rem, 2.4vw, 2rem);
+      max-width: 700px;
+    }
+
+    .move-main p {
+      color: #46514e;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(90px, 1fr));
+      gap: 9px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      background: #f8faf7;
+      border-radius: var(--radius-sm);
+      padding: 11px;
+      min-height: 88px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.75rem;
+      margin-bottom: 8px;
+    }
+
+    .metric strong {
+      font-size: 1.24rem;
+      letter-spacing: 0;
+    }
+
+    .ev-plan {
+      display: grid;
+      gap: 16px;
+    }
+
+    .ev-summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.95fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .decision-copy {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .decision-copy p {
+      margin: 0;
+      color: #46514e;
+      line-height: 1.5;
+    }
+
+    .cost-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .cost-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: #f8faf7;
+      padding: 12px;
+      min-height: 116px;
+      display: grid;
+      align-content: space-between;
+      gap: 10px;
+    }
+
+    .cost-card strong {
+      font-size: clamp(1.35rem, 2vw, 1.75rem);
+      line-height: 1;
+    }
+
+    .cost-card span,
+    .cost-card small {
+      color: var(--muted);
+      line-height: 1.32;
+    }
+
+    .cost-card.save {
+      background: var(--panel-strong);
+      border-color: rgba(10, 122, 85, 0.28);
+    }
+
+    .formula-box {
+      border: 1px solid rgba(10, 122, 85, 0.18);
+      background: #17211f;
+      color: #edf7f0;
+      border-radius: var(--radius-sm);
+      padding: 13px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .source-badge {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      padding: 11px;
+      display: grid;
+      gap: 5px;
+      min-height: 92px;
+    }
+
+    .source-badge span {
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 720;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .source-badge strong {
+      font-size: 0.95rem;
+      line-height: 1.25;
+    }
+
+    .source-badge small {
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    .move-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .price-card {
+      border: 1px solid rgba(10, 122, 85, 0.16);
+      background:
+        linear-gradient(180deg, rgba(207, 238, 221, 0.6), rgba(255, 255, 255, 0.9)),
+        #fff;
+      border-radius: var(--radius);
+      padding: 14px;
+      display: grid;
+      gap: 13px;
+      min-width: 0;
+    }
+
+    .price-arc {
+      min-height: 148px;
+      display: grid;
+      align-items: end;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 4px;
+      padding: 12px 6px 2px;
+      border-bottom: 1px solid rgba(10, 122, 85, 0.18);
+    }
+
+    .price-bar {
+      border-radius: 4px 4px 0 0;
+      background: var(--sky);
+      min-height: 18px;
+      position: relative;
+    }
+
+    .price-bar.best {
+      background: var(--green);
+      box-shadow: 0 0 0 3px rgba(10, 122, 85, 0.12);
+    }
+
+    .price-bar.high {
+      background: var(--coral);
+    }
+
+    .price-meta {
+      display: grid;
+      gap: 3px;
+    }
+
+    .price-meta strong {
+      font-size: 1.42rem;
+    }
+
+    .translator-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.74fr) minmax(0, 1.26fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .input-block {
+      display: grid;
+      gap: 12px;
+    }
+
+    .kwh-input {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 70px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .kwh-input input {
+      width: 100%;
+      min-height: 54px;
+      border: 1px solid rgba(10, 122, 85, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 1.4rem;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .unit-box {
+      min-height: 54px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-weight: 760;
+      background: #f8faf7;
+    }
+
+    .chip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .chip-button {
+      min-height: 42px;
+      padding: 7px 9px;
+      font-weight: 720;
+      text-align: center;
+    }
+
+    .equiv-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      gap: 9px;
+    }
+
+    .equiv {
+      border-radius: var(--radius-sm);
+      background: #f8faf7;
+      border: 1px solid var(--line);
+      padding: 12px;
+      min-height: 120px;
+      display: grid;
+      align-content: space-between;
+    }
+
+    .equiv span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.3;
+    }
+
+    .equiv strong {
+      display: block;
+      font-size: 1.35rem;
+      margin-top: 10px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .segmented {
+      display: inline-grid;
+      grid-auto-flow: column;
+      gap: 5px;
+      padding: 4px;
+      border-radius: 8px;
+      background: #eef2ec;
+      border: 1px solid var(--line);
+    }
+
+    .seg-button {
+      min-height: 33px;
+      padding: 5px 10px;
+      font-weight: 720;
+      font-size: 0.82rem;
+      background: transparent;
+      white-space: nowrap;
+    }
+
+    .seg-button.active {
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(23, 33, 31, 0.08);
+    }
+
+    .bars {
+      display: grid;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) 86px;
+      align-items: center;
+      gap: 11px;
+      min-height: 42px;
+    }
+
+    .bar-label {
+      color: var(--muted);
+      font-weight: 720;
+      font-size: 0.86rem;
+    }
+
+    .bar-track {
+      height: 18px;
+      background: #edf1ec;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(220, 227, 221, 0.96);
+    }
+
+    .bar-fill {
+      display: block;
+      height: 100%;
+      width: 45%;
+      border-radius: inherit;
+      background: var(--green);
+      transition: width 180ms ease;
+    }
+
+    .bar-fill.now {
+      background: var(--coral);
+    }
+
+    .bar-fill.smart {
+      background: var(--green);
+    }
+
+    .bar-fill.solar {
+      background: var(--amber);
+    }
+
+    .bar-value {
+      font-weight: 790;
+      text-align: right;
+      font-size: 0.9rem;
+    }
+
+    .slider-box {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f8faf7;
+      padding: 14px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .slider-box label {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 720;
+    }
+
+    .slider-box input[type="range"] {
+      width: 100%;
+      accent-color: var(--green);
+    }
+
+    .saving-big {
+      display: grid;
+      gap: 3px;
+    }
+
+    .saving-big strong {
+      font-size: 2.4rem;
+      letter-spacing: 0;
+      line-height: 1;
+    }
+
+    .saving-big span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.35;
+    }
+
+    .timeline-layout {
+      display: grid;
+      gap: 16px;
+    }
+
+    .timeline-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .timeline-strip {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(48px, 1fr));
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-color: rgba(10, 122, 85, 0.35) transparent;
+    }
+
+    .timeline-button {
+      min-height: 118px;
+      padding: 8px;
+      display: grid;
+      align-content: end;
+      gap: 7px;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      min-width: 54px;
+    }
+
+    .timeline-button::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 35px;
+      height: var(--level, 50%);
+      border-radius: 5px 5px 0 0;
+      background: var(--bar, var(--sky));
+      opacity: 0.88;
+      transition: height 160ms ease;
+    }
+
+    .timeline-button span,
+    .timeline-button strong {
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-button span {
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .timeline-button strong {
+      font-size: 0.78rem;
+    }
+
+    .timeline-detail {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 9px;
+    }
+
+    .detail-tile {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      background: #f8faf7;
+      min-height: 82px;
+    }
+
+    .detail-tile span {
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+
+    .detail-tile strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 1.05rem;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    .trust-card {
+      border: 1px solid var(--line);
+      background: #f8faf7;
+      border-radius: var(--radius-sm);
+      padding: 13px;
+      min-height: 136px;
+      display: grid;
+      align-content: space-between;
+      gap: 12px;
+    }
+
+    .trust-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 7px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      color: var(--green-dark);
+      border: 1px solid rgba(10, 122, 85, 0.18);
+    }
+
+    .trust-icon svg {
+      width: 19px;
+      height: 19px;
+    }
+
+    .trust-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.38;
+    }
+
+    .assistant-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.66fr) minmax(0, 1.34fr);
+      gap: 16px;
+    }
+
+    .prompt-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .prompt-button {
+      min-height: 52px;
+      padding: 10px;
+      text-align: left;
+      font-weight: 720;
+      line-height: 1.25;
+    }
+
+    .assistant-answer {
+      border: 1px solid rgba(10, 122, 85, 0.16);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(207, 238, 221, 0.56), rgba(255, 255, 255, 0.9)),
+        #fff;
+      padding: 16px;
+      min-height: 268px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+    }
+
+    .assistant-answer p {
+      margin: 0;
+      color: #42504b;
+      line-height: 1.5;
+    }
+
+    .assistant-answer ul {
+      margin: 0;
+      padding-left: 19px;
+      color: #42504b;
+      line-height: 1.46;
+    }
+
+    .assistant-answer li + li {
+      margin-top: 6px;
+    }
+
+    .toast {
+      position: fixed;
+      right: clamp(16px, 3vw, 32px);
+      bottom: 22px;
+      z-index: 20;
+      transform: translateY(18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms ease, transform 160ms ease;
+      background: #17211f;
+      color: #fff;
+      border-radius: var(--radius);
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 11px 14px;
+      box-shadow: 0 18px 48px rgba(23, 33, 31, 0.26);
+      max-width: min(360px, calc(100vw - 32px));
+      line-height: 1.35;
+      font-size: 0.9rem;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1180px) {
+      .hero,
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .home-visual {
+        min-height: 410px;
+      }
+
+      .energy-check {
+        position: static;
+      }
+
+      .move-card,
+      .comparison-grid,
+      .translator-grid,
+      .assistant-grid,
+      .ev-summary {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .app-shell {
+        padding-inline: 14px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .brand-title strong,
+      .brand-title span {
+        white-space: normal;
+      }
+
+      .top-actions {
+        display: none;
+      }
+
+      h1 {
+        font-size: clamp(2.05rem, 12vw, 4rem);
+      }
+
+      .snapshot-grid,
+      .metric-row,
+      .cost-cards,
+      .equiv-grid,
+      .timeline-detail,
+      .trust-grid,
+      .source-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .home-visual {
+        min-height: 360px;
+        padding: 16px;
+      }
+
+      .house {
+        width: min(98%, 480px);
+        height: 220px;
+      }
+
+      .house-body {
+        padding-inline: 20px;
+        gap: 12px;
+      }
+
+      .visual-caption {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-meter {
+        width: 100%;
+      }
+
+      .bar-row {
+        grid-template-columns: 70px minmax(0, 1fr) 72px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .snapshot-grid,
+      .metric-row,
+      .cost-cards,
+      .readout,
+      .equiv-grid,
+      .timeline-detail,
+      .trust-grid,
+      .source-grid,
+      .chip-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-header,
+      .timeline-controls {
+        display: grid;
+      }
+
+      .segmented {
+        grid-auto-flow: row;
+        width: 100%;
+      }
+
+      .seg-button {
+        width: 100%;
+      }
+
+      .move-actions {
+        display: grid;
+      }
+
+      .primary-button,
+      .ghost-button {
+        width: 100%;
+      }
+
+      .home-visual {
+        min-height: 330px;
+      }
+
+      .house {
+        transform: scale(0.9);
+        transform-origin: bottom center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar" aria-label="Application header">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 13.5 12 6l8 7.5"></path>
+            <path d="M7 12.5V20h10v-7.5"></path>
+            <path d="M10 20v-5h4v5"></path>
+          </svg>
+        </div>
+        <div class="brand-title">
+          <strong>Enpal Smart Energy Companion</strong>
+          <span id="householdLabel">Berlin EV demo profile</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="status-pill"><span class="status-dot"></span><span id="syncStatus">Smart meter synced 8 min ago</span></div>
+        <select class="mini-select" id="scenarioSelect" aria-label="Household scenario">
+          <option value="berlin">Berlin EV demo</option>
+          <option value="hamburg">Hamburg family home</option>
+          <option value="munich">Munich apartment</option>
+          <option value="leipzig">Leipzig EV household</option>
+        </select>
+      </div>
+    </header>
+
+    <section class="hero" aria-labelledby="pageTitle">
+      <div class="intro">
+        <div class="intro-copy">
+          <div class="eyebrow">Smart home energy companion</div>
+          <h1 id="pageTitle">Make today's energy choices feel obvious.</h1>
+          <p>Live meter data, solar forecasts, tariff windows, and home routines are combined into a plain-English plan for a German household.</p>
+        </div>
+        <div class="snapshot-grid" aria-label="Household energy snapshot">
+          <div class="snapshot">
+            <span>Today's forecast use</span>
+            <strong id="todayUse">18.4 kWh</strong>
+            <small id="todayUseHint">2.6 kWh below last Tuesday</small>
+          </div>
+          <div class="snapshot">
+            <span>Solar available</span>
+            <strong id="solarForecast">11.8 kWh</strong>
+            <small id="solarHint">Peak at 13:20</small>
+          </div>
+          <div class="snapshot">
+            <span>Best tariff window</span>
+            <strong id="bestWindow">12:30</strong>
+            <small id="bestWindowHint">23 ct/kWh</small>
+          </div>
+          <div class="snapshot">
+            <span>Estimated saving</span>
+            <strong id="heroSaving">EUR 3.70</strong>
+            <small id="heroSavingHint">with a smart plan</small>
+          </div>
+        </div>
+      </div>
+
+      <aside class="home-visual" aria-label="Home energy overview">
+        <div class="sky-band"></div>
+        <div class="house-scene" aria-hidden="true">
+          <div class="house">
+            <div class="roof"></div>
+            <div class="solar-row"><span></span><span></span><span></span><span></span></div>
+            <div class="house-body">
+              <div class="window"></div>
+              <div class="door"></div>
+              <div class="window"></div>
+            </div>
+            <div class="battery"><div class="battery-fill"></div></div>
+          </div>
+        </div>
+        <div class="visual-caption">
+          <div class="caption-text">
+            <strong id="visualTitle">Solar is covering the afternoon load.</strong>
+            <span id="visualCopy">Shift flexible devices into the bright window and the home imports less from the grid.</span>
+          </div>
+          <div class="flow-meter" aria-label="Energy flow">
+            <div class="flow-row"><span>Solar</span><div class="flow-track"><span class="flow-fill" id="solarFlow" style="width: 74%"></span></div></div>
+            <div class="flow-row"><span>Home</span><div class="flow-track"><span class="flow-fill amber" id="homeFlow" style="width: 58%"></span></div></div>
+            <div class="flow-row"><span>Grid</span><div class="flow-track"><span class="flow-fill sky" id="gridFlow" style="width: 31%"></span></div></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <main class="main-grid">
+      <section class="stack">
+        <article class="panel energy-check" aria-labelledby="wizardTitle">
+          <div class="panel-header">
+            <div class="panel-title">
+              <h2 id="wizardTitle">Energy check</h2>
+              <span id="wizardSubtitle">Tune the plan around the household.</span>
+            </div>
+            <span class="tag" id="wizardTag">Step 1 of 4</span>
+          </div>
+
+          <div class="progress-shell">
+            <div class="progress-track" aria-hidden="true"><div class="progress-bar" id="wizardProgress"></div></div>
+            <div class="progress-meta">
+              <span id="wizardStage">Home</span>
+              <span id="wizardProgressText">25%</span>
+            </div>
+          </div>
+
+          <div class="wizard-card">
+            <div class="wizard-question">
+              <strong id="questionTitle">What type of home is this?</strong>
+              <span class="small-muted" id="questionHint">This shapes heat, standby, and solar assumptions.</span>
+            </div>
+            <div class="wizard-options" id="wizardOptions"></div>
+            <div class="wizard-actions">
+              <button class="icon-button" id="prevStep" type="button" aria-label="Previous step">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m15 18-6-6 6-6"></path>
+                </svg>
+              </button>
+              <button class="primary-button" id="nextStep" type="button">
+                <span>Continue</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14"></path>
+                  <path d="m13 6 6 6-6 6"></path>
+                </svg>
+              </button>
+              <button class="icon-button" id="resetWizard" type="button" aria-label="Reset energy check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+                  <path d="M3 4v6h6"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="readout" aria-label="Energy check result">
+            <div class="readout-item">
+              <span>Smart fit</span>
+              <strong id="smartFit">78%</strong>
+            </div>
+            <div class="readout-item">
+              <span>Flexible load</span>
+              <strong id="flexLoad">5.2 kWh</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" aria-labelledby="trustTitle">
+          <div class="panel-header">
+            <div class="panel-title">
+              <h2 id="trustTitle">Why trust this</h2>
+              <span>Grounded signals, visible confidence, and household control.</span>
+            </div>
+          </div>
+          <div class="trust-grid">
+            <div class="trust-card">
+              <div class="trust-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3v18"></path><path d="M5 8h14"></path><path d="M7 16h10"></path>
+                </svg>
+              </div>
+              <h3>Meter first</h3>
+              <p>Recommendations start with live smart meter readings and recent household patterns.</p>
+            </div>
+            <div class="trust-card">
+              <div class="trust-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M4.93 4.93l2.83 2.83"></path><path d="M16.24 16.24l2.83 2.83"></path><path d="M2 12h4"></path><path d="M18 12h4"></path><circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </div>
+              <h3>Forecast aware</h3>
+              <p>Solar yield, weather, and tariff curves are refreshed before each daily plan.</p>
+            </div>
+            <div class="trust-card">
+              <div class="trust-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path><path d="m9 12 2 2 4-5"></path>
+                </svg>
+              </div>
+              <h3>User consent</h3>
+              <p>Device changes stay as suggestions unless the household chooses automation.</p>
+            </div>
+            <div class="trust-card">
+              <div class="trust-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19h16"></path><path d="M7 15V9"></path><path d="M12 15V5"></path><path d="M17 15v-3"></path>
+                </svg>
+              </div>
+              <h3>Clear tradeoffs</h3>
+              <p>Every suggestion shows savings, comfort impact, and confidence side by side.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="stack">
+        <article class="panel" aria-labelledby="moveTitle">
+          <div class="move-card">
+            <div class="move-main">
+              <div class="move-time">
+                <span class="time-badge" id="moveTime">12:30-14:30</span>
+                <span class="tag amber" id="moveTag">Best move today</span>
+              </div>
+              <h2 id="moveTitle">Run the dishwasher and charge the battery during the solar peak.</h2>
+              <p id="moveCopy">The home has strong midday generation and a low tariff window, while evening demand is expected to rise after 18:00.</p>
+              <div class="metric-row">
+                <div class="metric">
+                  <span>Expected saving</span>
+                  <strong id="moveSaving">EUR 1.46</strong>
+                </div>
+                <div class="metric">
+                  <span>Grid import avoided</span>
+                  <strong id="moveImport">3.1 kWh</strong>
+                </div>
+                <div class="metric">
+                  <span>Confidence</span>
+                  <strong id="moveConfidence">86%</strong>
+                </div>
+              </div>
+              <div class="move-actions">
+                <button class="primary-button" id="scheduleMove" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M8 2v4"></path><path d="M16 2v4"></path><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M3 10h18"></path>
+                  </svg>
+                  <span>Add reminder</span>
+                </button>
+                <button class="ghost-button" id="applyMove" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M13 2 3 14h8l-1 8 11-13h-8l0-7Z"></path>
+                  </svg>
+                  <span>Use smart timing</span>
+                </button>
+              </div>
+            </div>
+            <div class="price-card">
+              <div class="panel-title">
+                <h3>Price and solar curve</h3>
+                <span id="curveCaption">Midday is the cleanest and cheapest window.</span>
+              </div>
+              <div class="price-arc" id="priceArc" aria-label="Price curve"></div>
+              <div class="price-meta">
+                <span class="small-muted">Lowest tariff today</span>
+                <strong id="lowestTariff">23 ct/kWh</strong>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel ev-plan" aria-labelledby="evPlanTitle">
+          <div class="panel-header">
+            <div class="panel-title">
+              <h2 id="evPlanTitle">EV smart charging decision</h2>
+              <span>One grounded recommendation with the exact cost difference.</span>
+            </div>
+            <span class="tag amber">Canonical demo</span>
+          </div>
+          <div class="ev-summary">
+            <div class="decision-copy">
+              <div class="move-time">
+                <span class="time-badge">14:00 solar + 22:00 low-price grid</span>
+                <span class="tag">Target met by 08:00</span>
+              </div>
+              <h3>Do not charge at full power right now.</h3>
+              <p>Use 6 kWh of expected solar surplus this afternoon, then finish with 18 kWh during the low-price window. The EV still reaches the 80% target before the morning departure.</p>
+              <div class="formula-box">Charge now: 24 kWh x 0.35 EUR/kWh = 8.40 EUR
+Smart plan: (6 kWh x 0.00 EUR/kWh) + (18 kWh x 0.18 EUR/kWh) = 3.24 EUR
+Savings: 8.40 EUR - 3.24 EUR = 5.16 EUR</div>
+            </div>
+            <div class="cost-cards" aria-label="EV cost comparison">
+              <div class="cost-card">
+                <span>Charge now</span>
+                <strong>EUR 8.40</strong>
+                <small>24 kWh at the current final contract price.</small>
+              </div>
+              <div class="cost-card">
+                <span>Smart plan</span>
+                <strong>EUR 3.24</strong>
+                <small>Solar surplus plus the low-price grid window.</small>
+              </div>
+              <div class="cost-card save">
+                <span>You save</span>
+                <strong>EUR 5.16</strong>
+                <small>61% less than charging immediately.</small>
+              </div>
+            </div>
+          </div>
+          <div class="source-grid" aria-label="Recommendation sources">
+            <div class="source-badge">
+              <span>Contract</span>
+              <strong>0.35 EUR/kWh now</strong>
+              <small>Parsed tariff rule from the mock contract.</small>
+            </div>
+            <div class="source-badge">
+              <span>EV need</span>
+              <strong>24 kWh by 08:00</strong>
+              <small>Mock wallbox and vehicle state.</small>
+            </div>
+            <div class="source-badge">
+              <span>Forecast</span>
+              <strong>6 kWh solar surplus</strong>
+              <small>Forecast value, refreshed at 10:42 Europe/Berlin.</small>
+            </div>
+            <div class="source-badge">
+              <span>Tariff window</span>
+              <strong>0.18 EUR/kWh from 22:00</strong>
+              <small>Final customer price from the tariff fixture.</small>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" aria-labelledby="translatorTitle">
+          <div class="panel-header">
+            <div class="panel-title">
+              <h2 id="translatorTitle">kWh translator</h2>
+              <span>Turn energy numbers into familiar household moments.</span>
+            </div>
+            <span class="tag sky" id="translatorRate">31 ct/kWh now</span>
+          </div>
+          <div class="translator-grid">
+            <div class="input-block">
+              <div class="kwh-input">
+                <input id="kwhInput" type="number" min="0.1" max="80" step="0.1" value="4.8" aria-label="Kilowatt hours">
+                <div class="unit-box">kWh</div>
+              </div>
+              <div class="chip-grid" id="translatorChips"></div>
+            </div>
+            <div class="equiv-grid">
+              <div class="equiv">
+                <span>Cost at current tariff</span>
+                <strong id="costNow">EUR 1.49</strong>
+              </div>
+              <div class="equiv">
+                <span>Cost in smart window</span>
+                <strong id="costSmart">EUR 1.10</strong>
+              </div>
+              <div class="equiv">
+                <span id="equivLabel">Dishwasher cycles</span>
+                <strong id="equivValue">4.0</strong>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" aria-labelledby="planTitle">
+          <div class="panel-header">
+            <div class="panel-title">
+              <h2 id="planTitle">Now vs smart plan</h2>
+              <span>Compare the baseline with a flexible household schedule.</span>
+            </div>
+            <div class="segmented" role="tablist" aria-label="Comparison period">
+              <button class="seg-button active" type="button" data-period="today">Today</button>
+              <button class="seg-button" type="button" data-period="week">Week</button>
+              <button class="seg-button" type="button" data-period="month">Month</button>
+            </div>
+          </div>
+          <div class="comparison-grid">
+            <div class="bars" id="comparisonBars"></div>
+            <div class="slider-box">
+              <label for="flexibilityRange">
+                Household flexibility
+                <input id="flexibilityRange" type="range" min="10" max="90" value="58">
+              </label>
+              <div class="saving-big">
+                <strong id="smartSaving">EUR 3.70</strong>
+                <span id="smartSavingCopy">Projected saving today with 58% flexible load timing.</span>
+              </div>
+              <span class="small-muted" id="comfortCopy">Comfort impact is low because heating and hot water stay within the household's usual windows.</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" aria-labelledby="timelineTitle">
+          <div class="timeline-layout">
+            <div class="timeline-controls">
+              <div class="panel-title">
+                <h2 id="timelineTitle">Energy timeline</h2>
+                <span id="timelineSubtitle">Tap an hour to inspect price, solar, battery, and load.</span>
+              </div>
+              <div class="segmented" role="tablist" aria-label="Timeline metric">
+                <button class="seg-button active" type="button" data-timeline-mode="price">Price</button>
+                <button class="seg-button" type="button" data-timeline-mode="solar">Solar</button>
+                <button class="seg-button" type="button" data-timeline-mode="load">Load</button>
+              </div>
+            </div>
+            <div class="timeline-strip" id="timelineStrip" aria-label="Hourly energy timeline"></div>
+            <div class="timeline-detail" id="timelineDetail"></div>
+          </div>
+        </article>
+
+        <article class="panel" aria-labelledby="assistantTitle">
+          <div class="panel-header">
+            <div class="panel-title">
+              <h2 id="assistantTitle">AI assistant prompts</h2>
+              <span>Household-ready answers from the current plan.</span>
+            </div>
+            <span class="tag" id="assistantContext">Using Hamburg profile</span>
+          </div>
+          <div class="assistant-grid">
+            <div class="prompt-list" id="promptList"></div>
+            <div class="assistant-answer" id="assistantAnswer" aria-live="polite"></div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const households = {
+      berlin: {
+        label: "Berlin EV demo",
+        sync: "Mock smart meter synced at 10:42",
+        city: "Berlin",
+        residents: 4,
+        todayUse: 32.0,
+        lastHint: "Includes heat pump baseline before EV charging",
+        solar: 43.9,
+        solarHint: "6.0 kWh EV-ready surplus from 14:00",
+        bestWindow: "22:00",
+        bestRate: 0.18,
+        currentRate: 0.35,
+        smartSaving: 5.16,
+        fitBase: 49,
+        flexBase: 17.8,
+        battery: 62,
+        move: {
+          time: "14:00 + 22:00",
+          title: "Delay EV charging and use solar plus the low-price window.",
+          copy: "The EV needs 24 kWh by 08:00. The smart plan uses 6 kWh of solar surplus first, then 18 kWh at 0.18 EUR/kWh.",
+          saving: 5.16,
+          importAvoided: 6.0,
+          confidence: 78,
+          tag: "EV smart charging"
+        },
+        timeline: [
+          { hour: "10", price: 35, solar: 2.4, load: 1.4, battery: 58, note: "Current final import price is 35 ct/kWh" },
+          { hour: "11", price: 34, solar: 3.1, load: 1.2, battery: 60, note: "Solar improves, but battery reservation comes first" },
+          { hour: "12", price: 30, solar: 4.2, load: 1.3, battery: 64, note: "PV covers household load" },
+          { hour: "13", price: 27, solar: 5.0, load: 1.4, battery: 68, note: "Battery and home load still take priority" },
+          { hour: "14", price: 24, solar: 5.8, load: 1.7, battery: 72, note: "Start EV solar charging, 1.2 kWh available" },
+          { hour: "15", price: 22, solar: 5.6, load: 1.5, battery: 76, note: "Strong EV solar surplus, 1.8 kWh available" },
+          { hour: "16", price: 23, solar: 4.8, load: 1.4, battery: 79, note: "Continue EV solar charging, 1.7 kWh available" },
+          { hour: "17", price: 26, solar: 3.4, load: 1.3, battery: 78, note: "Final solar slot, 1.3 kWh available" },
+          { hour: "18", price: 31, solar: 1.9, load: 1.8, battery: 74, note: "Avoid EV charging during evening demand" },
+          { hour: "20", price: 42, solar: 0.4, load: 2.2, battery: 64, note: "Evening peak, delay the EV" },
+          { hour: "22", price: 18, solar: 0.0, load: 1.1, battery: 58, note: "Low-price grid charging begins" },
+          { hour: "00", price: 18, solar: 0.0, load: 0.8, battery: 54, note: "Finish low-price EV charging before departure" }
+        ]
+      },
+      hamburg: {
+        label: "Hamburg family home",
+        sync: "Smart meter synced 8 min ago",
+        city: "Hamburg",
+        residents: 4,
+        todayUse: 18.4,
+        lastHint: "2.6 kWh below last Tuesday",
+        solar: 11.8,
+        solarHint: "Peak at 13:20",
+        bestWindow: "12:30",
+        bestRate: 0.23,
+        currentRate: 0.31,
+        smartSaving: 3.7,
+        fitBase: 78,
+        flexBase: 5.2,
+        battery: 68,
+        move: {
+          time: "12:30-14:30",
+          title: "Run the dishwasher and charge the battery during the solar peak.",
+          copy: "The home has strong midday generation and a low tariff window, while evening demand is expected to rise after 18:00.",
+          saving: 1.46,
+          importAvoided: 3.1,
+          confidence: 86,
+          tag: "Best move today"
+        },
+        timeline: [
+          { hour: "06", price: 34, solar: 0.1, load: 1.2, battery: 46, note: "Morning base load" },
+          { hour: "08", price: 36, solar: 0.7, load: 2.1, battery: 41, note: "Breakfast and hot water" },
+          { hour: "10", price: 29, solar: 2.4, load: 1.5, battery: 48, note: "Solar starts covering home use" },
+          { hour: "12", price: 23, solar: 4.0, load: 1.8, battery: 61, note: "Best flexible appliance window" },
+          { hour: "14", price: 24, solar: 3.6, load: 2.0, battery: 78, note: "Battery charging well" },
+          { hour: "16", price: 28, solar: 1.9, load: 2.5, battery: 82, note: "Afternoon demand rises" },
+          { hour: "18", price: 38, solar: 0.5, load: 3.8, battery: 72, note: "Dinner peak begins" },
+          { hour: "20", price: 41, solar: 0.0, load: 3.4, battery: 55, note: "Battery support recommended" },
+          { hour: "22", price: 32, solar: 0.0, load: 1.6, battery: 43, note: "Lower standby load" },
+          { hour: "00", price: 27, solar: 0.0, load: 0.9, battery: 39, note: "Quiet overnight window" },
+          { hour: "02", price: 25, solar: 0.0, load: 0.8, battery: 37, note: "EV trickle charging possible" },
+          { hour: "04", price: 28, solar: 0.0, load: 0.7, battery: 35, note: "Pre-morning baseline" }
+        ]
+      },
+      munich: {
+        label: "Munich apartment",
+        sync: "Smart meter synced 11 min ago",
+        city: "Munich",
+        residents: 2,
+        todayUse: 9.7,
+        lastHint: "0.9 kWh below yesterday",
+        solar: 3.2,
+        solarHint: "Balcony PV peak at 12:50",
+        bestWindow: "13:00",
+        bestRate: 0.25,
+        currentRate: 0.33,
+        smartSaving: 1.35,
+        fitBase: 64,
+        flexBase: 2.1,
+        battery: 31,
+        move: {
+          time: "13:00-15:00",
+          title: "Run laundry after lunch and avoid the evening price spike.",
+          copy: "The balcony PV forecast covers a smaller load, so the best move is shifting one flexible appliance out of the evening.",
+          saving: 0.72,
+          importAvoided: 1.3,
+          confidence: 79,
+          tag: "Low effort"
+        },
+        timeline: [
+          { hour: "06", price: 35, solar: 0.0, load: 0.5, battery: 0, note: "Quiet morning base" },
+          { hour: "08", price: 37, solar: 0.2, load: 0.9, battery: 0, note: "Coffee and lighting" },
+          { hour: "10", price: 30, solar: 0.7, load: 0.8, battery: 0, note: "PV almost covers standby" },
+          { hour: "12", price: 26, solar: 1.0, load: 1.1, battery: 0, note: "Good appliance window" },
+          { hour: "14", price: 25, solar: 1.1, load: 1.3, battery: 0, note: "Best laundry window" },
+          { hour: "16", price: 29, solar: 0.4, load: 1.2, battery: 0, note: "Solar fades" },
+          { hour: "18", price: 39, solar: 0.0, load: 2.0, battery: 0, note: "Cooking peak" },
+          { hour: "20", price: 42, solar: 0.0, load: 1.7, battery: 0, note: "Avoid flexible loads" },
+          { hour: "22", price: 34, solar: 0.0, load: 0.8, battery: 0, note: "Lower evening load" },
+          { hour: "00", price: 28, solar: 0.0, load: 0.4, battery: 0, note: "Quiet overnight" },
+          { hour: "02", price: 26, solar: 0.0, load: 0.3, battery: 0, note: "Lowest standby" },
+          { hour: "04", price: 29, solar: 0.0, load: 0.3, battery: 0, note: "Morning preheat off" }
+        ]
+      },
+      leipzig: {
+        label: "Leipzig EV household",
+        sync: "Smart meter synced 5 min ago",
+        city: "Leipzig",
+        residents: 3,
+        todayUse: 27.6,
+        lastHint: "EV adds 9.4 kWh tonight",
+        solar: 14.4,
+        solarHint: "Peak at 12:40",
+        bestWindow: "01:30",
+        bestRate: 0.21,
+        currentRate: 0.32,
+        smartSaving: 5.9,
+        fitBase: 86,
+        flexBase: 9.8,
+        battery: 74,
+        move: {
+          time: "01:30-04:30",
+          title: "Delay EV charging until the overnight low-price window.",
+          copy: "The vehicle needs 60 km of range by morning, and the overnight tariff window beats the evening peak by 14 ct/kWh.",
+          saving: 2.28,
+          importAvoided: 6.4,
+          confidence: 91,
+          tag: "High impact"
+        },
+        timeline: [
+          { hour: "06", price: 33, solar: 0.1, load: 1.0, battery: 52, note: "Heat pump baseline" },
+          { hour: "08", price: 35, solar: 0.8, load: 2.4, battery: 47, note: "Morning routine" },
+          { hour: "10", price: 28, solar: 3.1, load: 1.9, battery: 56, note: "Solar surplus starts" },
+          { hour: "12", price: 24, solar: 4.7, load: 2.1, battery: 70, note: "Battery and hot water window" },
+          { hour: "14", price: 25, solar: 4.3, load: 2.5, battery: 88, note: "Strong self-consumption" },
+          { hour: "16", price: 30, solar: 2.2, load: 2.8, battery: 85, note: "School return load" },
+          { hour: "18", price: 40, solar: 0.5, load: 4.4, battery: 72, note: "Evening peak" },
+          { hour: "20", price: 43, solar: 0.0, load: 5.1, battery: 55, note: "Delay EV charging" },
+          { hour: "22", price: 34, solar: 0.0, load: 2.0, battery: 44, note: "Vehicle plugged in" },
+          { hour: "00", price: 25, solar: 0.0, load: 1.4, battery: 40, note: "Prepare low-price charging" },
+          { hour: "02", price: 21, solar: 0.0, load: 6.5, battery: 36, note: "Best EV charging window" },
+          { hour: "04", price: 23, solar: 0.0, load: 5.8, battery: 32, note: "Finish EV charging" }
+        ]
+      }
+    };
+
+    const wizardSteps = [
+      {
+        key: "home",
+        stage: "Home",
+        title: "What type of home is this?",
+        hint: "This shapes heat, standby, and solar assumptions.",
+        options: [
+          { value: "detached", label: "Detached house", detail: "Roof PV, home battery, heat pump", fit: 8, flex: 1.1 },
+          { value: "townhouse", label: "Townhouse", detail: "Shared walls and moderate load", fit: 4, flex: 0.6 },
+          { value: "apartment", label: "Apartment", detail: "Lower heating and limited PV", fit: -6, flex: -1.2 }
+        ]
+      },
+      {
+        key: "routine",
+        stage: "Routine",
+        title: "When is the home most active?",
+        hint: "The companion protects the busy windows first.",
+        options: [
+          { value: "evening", label: "Evenings", detail: "Cooking, laundry, and media after 18:00", fit: 5, flex: 0.9 },
+          { value: "daytime", label: "Daytime", detail: "Remote work and daytime appliances", fit: 3, flex: 0.4 },
+          { value: "mixed", label: "Mixed schedule", detail: "Activity changes across the week", fit: 2, flex: 0.7 }
+        ]
+      },
+      {
+        key: "devices",
+        stage: "Devices",
+        title: "Which flexible device matters most?",
+        hint: "This sets the top recommendation style.",
+        options: [
+          { value: "battery", label: "Home battery", detail: "Charge and discharge around prices", fit: 7, flex: 1.4 },
+          { value: "ev", label: "Electric vehicle", detail: "Large load with clear deadlines", fit: 10, flex: 3.1 },
+          { value: "appliances", label: "Appliances", detail: "Dishwasher, laundry, and dryer timing", fit: 4, flex: 0.8 }
+        ]
+      },
+      {
+        key: "comfort",
+        stage: "Comfort",
+        title: "How much automation feels right?",
+        hint: "Suggestions can stay manual or become scheduled.",
+        options: [
+          { value: "manual", label: "Manual suggestions", detail: "Ask before every household change", fit: 1, flex: -0.4 },
+          { value: "assist", label: "Assisted scheduling", detail: "Confirm appliance and charging windows", fit: 6, flex: 1.1 },
+          { value: "auto", label: "Smart automation", detail: "Run approved routines automatically", fit: 9, flex: 2.0 }
+        ]
+      }
+    ];
+
+    const translatorPresets = [
+      { label: "Dishwasher", kwh: 1.2, unit: "Dishwasher cycles" },
+      { label: "Laundry", kwh: 0.8, unit: "Laundry cycles" },
+      { label: "EV range", kwh: 0.17, unit: "EV kilometres" },
+      { label: "Heat pump", kwh: 2.4, unit: "Heat pump hours" }
+    ];
+
+    const assistantPrompts = [
+      {
+        id: "explain",
+        label: "Explain today's best move",
+        title: "Today's best move",
+        body: "The strongest opportunity is the period where solar production and lower tariff pricing overlap. The plan shifts flexible demand into that window, then reserves battery energy for the evening peak.",
+        bullets: ["Expected savings are based on the current tariff spread.", "Comfort-sensitive loads stay inside the household's selected routine.", "Confidence changes when weather or device availability changes."]
+      },
+      {
+        id: "bill",
+        label: "Lower this month's bill",
+        title: "Monthly bill levers",
+        body: "The largest savings come from timing high-load devices and reducing grid import during the evening peak. The companion prioritizes actions that repeat without asking the household to think about energy every day.",
+        bullets: ["Move appliance runs into low-price windows.", "Charge the battery from solar before the evening peak.", "Use overnight EV charging when the car has enough time before departure."]
+      },
+      {
+        id: "comfort",
+        label: "Keep comfort steady",
+        title: "Comfort guardrails",
+        body: "The plan keeps heating, hot water, and essential device deadlines within familiar household windows. Flexible timing is used only where the result is likely to be invisible day to day.",
+        bullets: ["Heat pump changes stay inside a narrow temperature band.", "EV charging is planned backward from departure time.", "Manual confirmation remains available for every suggestion."]
+      },
+      {
+        id: "data",
+        label: "Show the data behind it",
+        title: "Signals used now",
+        body: "This prototype combines mock smart meter data, tariff windows, solar forecast, battery state, and recent consumption patterns for a German household profile.",
+        bullets: ["Meter sync age is shown in the header.", "Hourly timeline values drive the best-window recommendation.", "Savings are calculated from current and smart-window prices."]
+      }
+    ];
+
+    const state = {
+      householdKey: "berlin",
+      wizardStep: 0,
+      wizardAnswers: {
+        home: "detached",
+        routine: "evening",
+        devices: "ev",
+        comfort: "assist"
+      },
+      translatorPreset: 0,
+      period: "today",
+      flexibility: 58,
+      timelineMode: "price",
+      selectedHour: 4,
+      assistantPrompt: "explain"
+    };
+
+    const formatEuro = (value) => `EUR ${value.toFixed(2)}`;
+    const formatKwh = (value) => `${value.toFixed(1)} kWh`;
+    const formatRate = (value) => `${Math.round(value * 100)} ct/kWh`;
+
+    const byId = (id) => document.getElementById(id);
+
+    function currentHousehold() {
+      return households[state.householdKey];
+    }
+
+    function showToast(message) {
+      const toast = byId("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timeout);
+      showToast.timeout = window.setTimeout(() => toast.classList.remove("show"), 2400);
+    }
+
+    function updateSnapshot() {
+      const data = currentHousehold();
+      byId("householdLabel").textContent = `${data.label} profile`;
+      byId("syncStatus").textContent = data.sync;
+      byId("todayUse").textContent = formatKwh(data.todayUse);
+      byId("todayUseHint").textContent = data.lastHint;
+      byId("solarForecast").textContent = formatKwh(data.solar);
+      byId("solarHint").textContent = data.solarHint;
+      byId("bestWindow").textContent = data.bestWindow;
+      byId("bestWindowHint").textContent = formatRate(data.bestRate);
+      byId("heroSaving").textContent = formatEuro(calculatePlanSaving());
+      byId("heroSavingHint").textContent = "with a smart plan";
+      byId("translatorRate").textContent = `${formatRate(data.currentRate)} now`;
+      byId("assistantContext").textContent = `Using ${data.city} profile`;
+      byId("solarFlow").style.width = `${Math.min(96, 28 + data.solar * 4)}%`;
+      byId("homeFlow").style.width = `${Math.min(96, 24 + data.todayUse * 2)}%`;
+      byId("gridFlow").style.width = `${Math.max(12, 72 - data.solar * 3)}%`;
+      document.querySelector(".battery-fill").style.height = `${Math.max(12, data.battery)}%`;
+      document.querySelector(".battery-fill").style.marginTop = `${100 - Math.max(12, data.battery)}%`;
+      byId("visualTitle").textContent = data.solar > 7 ? "Solar is covering the afternoon load." : "The next low-price window carries the day.";
+      byId("visualCopy").textContent = data.solar > 7
+        ? "Shift flexible devices into the bright window and the home imports less from the grid."
+        : "Small, well-timed changes make the biggest difference when solar is limited.";
+    }
+
+    function calculateWizardResult() {
+      const data = currentHousehold();
+      let fit = data.fitBase;
+      let flex = data.flexBase;
+      wizardSteps.forEach((step) => {
+        const selected = step.options.find((option) => option.value === state.wizardAnswers[step.key]);
+        if (selected) {
+          fit += selected.fit;
+          flex += selected.flex;
+        }
+      });
+      fit = Math.max(32, Math.min(96, Math.round(fit)));
+      flex = Math.max(0.8, flex);
+      return { fit, flex };
+    }
+
+    function calculatePlanSaving() {
+      const data = currentHousehold();
+      const flexibilityFactor = state.flexibility / 58;
+      const result = calculateWizardResult();
+      const fitFactor = result.fit / 78;
+      return data.smartSaving * flexibilityFactor * fitFactor;
+    }
+
+    function renderWizard() {
+      const step = wizardSteps[state.wizardStep];
+      const percent = Math.round(((state.wizardStep + 1) / wizardSteps.length) * 100);
+      byId("wizardTag").textContent = `Step ${state.wizardStep + 1} of ${wizardSteps.length}`;
+      byId("wizardStage").textContent = step.stage;
+      byId("wizardProgressText").textContent = `${percent}%`;
+      byId("wizardProgress").style.width = `${percent}%`;
+      byId("questionTitle").textContent = step.title;
+      byId("questionHint").textContent = step.hint;
+      byId("prevStep").disabled = state.wizardStep === 0;
+      byId("nextStep").querySelector("span").textContent = state.wizardStep === wizardSteps.length - 1 ? "Finish check" : "Continue";
+
+      const options = byId("wizardOptions");
+      options.innerHTML = "";
+      step.options.forEach((option) => {
+        const button = document.createElement("button");
+        button.className = `option-button${state.wizardAnswers[step.key] === option.value ? " active" : ""}`;
+        button.type = "button";
+        button.innerHTML = `<strong>${option.label}</strong><span>${option.detail}</span>`;
+        button.addEventListener("click", () => {
+          state.wizardAnswers[step.key] = option.value;
+          renderWizard();
+          updateComputedSections();
+        });
+        options.appendChild(button);
+      });
+
+      const result = calculateWizardResult();
+      byId("smartFit").textContent = `${result.fit}%`;
+      byId("flexLoad").textContent = formatKwh(result.flex);
+    }
+
+    function renderMove() {
+      const data = currentHousehold();
+      byId("moveTime").textContent = data.move.time;
+      byId("moveTag").textContent = data.move.tag;
+      byId("moveTitle").textContent = data.move.title;
+      byId("moveCopy").textContent = data.move.copy;
+      byId("moveSaving").textContent = formatEuro(data.move.saving * (state.flexibility / 58));
+      byId("moveImport").textContent = formatKwh(data.move.importAvoided * (state.flexibility / 58));
+      byId("moveConfidence").textContent = `${Math.min(96, Math.round(data.move.confidence + (state.flexibility - 58) / 8))}%`;
+      byId("lowestTariff").textContent = formatRate(data.bestRate);
+      byId("curveCaption").textContent = data.solar > 7 ? "Midday is the cleanest and cheapest window." : "Use the lowest tariff hour and keep solar loads modest.";
+
+      const arc = byId("priceArc");
+      arc.innerHTML = "";
+      data.timeline.forEach((point) => {
+        const bar = document.createElement("span");
+        const isBest = point.price === Math.min(...data.timeline.map((item) => item.price));
+        bar.className = `price-bar${isBest ? " best" : ""}${point.price > 38 ? " high" : ""}`;
+        bar.style.height = `${Math.max(20, 150 - point.price * 2.7 + point.solar * 8)}px`;
+        bar.title = `${point.hour}:00, ${point.price} ct/kWh`;
+        arc.appendChild(bar);
+      });
+    }
+
+    function renderTranslator() {
+      const chips = byId("translatorChips");
+      chips.innerHTML = "";
+      translatorPresets.forEach((preset, index) => {
+        const button = document.createElement("button");
+        button.className = `chip-button${index === state.translatorPreset ? " active" : ""}`;
+        button.type = "button";
+        button.textContent = preset.label;
+        button.addEventListener("click", () => {
+          state.translatorPreset = index;
+          renderTranslator();
+        });
+        chips.appendChild(button);
+      });
+
+      const data = currentHousehold();
+      const preset = translatorPresets[state.translatorPreset];
+      const kwh = Number(byId("kwhInput").value) || 0;
+      byId("costNow").textContent = formatEuro(kwh * data.currentRate);
+      byId("costSmart").textContent = formatEuro(kwh * data.bestRate);
+      byId("equivLabel").textContent = preset.unit;
+      const equivalent = preset.label === "EV range" ? kwh / preset.kwh : kwh / preset.kwh;
+      byId("equivValue").textContent = preset.label === "EV range" ? `${Math.round(equivalent)} km` : equivalent.toFixed(1);
+    }
+
+    function renderComparison() {
+      const data = currentHousehold();
+      const multiplier = state.period === "today" ? 1 : state.period === "week" ? 7 : 30;
+      const saving = calculatePlanSaving() * multiplier;
+      const use = data.todayUse * multiplier;
+      const smartUse = use * (1 - state.flexibility * 0.0018);
+      const solarUsed = Math.min(data.solar * multiplier * (0.58 + state.flexibility / 200), smartUse);
+      const costNow = use * data.currentRate;
+      const costSmart = Math.max(0, costNow - saving);
+      const rows = [
+        { label: "Cost now", value: costNow, max: Math.max(costNow, costSmart, solarUsed), className: "now", suffix: "EUR" },
+        { label: "Smart cost", value: costSmart, max: Math.max(costNow, costSmart, solarUsed), className: "smart", suffix: "EUR" },
+        { label: "Solar used", value: solarUsed, max: Math.max(use, smartUse, solarUsed), className: "solar", suffix: "kWh" },
+        { label: "Grid use", value: smartUse - solarUsed, max: Math.max(use, smartUse, solarUsed), className: "smart", suffix: "kWh" }
+      ];
+
+      const bars = byId("comparisonBars");
+      bars.innerHTML = "";
+      rows.forEach((row) => {
+        const width = Math.max(8, Math.min(100, (row.value / row.max) * 100));
+        const valueText = row.suffix === "EUR" ? formatEuro(row.value) : formatKwh(row.value);
+        const item = document.createElement("div");
+        item.className = "bar-row";
+        item.innerHTML = `
+          <div class="bar-label">${row.label}</div>
+          <div class="bar-track"><span class="bar-fill ${row.className}" style="width: ${width}%"></span></div>
+          <div class="bar-value">${valueText}</div>
+        `;
+        bars.appendChild(item);
+      });
+
+      const periodLabel = state.period === "today" ? "today" : `this ${state.period}`;
+      byId("smartSaving").textContent = formatEuro(saving);
+      byId("smartSavingCopy").textContent = `Projected saving ${periodLabel} with ${state.flexibility}% flexible load timing.`;
+      byId("comfortCopy").textContent = state.flexibility > 72
+        ? "Comfort impact is moderate because more devices are moved into price-optimized windows."
+        : "Comfort impact is low because heating and hot water stay within the household's usual windows.";
+      byId("heroSaving").textContent = formatEuro(calculatePlanSaving());
+    }
+
+    function renderTimeline() {
+      const data = currentHousehold();
+      const strip = byId("timelineStrip");
+      strip.innerHTML = "";
+      const maxValues = {
+        price: Math.max(...data.timeline.map((point) => point.price)),
+        solar: Math.max(...data.timeline.map((point) => point.solar)),
+        load: Math.max(...data.timeline.map((point) => point.load))
+      };
+      data.timeline.forEach((point, index) => {
+        const value = point[state.timelineMode];
+        const level = Math.max(10, (value / maxValues[state.timelineMode]) * 82);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `timeline-button${index === state.selectedHour ? " active" : ""}`;
+        const color = state.timelineMode === "price" ? (point.price > 38 ? "var(--coral)" : "var(--sky)") : state.timelineMode === "solar" ? "var(--amber)" : "var(--green)";
+        button.style.setProperty("--level", `${level}%`);
+        button.style.setProperty("--bar", color);
+        button.innerHTML = `<span>${point.hour}:00</span><strong>${formatTimelineValue(point)}</strong>`;
+        button.addEventListener("click", () => {
+          state.selectedHour = index;
+          renderTimeline();
+        });
+        strip.appendChild(button);
+      });
+
+      const selected = data.timeline[state.selectedHour];
+      const detail = byId("timelineDetail");
+      detail.innerHTML = `
+        <div class="detail-tile"><span>Hour</span><strong>${selected.hour}:00</strong></div>
+        <div class="detail-tile"><span>Tariff</span><strong>${selected.price} ct/kWh</strong></div>
+        <div class="detail-tile"><span>Solar / load</span><strong>${selected.solar.toFixed(1)} / ${selected.load.toFixed(1)} kWh</strong></div>
+        <div class="detail-tile"><span>Battery</span><strong>${selected.battery}%</strong></div>
+      `;
+      byId("timelineSubtitle").textContent = selected.note;
+    }
+
+    function formatTimelineValue(point) {
+      if (state.timelineMode === "price") return `${point.price} ct`;
+      if (state.timelineMode === "solar") return `${point.solar.toFixed(1)} kWh`;
+      return `${point.load.toFixed(1)} kWh`;
+    }
+
+    function renderAssistant() {
+      const promptList = byId("promptList");
+      promptList.innerHTML = "";
+      assistantPrompts.forEach((prompt) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `prompt-button${prompt.id === state.assistantPrompt ? " active" : ""}`;
+        button.textContent = prompt.label;
+        button.addEventListener("click", () => {
+          state.assistantPrompt = prompt.id;
+          renderAssistant();
+        });
+        promptList.appendChild(button);
+      });
+
+      const selected = assistantPrompts.find((prompt) => prompt.id === state.assistantPrompt) || assistantPrompts[0];
+      const data = currentHousehold();
+      byId("assistantAnswer").innerHTML = `
+        <span class="tag">${data.city} household</span>
+        <h3>${selected.title}</h3>
+        <p>${selected.body}</p>
+        <ul>${selected.bullets.map((bullet) => `<li>${bullet}</li>`).join("")}</ul>
+      `;
+    }
+
+    function updateComputedSections() {
+      updateSnapshot();
+      renderWizard();
+      renderMove();
+      renderTranslator();
+      renderComparison();
+      renderTimeline();
+      renderAssistant();
+    }
+
+    byId("scenarioSelect").addEventListener("change", (event) => {
+      state.householdKey = event.target.value;
+      state.selectedHour = 3;
+      updateComputedSections();
+      showToast(`${currentHousehold().label} loaded`);
+    });
+
+    byId("prevStep").addEventListener("click", () => {
+      state.wizardStep = Math.max(0, state.wizardStep - 1);
+      renderWizard();
+    });
+
+    byId("nextStep").addEventListener("click", () => {
+      if (state.wizardStep < wizardSteps.length - 1) {
+        state.wizardStep += 1;
+        renderWizard();
+      } else {
+        showToast("Energy check complete. The plan has been refreshed.");
+        updateComputedSections();
+      }
+    });
+
+    byId("resetWizard").addEventListener("click", () => {
+      state.wizardStep = 0;
+      state.wizardAnswers = {
+        home: "detached",
+        routine: "evening",
+        devices: "ev",
+        comfort: "assist"
+      };
+      updateComputedSections();
+      showToast("Energy check reset");
+    });
+
+    byId("scheduleMove").addEventListener("click", () => {
+      showToast(`Reminder added for ${currentHousehold().move.time}`);
+    });
+
+    byId("applyMove").addEventListener("click", () => {
+      state.flexibility = Math.min(90, state.flexibility + 8);
+      byId("flexibilityRange").value = state.flexibility;
+      renderMove();
+      renderComparison();
+      showToast("Smart timing applied to the comparison");
+    });
+
+    byId("kwhInput").addEventListener("input", renderTranslator);
+
+    document.querySelectorAll("[data-period]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("[data-period]").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        state.period = button.dataset.period;
+        renderComparison();
+      });
+    });
+
+    byId("flexibilityRange").addEventListener("input", (event) => {
+      state.flexibility = Number(event.target.value);
+      renderMove();
+      renderComparison();
+    });
+
+    document.querySelectorAll("[data-timeline-mode]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("[data-timeline-mode]").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        state.timelineMode = button.dataset.timelineMode;
+        renderTimeline();
+      });
+    });
+
+    updateComputedSections();
+  </script>
+</body>
+</html>

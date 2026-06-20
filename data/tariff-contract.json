@@ -1,0 +1,71 @@
+{
+  "schema_version": "0.1.0",
+  "household_id": "hh_de_berlin_001",
+  "contract_id": "contract_de_flex_2026_demo",
+  "profile_type": "synthetic_demo",
+  "last_parsed_at": "2026-06-20T10:40:00+02:00",
+  "supplier": {
+    "name": "Synthetic Enpal Energy Flex",
+    "country": "Germany",
+    "customer_service_reference": "DEMO-10405-ENERGY"
+  },
+  "contract": {
+    "product_name": "Smart Home Dynamic Tariff Demo",
+    "contract_start_date": "2026-04-01",
+    "fixed_term_end_date": "2027-03-31",
+    "billing_period": "monthly",
+    "cancellation_notice_days": 30,
+    "metering_requirement": "Smart meter or approved interval meter required for dynamic settlement."
+  },
+  "metering": {
+    "marktlokation_id": "DEMO-MALO-10405-001",
+    "meter_serial": "DEMO-METER-2026-001",
+    "settlement_granularity": "PT1H",
+    "timezone": "Europe/Berlin"
+  },
+  "price_rules": {
+    "currency": "EUR",
+    "vat_included": true,
+    "standing_charge_eur_per_month": 12.9,
+    "metering_fee_eur_per_month": 8.2,
+    "dynamic_import_price_formula": "final_import_price = clamp(market_reference_price + network_fee + supplier_service_fee + taxes_and_levies + vat_adjustment, min_price, max_price)",
+    "network_fee_eur_per_kwh": 0.112,
+    "supplier_service_fee_eur_per_kwh": 0.025,
+    "taxes_and_levies_eur_per_kwh": 0.032,
+    "vat_rate": 0.19,
+    "min_price_eur_per_kwh": 0.12,
+    "max_price_eur_per_kwh": 0.48,
+    "current_import_price_eur_per_kwh": 0.35,
+    "standard_tariff_benchmark_eur_per_kwh": 0.35,
+    "feed_in_credit_eur_per_kwh": 0.081
+  },
+  "ev_charging_demo_terms": {
+    "naive_price_basis": "current_import_price_eur_per_kwh",
+    "smart_price_basis": "forecast final import prices plus solar surplus availability",
+    "solar_surplus_cash_cost_eur_per_kwh": 0.0,
+    "solar_surplus_opportunity_cost_eur_per_kwh": 0.081,
+    "low_price_window": {
+      "start": "2026-06-20T22:00:00+02:00",
+      "end": "2026-06-21T01:00:00+02:00",
+      "final_import_price_eur_per_kwh": 0.18
+    }
+  },
+  "source_documents": [
+    {
+      "document_id": "demo-contract-json",
+      "type": "contract_json",
+      "status": "synthetic",
+      "confidence": 1.0
+    },
+    {
+      "document_id": "demo-tariff-summary",
+      "type": "tariff_summary",
+      "status": "synthetic",
+      "confidence": 1.0
+    }
+  ],
+  "contract_explanation": {
+    "plain_english_summary": "This demo contract uses an hourly dynamic import price. The homeowner pays a monthly standing charge and the hourly final import price for grid electricity. Solar exported to the grid earns a feed-in credit of 0.081 EUR/kWh.",
+    "important_user_message": "Public market prices are not the same as the customer's final bill price. Recommendations must use this contract's final import price rules."
+  }
+}
