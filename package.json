@@ -1,0 +1,14 @@
+{
+  "name": "enpal-smart-energy-companion",
+  "version": "0.1.0",
+  "private": true,
+  "description": "No-dependency prototype API for the Enpal Smart Energy Companion demo.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node tests/energy-calculations.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

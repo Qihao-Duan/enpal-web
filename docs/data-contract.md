@@ -171,17 +171,45 @@ EV demo invariants:
 
 The UI can use `savings.headline_metric` to decide whether to show cash savings or economic savings. For this prototype it is set to `cash_savings_eur`, matching the demo narrative.
 
-## Suggested Backend Endpoints
+## Implemented Prototype Backend Endpoints
 
-These are not implemented yet, but the fixtures are shaped so a thin mock API can expose them.
+The current no-dependency Node backend exposes a thin mock API from `src/server.js`. The API recomputes recommendation values from the fixture inputs rather than treating `ev-charging-recommendation.json` as trusted user input.
 
-| Endpoint | Backing fixture | Notes |
+| Endpoint | Backing data | Notes |
 | --- | --- | --- |
-| `GET /api/households/{household_id}` | `household-profile.json` | Stable profile and capabilities. |
-| `GET /api/households/{household_id}/contract` | `tariff-contract.json` | Parsed contract and tariff terms. |
-| `GET /api/households/{household_id}/forecasts?from=&to=` | `forecasts-24h.json` | Price, PV, and load forecast. |
-| `GET /api/households/{household_id}/devices/current` | `device-state.json` | Current power flow and devices. |
-| `POST /api/recommendations/ev-charging` | `ev-charging-recommendation.json` | Future service should calculate this from request + fixtures. |
+| `GET /api/health` | Runtime only | Returns service status and formula version. |
+| `GET /api/demo-state` | All fixture files + calculation engine | Combined payload for the prototype UI. Includes household, contract, forecast, device state, recommendation, calculation metadata, and source quality. |
+| `GET /api/calculations/live` | Forecast, contract, device state | Returns `power_intervals`, `price_intervals`, `bill_forecast`, calculation metadata, and source quality. |
+| `POST /api/recommendations/ev-charging` | Contract, forecast, device state | Recomputes EV charging recommendation. Accepts safe request overrides such as `required_energy_kwh`; contract prices still come from fixtures. |
+| `GET /api/connectors/status` | Connector registry + fixtures | Lists connector-ready adapters for tariff, solar/weather, device telemetry, contract parsing, and product lookup. |
+| `POST /api/connectors/refresh` | Connector registry + fixtures | Returns normalized signals that would feed calculations after a real external refresh. Current mode is `external_ready_fixture_adapters`. |
+| `POST /api/products/lookup` | `data/product-catalog.json` | Finds candidate appliance/EV models from model text or scan-derived labels. Results require user confirmation before bill forecasts. |
+| `POST /api/contracts/parse` | Rule parser + `tariff-contract.json` fallback | Extracts calculation terms from pasted contract text, such as import price, monthly fee, feed-in credit, and notice period. |
+
+Savings-bearing API responses must include:
+
+| Field | Purpose |
+| --- | --- |
+| `calculated_at` | Timestamp for the calculation run. |
+| `valid_until` | End of the forecast or validity window. |
+| `input_snapshot_id` | Stable join key for the fixture inputs used in the run. |
+| `formula_version` | Calculation engine version, currently `energy-engine.v0.1.0`. |
+| `source_quality[]` | Source, status, unit, value, and confidence records for audit display. |
+
+The prototype server also serves `prototype.html`, `/data/`, and `/docs/` read-only on the same origin, so the browser can fetch API data without CORS complexity.
+
+## Implemented Retrieval Layer
+
+The current retrieval layer is connector-ready rather than fully live. It uses deterministic fixture adapters so the UI and calculation engine can develop against the same response shape that real integrations should use later.
+
+| Capability | Current implementation | Production replacement |
+| --- | --- | --- |
+| Connector status | `makeConnectorStatus()` in `src/lib/connectors.js` | Connector registry with OAuth/consent state and health checks |
+| Source refresh | `refreshConnectors()` returns normalized fixture signals | Scheduled and on-demand provider fetch jobs |
+| Product lookup | Demo catalog in `data/product-catalog.json` | EPREL, manufacturer manuals, retailer specs, barcode/OCR |
+| Contract parsing | Rule-based text parser with fixture fallback | OCR/PDF parser plus user confirmation UI |
+
+The frontend panel "Automatic data retrieval" calls these endpoints directly, making the backend interaction visible without claiming that private user accounts are already connected.
 
 ## Future Connectors
 

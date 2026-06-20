@@ -1,6 +1,6 @@
 # Enpal Smart Energy Companion - Engineering Alignment
 
-Status: active prototype planning  
+Status: active development sprint  
 Primary language: English for all product UI, code names, data fields, documentation, and demo copy  
 Workspace: `/Users/qihao/Documents/enpal-web`
 
@@ -54,9 +54,11 @@ Workers are not alone in the codebase. They must not revert or overwrite work ou
 
 For this repository's immediate state:
 
-- Phase 0 prototype: static HTML/CSS/JS, no package setup required.
+- Phase 1 prototype: static HTML/CSS/JS plus a no-dependency Node.js calculation API.
 - Primary prototype file: `prototype.html`.
 - Mock data files: `data/*.json`.
+- Runtime entrypoint: `src/server.js`.
+- Calculation engine: `src/lib/energy-calculations.js`.
 - Data contract: `docs/data-contract.md`.
 - Coordination document: `ENGINEERING_ALIGNMENT.md`.
 
@@ -97,7 +99,49 @@ data/mock/
 docs/
 ```
 
-The immediate sprint should not scaffold this full app unless explicitly requested. The static prototype is the fastest way to validate the experience.
+The immediate sprint should not scaffold the full future app. It should make the current prototype runnable through a thin backend, so money numbers come from deterministic API calculations instead of inline UI constants.
+
+## 5.0 Current Development Sprint
+
+Goal: turn the existing static prototype and mock data into a runnable MVP with a real calculation API.
+
+| Role | Current owner | Write scope |
+|---|---|---|
+| Architecture lead | agent | Read-only implementation guidance |
+| Backend/data worker | agent | `package.json`, `src/`, `tests/energy-calculations.test.js` |
+| Frontend worker | agent | `prototype.html` only |
+| QA reviewer | agent | Read-only QA checklist/review |
+| Main integrator | Codex main thread | Integration, verification, `ENGINEERING_ALIGNMENT.md` |
+
+Target API contract:
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/api/health` | GET | Server status and version |
+| `/api/demo-state` | GET | Combined household, contract, forecast, device state, recommendation, calculation metadata |
+| `/api/calculations/live` | GET | Power intervals, tariff intervals, bill forecast, source quality, audit metadata |
+| `/api/recommendations/ev-charging` | POST | Recalculate EV now-vs-smart plan from request overrides plus fixtures |
+| `/api/connectors/status` | GET | Connector-ready adapter registry for Germany demo data sources |
+| `/api/connectors/refresh` | POST | Refresh fixture adapters into normalized calculation signals |
+| `/api/products/lookup` | POST | Product/model lookup from demo catalog with user-confirmation flag |
+| `/api/contracts/parse` | POST | Rule-based tariff text parser with fixture fallback terms |
+
+Backend responses that display savings must include:
+
+```text
+calculated_at
+valid_until
+input_snapshot_id
+formula_version
+source_quality[]
+```
+
+Frontend behavior:
+
+- When served by `src/server.js`, `prototype.html` should fetch `/api/demo-state`.
+- When opened as `file://` or API is unavailable, the existing inline canonical values remain as graceful fallback.
+- The "Automatic data retrieval" panel should call the connector endpoints so users can see backend retrieval, source quality, and confirmation boundaries.
+- UI remains English-only.
 
 ## 5.1 Service Boundaries
 
@@ -108,10 +152,11 @@ The immediate sprint should not scaffold this full app unless explicitly request
 | `ContractService` | Contract JSON/PDF extraction and tariff normalization | Mock contract JSON |
 | `PublicDataService` | SMARD/ENTSO-E, Open-Meteo, PVGIS cache | Static sample forecast |
 | `HouseholdDataService` | Canonical state from meter, PV, battery, EV, heat pump | Static device state |
+| `ConnectorRetrievalService` | Provider status, refresh, product lookup, contract parsing | `src/lib/connectors.js` fixture adapters |
 | `ForecastService` | PV surplus, price windows, heat pump demand | Static 24-hour curve |
-| `OptimizerService` | EV now-vs-smart cost and schedule | Inline deterministic JS or JSON output |
-| `RecommendationService` | Today's Best Move and savings log | Static recommendation payload |
-| `TrustAuditService` | Sources, timestamps, confidence, formulas | `data/ev-charging-recommendation.json` |
+| `OptimizerService` | EV now-vs-smart cost and schedule | `src/lib/energy-calculations.js` |
+| `RecommendationService` | Today's Best Move and savings log | Backend-calculated recommendation payload |
+| `TrustAuditService` | Sources, timestamps, confidence, formulas | Backend metadata plus fixture source quality |
 | `AIOrchestrator` | Tool calling and grounded explanation | Scripted demo answers first |
 
 ## 5.2 Control And Consent States
