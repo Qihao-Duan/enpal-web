@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Enpal - The Smart Energy Companion</title>
+  <title>Enpal - Every kWh, routed to its best use.</title>
   <style>
     :root {
       color-scheme: light;
@@ -1272,6 +1272,106 @@
       display: block;
       color: var(--ink);
       margin-bottom: 4px;
+    }
+
+    .product-home-panel {
+      border: 1px solid rgba(10, 122, 85, 0.16);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      padding: 12px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .product-home-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .product-home-copy {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .product-home-kicker {
+      color: var(--green);
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .product-home-copy strong {
+      color: var(--ink);
+      font-size: 0.95rem;
+      line-height: 1.22;
+    }
+
+    .product-home-copy small,
+    .added-device-empty span,
+    .added-device-main span,
+    .added-device-item small {
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .add-device-button {
+      min-width: 132px;
+      white-space: nowrap;
+    }
+
+    .added-devices-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .added-device-empty,
+    .added-device-item {
+      border: 1px dashed rgba(23, 33, 31, 0.16);
+      border-radius: var(--radius-sm);
+      background: #f8faf7;
+      padding: 10px;
+    }
+
+    .added-device-empty {
+      display: grid;
+      gap: 3px;
+    }
+
+    .added-device-empty strong {
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+
+    .added-device-item {
+      border-style: solid;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      background: var(--panel-strong);
+      border-color: rgba(10, 122, 85, 0.2);
+    }
+
+    .added-device-main {
+      min-width: 0;
+      display: grid;
+      gap: 3px;
+    }
+
+    .added-device-main strong,
+    .added-device-main span,
+    .added-device-item small {
+      overflow-wrap: anywhere;
+    }
+
+    .added-device-main strong {
+      color: var(--ink);
+      font-size: 0.94rem;
+      line-height: 1.22;
     }
 
     .move-actions {
@@ -2634,6 +2734,10 @@
         grid-template-columns: 1fr;
       }
 
+      .product-home-header {
+        grid-template-columns: 1fr;
+      }
+
       .plan-step {
         grid-template-columns: 1fr;
       }
@@ -2876,6 +2980,7 @@
     .price-card,
     .backend-console,
     .lookup-card,
+    .product-home-panel,
     .slider-box {
       background: color-mix(in srgb, var(--ds-neutral-primary-soft) 92%, transparent);
       border: 1px solid var(--ds-border-default);
@@ -2918,6 +3023,8 @@
     .backend-field,
     .connector-card,
     .lookup-result,
+    .added-device-empty,
+    .added-device-item,
     .readout-item,
     .metric,
     .cost-card,
@@ -2951,7 +3058,10 @@
     .backend-field strong,
     .source-badge strong,
     .connector-card strong,
-    .lookup-result strong {
+    .lookup-result strong,
+    .product-home-copy strong,
+    .added-device-empty strong,
+    .added-device-main strong {
       color: var(--ds-heading);
       font-weight: 600;
     }
@@ -3008,10 +3118,18 @@
     .backend-field span,
     .source-badge span,
     .connector-card span,
-    .device-detail-tile span {
+    .device-detail-tile span,
+    .product-home-copy small,
+    .added-device-empty span,
+    .added-device-main span,
+    .added-device-item small {
       color: var(--ds-body-subtle);
       font-weight: 500;
       letter-spacing: 0.4px;
+    }
+
+    .product-home-kicker {
+      color: var(--ds-fg-brand);
     }
 
     .advice-score strong {
@@ -4513,6 +4631,12 @@
       cursor: grabbing;
     }
 
+    .assistant-fab[aria-expanded="true"] {
+      border-color: var(--ds-border-brand-light);
+      background: var(--ds-neutral-secondary-soft);
+      color: var(--ds-heading);
+    }
+
     .assistant-fab svg {
       width: 22px;
       height: 22px;
@@ -4894,7 +5018,7 @@
           <div class="workbench-center">
             <div class="advice-copy">
               <p class="section-kicker">Best action now</p>
-              <h2 id="decisionBoardTitle">The Smart Energy Companion</h2>
+              <h2 id="decisionBoardTitle">Every kWh, routed to its best use.</h2>
               <p id="adviceHeroCopy">The optimizer checks EV charging, dishwasher timing, heat-pump comfort, battery reserve, and flexible appliances. EV charging is the top action today, while smaller appliances stay in the plan with user-friendly deadlines.</p>
               <div class="decision-meta" aria-label="Current planning context">
                 <div class="decision-meta-item">
@@ -5275,7 +5399,7 @@
       </form>
     </aside>
 
-    <button class="assistant-fab" id="openCompanion" type="button" aria-label="Ask Energy Companion">
+    <button class="assistant-fab" id="openCompanion" type="button" aria-label="Ask Energy Companion" aria-controls="companionDrawer" aria-expanded="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"></path>
         <path d="M8 9h8"></path>
@@ -5621,7 +5745,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
           <div class="panel-header">
             <div class="panel-title">
               <h2 id="retrievalTitle">Automatic data retrieval</h2>
-              <span id="retrievalSubtitle">Connected data layer for tariff, solar, devices, products, and contract terms.</span>
+              <span id="retrievalSubtitle">Connected data layer for tariff, solar, real-time appliance telemetry, products, and contract terms.</span>
             </div>
             <button class="primary-button" id="refreshConnectors" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -5668,15 +5792,15 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
             <section class="embedded-translator" aria-labelledby="translatorTitle">
               <div class="panel-header">
                 <div class="panel-title">
-                  <h2 id="translatorTitle">kWh translator</h2>
-                  <span>Turn retrieved energy numbers into familiar household moments.</span>
+                  <h2 id="translatorTitle">Device cost translator</h2>
+                  <span>Pick a load to see what one run costs now versus the smart window.</span>
                 </div>
                 <span class="tag sky" id="translatorRate">EUR 0.31/kWh now</span>
               </div>
               <div class="translator-grid">
                 <div class="input-block">
                   <div class="kwh-input">
-                    <input id="kwhInput" type="number" min="0.1" max="80" step="0.1" value="4.8" aria-label="Kilowatt hours">
+                    <input id="kwhInput" type="number" min="0.1" max="80" step="0.1" value="1.05" aria-label="Kilowatt hours">
                     <div class="unit-box">kWh</div>
                   </div>
                   <div class="chip-grid" id="translatorChips"></div>
@@ -5691,8 +5815,8 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
                     <strong id="costSmart">EUR 1.10</strong>
                   </div>
                   <div class="equiv">
-                    <span id="equivLabel">Dishwasher cycles</span>
-                    <strong id="equivValue">4.0</strong>
+                    <span id="equivLabel">Selected load</span>
+                    <strong id="equivValue">1 dishwasher run</strong>
                   </div>
                 </div>
               </div>
@@ -5702,7 +5826,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
             <div class="lookup-card">
               <div class="panel-title">
                 <h3>Product model lookup</h3>
-                <span>Type a model or scan-derived label text.</span>
+                <span>Type a model, appliance type, or scan-derived label text.</span>
               </div>
               <div class="lookup-row">
                 <input id="productLookupInput" type="text" value="Tesla Model Y" aria-label="Product model lookup">
@@ -5710,7 +5834,35 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
                   <span>Lookup</span>
                 </button>
               </div>
+              <div class="lookup-row">
+                <select class="mini-select" id="productCategoryInput" aria-label="Product category">
+                  <option value="ev">EV</option>
+                  <option value="dishwasher">Dishwasher</option>
+                  <option value="washing_machine">Washing machine</option>
+                  <option value="dryer">Dryer</option>
+                  <option value="heat_pump">Heat pump</option>
+                  <option value="">Unknown category</option>
+                </select>
+                <button class="ghost-button" id="productProfileButton" type="button">
+                  <span>Build usage profile</span>
+                </button>
+              </div>
+              <textarea id="productProfileText" aria-label="Product usage text">Bosch Serie 6 dishwasher 1.05 kWh per cycle 150 min 5 cycles per week</textarea>
               <div class="lookup-result" id="productLookupResult">No product lookup yet.</div>
+              <div class="lookup-result" id="productProfileResult">No product usage profile yet.</div>
+              <div class="product-home-panel" aria-live="polite">
+                <div class="product-home-header">
+                  <div class="product-home-copy">
+                    <span class="product-home-kicker">Home inventory</span>
+                    <strong id="productAddTitle">Ready after lookup or profile</strong>
+                    <small id="productAddStatus">No product is ready to add yet.</small>
+                  </div>
+                  <button class="ghost-button add-device-button" id="addProductToHomeButton" type="button" disabled>
+                    <span>Add to home</span>
+                  </button>
+                </div>
+                <div class="added-devices-list" id="addedDevicesList" aria-label="Added product devices"></div>
+              </div>
             </div>
             <div class="lookup-card">
               <div class="panel-title">
@@ -6047,10 +6199,11 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
     ];
 
     const translatorPresets = [
-      { label: "Dishwasher", kwh: 1.2, unit: "Dishwasher cycles" },
-      { label: "Laundry", kwh: 0.8, unit: "Laundry cycles" },
-      { label: "EV range", kwh: 0.17, unit: "EV kilometres" },
-      { label: "Heat pump", kwh: 2.4, unit: "Heat pump hours" }
+      { label: "Dishwasher run", kwh: 1.05, unit: "Selected load", value: "1 dishwasher run" },
+      { label: "Washer eco run", kwh: 0.47, unit: "Selected load", value: "1 washer run" },
+      { label: "Dryer run", kwh: 2.1, unit: "Selected load", value: "1 dryer run" },
+      { label: "Heat pump preheat", kwh: 2.4, unit: "Selected load", value: "1 preheat block" },
+      { label: "EV top-up", kwh: 24, unit: "Selected load", value: "Today's EV top-up" }
     ];
 
     const assistantPrompts = [
@@ -6100,7 +6253,11 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       timelineMode: "price",
       selectedHour: 4,
       selectedDeviceIndex: 0,
-      assistantPrompt: "explain"
+      assistantPrompt: "explain",
+      latestProductDevice: null,
+      deviceRegistry: null,
+      addedHomeDevices: [],
+      productAddStatus: "No product is ready to add yet."
     };
 
     const apiConnection = {
@@ -6165,9 +6322,19 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       panel.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
     }
 
+    function setCompanionToggleState(isOpen) {
+      const toggle = byId("openCompanion");
+      if (!toggle) return;
+      const label = toggle.querySelector("span");
+      toggle.setAttribute("aria-expanded", String(isOpen));
+      toggle.setAttribute("aria-label", isOpen ? "Minimize Energy Companion" : "Ask Energy Companion");
+      if (label) label.textContent = isOpen ? "Hide" : "Ask";
+    }
+
     function openCompanion(question) {
       byId("companionBackdrop").hidden = false;
       byId("companionDrawer").hidden = false;
+      setCompanionToggleState(true);
       if (question) byId("companionInput").value = question;
       window.setTimeout(() => byId("companionInput").focus(), 0);
     }
@@ -6175,7 +6342,16 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
     function closeCompanion() {
       byId("companionBackdrop").hidden = true;
       byId("companionDrawer").hidden = true;
+      setCompanionToggleState(false);
       byId("openCompanion").focus();
+    }
+
+    function toggleCompanion() {
+      if (byId("companionDrawer").hidden) {
+        openCompanion();
+      } else {
+        closeCompanion();
+      }
     }
 
     function currentHousehold() {
@@ -6187,6 +6363,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
     }
 
     function numberOrNull(value) {
+      if (value === null || value === undefined || value === "") return null;
       const number = Number(value);
       return Number.isFinite(number) ? number : null;
     }
@@ -6202,6 +6379,18 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
 
     function formatKwhCompact(value) {
       return `${formatCompactNumber(value)} kWh`;
+    }
+
+    function formatOptionalKwh(value) {
+      if (value === null || value === undefined || value === "") return "Needs confirmation";
+      const number = Number(value);
+      return Number.isFinite(number) ? formatKwhCompact(number) : "Needs confirmation";
+    }
+
+    function formatOptionalEuro(value) {
+      if (value === null || value === undefined || value === "") return "Needs confirmation";
+      const number = Number(value);
+      return Number.isFinite(number) ? formatEuro(number) : "Needs confirmation";
     }
 
     function formatEurPerKwh(value) {
@@ -6255,6 +6444,421 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
           .join(", ");
       }
       return String(value);
+    }
+
+    function productCategoryType(value) {
+      const category = String(value || "").toLowerCase();
+      const labels = {
+        ev: "EV",
+        dishwasher: "Dishwasher",
+        washing_machine: "Washing machine",
+        dryer: "Dryer",
+        heat_pump: "Heat pump",
+        fridge: "Fridge"
+      };
+      return labels[category] || titleCaseLabel(category || "Device");
+    }
+
+    function productDeviceKey(type, model) {
+      return `${type || "device"}:${model || "product"}`
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+    }
+
+    function optionalProductNumber(value) {
+      if (value === null || value === undefined || value === "") return null;
+      const number = Number(value);
+      return Number.isFinite(number) ? number : null;
+    }
+
+    function hasProductDraftInput() {
+      return Boolean(
+        byId("productLookupInput")?.value?.trim() ||
+        byId("productProfileText")?.value?.trim()
+      );
+    }
+
+    function productEnergySummary(profile = {}) {
+      const cycleKwh = optionalProductNumber(profile.cycle_kwh);
+      const weeklyKwh = optionalProductNumber(profile.weekly_kwh);
+      const powerKw = optionalProductNumber(profile.power_kw);
+      const runtimeMinutes = optionalProductNumber(profile.runtime_minutes);
+      const parts = [];
+
+      if (cycleKwh !== null) {
+        parts.push(`${formatKwhCompact(cycleKwh)} per run`);
+      } else if (powerKw !== null && runtimeMinutes !== null) {
+        parts.push(`${formatCompactNumber(powerKw)} kW for ${formatCompactNumber(runtimeMinutes, 0)} min`);
+      } else {
+        parts.push("Energy needs confirmation");
+      }
+
+      if (weeklyKwh !== null) parts.push(`${formatKwhCompact(weeklyKwh)} per week`);
+      return parts.join("; ");
+    }
+
+    function productSourceLabel(source) {
+      if (!source) return "Product intake";
+      if (typeof source === "string") return titleCaseLabel(source);
+      return titleCaseLabel(source.type || source.name || source.provider || "Product intake");
+    }
+
+    function productQualityLabel(payload, fallbackConfidence) {
+      const energyQuality = payload?.source_quality?.find((item) => item.field === "energy_per_run");
+      const status = energyQuality?.status ? titleCaseLabel(energyQuality.status) : "Needs confirmation";
+      const confidence = energyQuality?.confidence ?? fallbackConfidence;
+      return confidence !== undefined ? `${status} | ${formatConfidence(confidence)}` : status;
+    }
+
+    function productDeviceFromLookup(payload) {
+      const candidate = payload?.candidates?.[0];
+      if (!candidate) return null;
+      const type = productCategoryType(candidate.category);
+      const model = [candidate.brand, candidate.model].filter(Boolean).join(" ") || "Product candidate";
+      return {
+        key: productDeviceKey(type, model),
+        category: candidate.category || "unknown",
+        type,
+        model,
+        source: productSourceLabel(candidate.source),
+        energy: displaySourceValue(candidate.energy_profile),
+        status: candidate.user_confirmation_required ? "Needs confirmation" : "Ready",
+        planning: candidate.user_confirmation_required
+          ? "Confirm the exact model before forecasts or schedules use this device."
+          : "Ready to use in home planning.",
+        dataQuality: `Lookup | ${formatConfidence(candidate.confidence)}`,
+        rawEnergyProfile: candidate.energy_profile || {},
+        addedFrom: "lookup"
+      };
+    }
+
+    function productDeviceFromProfile(payload) {
+      if (!payload) return null;
+      const product = payload.product || {};
+      const profile = payload.normalized_energy_profile || {};
+      const type = productCategoryType(product.category || byId("productCategoryInput")?.value || "device");
+      const model = product.name || byId("productLookupInput")?.value?.trim() || `${type} profile`;
+      const cycleKwh = optionalProductNumber(profile.cycle_kwh);
+      const flexibleLoad = Boolean(profile.flexible_load);
+      const energyQuality = payload.source_quality?.find((item) => item.field === "energy_per_run");
+
+      return {
+        key: productDeviceKey(type, model),
+        category: product.category || byId("productCategoryInput")?.value || "unknown",
+        type,
+        model,
+        source: productSourceLabel(product.candidate?.source || energyQuality?.source || "Product usage profile"),
+        energy: productEnergySummary(profile),
+        status: cycleKwh === null ? "Needs confirmation" : flexibleLoad ? "Flexible load" : "Baseline load",
+        planning: payload.optimization_preview?.recommendation || "Confirm product details before using this device in planning.",
+        dataQuality: productQualityLabel(payload, payload.source_quality?.[0]?.confidence),
+        productProfilePayload: payload,
+        advice: payload.optimization_preview,
+        rawEnergyProfile: profile,
+        addedFrom: "profile"
+      };
+    }
+
+    function productDeviceFromRegistry(device) {
+      if (!device) return null;
+      const type = device.type_label || productCategoryType(device.category);
+      const energyProfile = device.energy_profile || {};
+      return {
+        key: device.device_id || productDeviceKey(type, device.model || device.name),
+        deviceId: device.device_id,
+        category: device.category || "unknown",
+        type,
+        model: device.model || device.name || `${type} device`,
+        source: device.source || "Home device registry",
+        energy: energyProfile.display || productEnergySummary(energyProfile),
+        status: device.status || device.advice?.status || "Ready to plan",
+        planning: device.planning || device.advice?.recommendation || "Available for whole-home planning.",
+        dataQuality: device.data_quality || titleCaseLabel(device.origin || "Device registry"),
+        advice: device.advice,
+        rawEnergyProfile: {
+          ...energyProfile,
+          flexible_load: device.flexible_load
+        },
+        origin: device.origin || "device_registry",
+        addedFrom: device.origin === "user_added" ? "registry" : "system"
+      };
+    }
+
+    function syncDeviceRegistry(registry) {
+      if (!registry) return;
+      state.deviceRegistry = registry;
+      state.addedHomeDevices = (registry.custom_devices || [])
+        .map(productDeviceFromRegistry)
+        .filter(Boolean);
+      renderProductAddPanel();
+    }
+
+    function homeInventoryDevices(fallbackDevices) {
+      const registryDevices = state.deviceRegistry?.devices;
+      if (Array.isArray(registryDevices) && registryDevices.length) {
+        return registryDevices.map(productDeviceFromRegistry).filter(Boolean);
+      }
+      return [...fallbackDevices, ...state.addedHomeDevices];
+    }
+
+    function parseLocalProductText(text) {
+      const value = String(text || "");
+      const kwhMatch = value.match(/(\d+(?:[.,]\d+)?)\s*kWh\s*(?:\/|\s*per\s*)?(?:cycle|run|wash|eco)?/i);
+      const kwMatch = value.match(/(\d+(?:[.,]\d+)?)\s*kW\b/i);
+      const wattMatch = value.match(/(\d+(?:[.,]\d+)?)\s*W\b/i);
+      const runtimeMatch = value.match(/(\d+(?:[.,]\d+)?)\s*(?:min|minutes|minute)\b/i);
+      const weeklyMatch = value.match(/(\d+(?:[.,]\d+)?)\s*(?:x|times|cycles|runs)\s*(?:\/|\s*per\s*)?(?:week|wk)/i);
+      const powerKw = kwMatch
+        ? Number(kwMatch[1].replace(",", "."))
+        : wattMatch ? Number(wattMatch[1].replace(",", ".")) / 1000 : null;
+      const runtimeMinutes = runtimeMatch ? Number(runtimeMatch[1].replace(",", ".")) : null;
+      const directKwh = kwhMatch ? Number(kwhMatch[1].replace(",", ".")) : null;
+      const cycleKwh = Number.isFinite(directKwh)
+        ? directKwh
+        : Number.isFinite(powerKw) && Number.isFinite(runtimeMinutes) ? powerKw * (runtimeMinutes / 60) : null;
+      return {
+        cycle_kwh: Number.isFinite(cycleKwh) ? Number(cycleKwh.toFixed(3)) : null,
+        power_kw: Number.isFinite(powerKw) ? Number(powerKw.toFixed(3)) : null,
+        runtime_minutes: Number.isFinite(runtimeMinutes) ? runtimeMinutes : 60,
+        cycles_per_week: weeklyMatch ? Number(weeklyMatch[1].replace(",", ".")) : 1
+      };
+    }
+
+    function buildLocalProductProfile(query, category, naturalText) {
+      const profile = parseLocalProductText(`${query || ""} ${naturalText || ""}`);
+      const data = currentHousehold();
+      const smartRate = data.bestRate || 0.18;
+      const currentRate = data.currentRate || 0.35;
+      const cycleKwh = profile.cycle_kwh;
+      const currentCost = cycleKwh === null ? null : cycleKwh * currentRate;
+      const smartCost = cycleKwh === null ? null : cycleKwh * smartRate;
+      const saving = currentCost === null || smartCost === null ? null : Math.max(0, currentCost - smartCost);
+      const flexible = ["ev", "dishwasher", "washing_machine", "dryer", "heat_pump"].includes(category || "");
+      return {
+        profile_id: "local_product_profile",
+        connector_version: "browser-local-preview",
+        product: {
+          name: query || naturalText || "User supplied product",
+          category: category || "unknown",
+          match_status: "local_preview",
+          candidate: null,
+          user_confirmation_required: true
+        },
+        normalized_energy_profile: {
+          ...profile,
+          weekly_kwh: cycleKwh === null ? null : Number((cycleKwh * profile.cycles_per_week).toFixed(3)),
+          flexible_load: flexible,
+          formula: cycleKwh === null
+            ? "needs energy per cycle or power_kw plus runtime_hours"
+            : profile.power_kw === null ? "cycle_kwh from user text" : "energy_kwh = power_kw x runtime_hours"
+        },
+        optimization_preview: {
+          recommendation: cycleKwh === null
+            ? "Confirm kWh per cycle or rated power before this device affects the schedule."
+            : flexible ? "Run during the cheaper suitable window if it fits the household routine." : "Keep this device in the baseline forecast.",
+          current_tariff_cost_eur: currentCost === null ? null : Number(currentCost.toFixed(2)),
+          smart_window_cost_eur: smartCost === null ? null : Number(smartCost.toFixed(2)),
+          estimated_saving_per_run_eur: saving === null ? null : Number(saving.toFixed(2)),
+          smart_window: {
+            interval_start: "2026-06-20T22:00:00+02:00",
+            interval_end: "2026-06-21T01:00:00+02:00",
+            price_eur_per_kwh: smartRate
+          }
+        },
+        ai_planning_context: {
+          allowed_ai_role: "Explain calculation and ask for missing comfort or deadline fields."
+        },
+        source_quality: [{
+          field: "energy_per_run",
+          source: "browser_local_text",
+          status: cycleKwh === null ? "missing_energy_input" : "needs_user_confirmation",
+          unit: "kWh",
+          value: cycleKwh,
+          confidence: cycleKwh === null ? 0.25 : 0.58
+        }]
+      };
+    }
+
+    function isProductDeviceAdded(device) {
+      return Boolean(device && state.addedHomeDevices.some((item) => item.key === device.key));
+    }
+
+    function renderAddedDevicesList() {
+      const list = byId("addedDevicesList");
+      if (!list) return;
+      list.innerHTML = "";
+
+      if (!state.addedHomeDevices.length) {
+        const empty = document.createElement("div");
+        const title = document.createElement("strong");
+        const copy = document.createElement("span");
+        empty.className = "added-device-empty";
+        title.textContent = "No added devices yet";
+        copy.textContent = "Confirmed products will appear here with their home-planning status.";
+        empty.append(title, copy);
+        list.appendChild(empty);
+        return;
+      }
+
+      state.addedHomeDevices.forEach((device) => {
+        const item = document.createElement("article");
+        const icon = document.createElement("span");
+        const main = document.createElement("div");
+        const name = document.createElement("strong");
+        const meta = document.createElement("span");
+        const energy = document.createElement("small");
+
+        item.className = "added-device-item";
+        icon.className = "device-icon";
+        icon.setAttribute("aria-hidden", "true");
+        icon.innerHTML = deviceIconSvg(device.type);
+        main.className = "added-device-main";
+        name.textContent = device.model;
+        meta.textContent = `${device.type} | ${device.status}`;
+        energy.textContent = device.energy;
+        main.append(name, meta, energy);
+        item.append(icon, main);
+        list.appendChild(item);
+      });
+    }
+
+    function renderProductAddPanel() {
+      const button = byId("addProductToHomeButton");
+      const label = button?.querySelector("span");
+      const title = byId("productAddTitle");
+      const status = byId("productAddStatus");
+      const device = state.latestProductDevice;
+      const alreadyAdded = isProductDeviceAdded(device);
+      const hasDraft = hasProductDraftInput();
+
+      if (title) {
+        title.textContent = device
+          ? alreadyAdded ? `${device.model} is in this home` : `${device.model} is ready`
+          : "Ready after lookup or profile";
+      }
+      if (status) {
+        status.textContent = device
+          ? alreadyAdded
+            ? `${device.type} added with ${device.status.toLowerCase()} status.`
+            : state.productAddStatus
+          : hasDraft && state.productAddStatus.includes("changed")
+            ? "Details changed. Add will rebuild the usage profile first."
+            : hasDraft ? "Click Build profile + add to add this product in one step." : state.productAddStatus;
+      }
+      if (button) {
+        button.disabled = (!device && !hasDraft) || alreadyAdded;
+        button.setAttribute("aria-disabled", String(button.disabled));
+      }
+      if (label) label.textContent = alreadyAdded ? "Added" : device ? "Add to home" : "Build profile + add";
+
+      renderAddedDevicesList();
+    }
+
+    function setLatestProductDevice(device, statusText) {
+      state.latestProductDevice = device;
+      state.productAddStatus = statusText || (device
+        ? `${device.type} profile can be added to this home.`
+        : "No product is ready to add yet.");
+      renderProductAddPanel();
+    }
+
+    function markProductInputDirty() {
+      if (!state.latestProductDevice) return;
+      setLatestProductDevice(null, "Product details changed. Run lookup or build a profile again.");
+    }
+
+    function addPayloadForDevice(device) {
+      if (device.productProfilePayload) {
+        return { product_profile: device.productProfilePayload };
+      }
+      return {
+        category: device.category || device.type,
+        model: device.model,
+        energy_profile: device.rawEnergyProfile || {},
+        planning: device.planning
+      };
+    }
+
+    async function addLatestProductToHome() {
+      let device = state.latestProductDevice;
+      const button = byId("addProductToHomeButton");
+      if (!device) {
+        if (!hasProductDraftInput()) {
+          showToast("Enter a product model or usage text first.");
+          return;
+        }
+        button.disabled = true;
+        state.productAddStatus = "Building a usage profile before adding...";
+        renderProductAddPanel();
+        const payload = await buildProductUsageProfile();
+        device = state.latestProductDevice || productDeviceFromProfile(payload);
+        if (!device) {
+          state.productAddStatus = "Could not build a device profile yet.";
+          renderProductAddPanel();
+          return;
+        }
+      }
+      if (isProductDeviceAdded(device)) {
+        renderProductAddPanel();
+        showToast("Device is already in this home.");
+        return;
+      }
+
+      if (window.location.protocol !== "file:") {
+        button.disabled = true;
+        state.productAddStatus = "Adding this device to the home registry...";
+        renderProductAddPanel();
+        try {
+          const response = await fetch("/api/devices", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            },
+            cache: "no-store",
+            body: JSON.stringify(addPayloadForDevice(device))
+          });
+          const payload = await response.json();
+          if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+          syncDeviceRegistry(payload.device_registry);
+          state.latestProductDevice = productDeviceFromRegistry(payload.device);
+          state.productAddStatus = `${payload.device?.model || device.model} is now part of this home.`;
+          state.selectedDeviceIndex = Math.max(0, (payload.device_registry?.devices || []).length - 1);
+          renderProductAddPanel();
+          renderDeviceInventory();
+          renderApplianceSchedule();
+          renderTranslator();
+          showToast(`${payload.device?.model || device.model} added to Home Devices.`);
+          return;
+        } catch (error) {
+          state.addedHomeDevices.push({
+            ...device,
+            addedAt: "Added locally from product intake"
+          });
+          state.productAddStatus = "Added locally; registry sync is unavailable.";
+          state.selectedDeviceIndex = Number.MAX_SAFE_INTEGER;
+          renderProductAddPanel();
+          renderDeviceInventory();
+          renderApplianceSchedule();
+          renderTranslator();
+          showToast(`${device.model} added locally.`);
+          return;
+        } finally {
+          if (!isProductDeviceAdded(state.latestProductDevice)) button.disabled = false;
+        }
+      }
+
+      state.addedHomeDevices.push({
+        ...device,
+        addedAt: "Added from product intake"
+      });
+      state.selectedDeviceIndex = Number.MAX_SAFE_INTEGER;
+      renderProductAddPanel();
+      renderDeviceInventory();
+      renderApplianceSchedule();
+      renderTranslator();
+      showToast(`${device.model} added to home.`);
     }
 
     function defaultEvSources(plan) {
@@ -6634,6 +7238,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const candidate = payload.candidates?.[0];
       if (!candidate) {
         output.textContent = `${payload.match_status || "No match"}\n${payload.next_best_action || "Try a more exact model name."}`;
+        setLatestProductDevice(null, "No model candidate is ready to add.");
         return;
       }
 
@@ -6645,23 +7250,58 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         candidate.user_confirmation_required ? "User confirmation required before bill forecasts." : "Ready for calculations.",
         payload.next_best_action
       ].filter(Boolean).join("\n");
+      setLatestProductDevice(productDeviceFromLookup(payload), "Lookup result can be added to this home.");
+    }
+
+    function renderProductProfileResult(payload) {
+      const output = byId("productProfileResult");
+      if (!output) return;
+      output.textContent = [
+        `${payload.product?.name || "Product profile"}`,
+        `Category: ${titleCaseLabel(payload.product?.category || "unknown")}`,
+        `Energy per run: ${formatOptionalKwh(payload.normalized_energy_profile?.cycle_kwh)}`,
+        `Formula: ${payload.normalized_energy_profile?.formula || "Needs energy input"}`,
+        `Cost now: ${formatOptionalEuro(payload.optimization_preview?.current_tariff_cost_eur)}`,
+        `Smart-window cost: ${formatOptionalEuro(payload.optimization_preview?.smart_window_cost_eur)}`,
+        `Saving per run: ${formatOptionalEuro(payload.optimization_preview?.estimated_saving_per_run_eur)}`,
+        `Recommendation: ${payload.optimization_preview?.recommendation || "Confirm product details first."}`,
+        `AI role: ${payload.ai_planning_context?.allowed_ai_role || "Explain calculation and missing inputs."}`,
+        `Photo path: ${payload.intake_modes?.photo_pipeline_design?.[1] || "OCR text can be passed into this endpoint."}`
+      ].filter(Boolean).join("\n");
+      setLatestProductDevice(productDeviceFromProfile(payload), "Usage profile can be added to this home.");
     }
 
     async function lookupProductModel() {
       const input = byId("productLookupInput");
       const button = byId("productLookupButton");
       const query = input?.value?.trim();
+      const category = byId("productCategoryInput")?.value || "";
       if (!query) {
         showToast("Enter a model name first.");
         return;
       }
       if (window.location.protocol === "file:") {
-        byId("productLookupResult").textContent = "Connect product data to use model lookup.";
+        const payload = {
+          match_status: "local_preview",
+          next_best_action: "Build a usage profile to calculate cost and scheduling advice.",
+          candidates: [{
+            category: category || "unknown",
+            brand: "User",
+            model: query,
+            confidence: 0.42,
+            energy_profile: {},
+            source: { type: "browser_local_preview" },
+            user_confirmation_required: true
+          }]
+        };
+        renderProductLookupResult(payload);
+        showToast("Local lookup preview ready.");
         return;
       }
 
       button.disabled = true;
       byId("productLookupResult").textContent = "Looking up product through connected product data...";
+      setLatestProductDevice(null, "Looking up product data...");
       try {
         const response = await fetch("/api/products/lookup", {
           method: "POST",
@@ -6670,7 +7310,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
             "Content-Type": "application/json"
           },
           cache: "no-store",
-          body: JSON.stringify({ query })
+          body: JSON.stringify({ query, category })
         });
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
@@ -6678,7 +7318,57 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         showToast("Product lookup completed.");
       } catch (error) {
         byId("productLookupResult").textContent = error.message || "Product lookup failed.";
+        setLatestProductDevice(null, "Product lookup failed. Nothing is ready to add.");
         showToast("Product lookup failed.");
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    async function buildProductUsageProfile() {
+      const query = byId("productLookupInput")?.value?.trim();
+      const category = byId("productCategoryInput")?.value || "";
+      const naturalText = byId("productProfileText")?.value?.trim();
+      const button = byId("productProfileButton");
+      if (!query && !naturalText) {
+        showToast("Enter product text first.");
+        return null;
+      }
+      if (window.location.protocol === "file:") {
+        const payload = buildLocalProductProfile(query, category, naturalText);
+        renderProductProfileResult(payload);
+        showToast("Local usage profile ready.");
+        return payload;
+      }
+
+      button.disabled = true;
+      byId("productProfileResult").textContent = "Building usage profile and timing recommendation...";
+      setLatestProductDevice(null, "Building usage profile...");
+      try {
+        const response = await fetch("/api/products/profile", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          cache: "no-store",
+          body: JSON.stringify({
+            query,
+            category,
+            natural_text: naturalText,
+            photo_ocr_text: naturalText
+          })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+        renderProductProfileResult(payload);
+        showToast("Product usage profile ready.");
+        return payload;
+      } catch (error) {
+        byId("productProfileResult").textContent = error.message || "Product profile failed.";
+        setLatestProductDevice(null, "Product profile failed. Nothing is ready to add.");
+        showToast("Product profile failed.");
+        return null;
       } finally {
         button.disabled = false;
       }
@@ -7161,7 +7851,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       if (!grid) return;
       const data = currentHousehold();
       const plan = currentEvPlan();
-      const devices = [
+      const fallbackDevices = [
         {
           type: "EV",
           model: "Family EV crossover",
@@ -7203,6 +7893,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
           planning: "Low-impact flexible load: schedule after model or user confirmation."
         }
       ];
+      const devices = homeInventoryDevices(fallbackDevices);
 
       state.selectedDeviceIndex = Math.min(state.selectedDeviceIndex, devices.length - 1);
       const selected = devices[state.selectedDeviceIndex] || devices[0];
@@ -7266,7 +7957,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         ["Energy profile", selected.energy],
         ["Status", selected.status],
         ["Use in planning", selected.planning],
-        ["Data quality", selected.status === "Needs confirmation" ? "Needs confirmation" : "Telemetry available"]
+        ["Data quality", selected.dataQuality || (selected.status === "Needs confirmation" ? "Needs confirmation" : "Telemetry available")]
       ].forEach(([labelText, valueText]) => {
         const tile = document.createElement("div");
         const tileLabel = document.createElement("span");
@@ -7297,7 +7988,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const dishwasherSaving = Math.max(0, dishwasherKwh * (dishwasherNowRate - dishwasherSmartRate));
       const heatPumpKwh = 2.4;
       const heatPumpAvoidedPeak = Math.max(0, heatPumpKwh * (timelinePriceAt(20) - timelinePriceAt(14)));
-      return [
+      const basePlan = [
         {
           type: "EV",
           title: "EV charging",
@@ -7345,6 +8036,27 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
           copy: "Stored solar is kept for evening loads before exporting. This makes smaller appliances less urgent to micromanage."
         }
       ];
+      const addedItems = state.addedHomeDevices
+        .filter((device) => device.addedFrom !== "system")
+        .map((device) => {
+          const cycleKwh = optionalProductNumber(device.rawEnergyProfile?.cycle_kwh);
+          if (cycleKwh === null) return null;
+          const saving = Math.max(0, cycleKwh * (Math.max(data.currentRate, timelinePriceAt(20)) - Math.min(data.bestRate, timelinePriceAt(22))));
+          const smartStart = device.advice?.smart_window?.interval_start;
+          return {
+            type: device.type,
+            title: device.model,
+            priority: device.rawEnergyProfile?.flexible_load === false ? "Baseline load" : "Added flexible load",
+            status: device.rawEnergyProfile?.flexible_load === false ? "Included in forecast" : "Ask before scheduling",
+            window: smartStart ? `Cheapest window around ${formatTimeLabel(smartStart)}` : "Use the low-price window if convenient",
+            energy: formatKwhCompact(cycleKwh),
+            saving: formatOptionalEuro(device.advice?.estimated_saving_per_run_eur ?? saving),
+            comfort: "Use only after the household confirms deadline, noise, and convenience preferences.",
+            copy: device.planning || "This user-added device is now available to the whole-home planner."
+          };
+        })
+        .filter(Boolean);
+      return [...basePlan, ...addedItems];
     }
 
     function renderApplianceSchedule() {
@@ -7525,7 +8237,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const routes = buildEnergyRoutingPlan();
       const routeValue = (key) => routes.find((route) => route.key === key)?.value || 0;
 
-      byId("decisionBoardTitle").textContent = "The Smart Energy Companion";
+      byId("decisionBoardTitle").textContent = "Every kWh, routed to its best use.";
       byId("adviceSavings").textContent = formatEuro(plan.savingsEur);
       byId("adviceSmartCost").textContent = formatEuro(plan.smartCostEur);
       byId("adviceReadyBy").textContent = formatTimeLabel(finishAt);
@@ -7854,26 +8566,31 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
     function renderTranslator() {
       const chips = byId("translatorChips");
       chips.innerHTML = "";
-      translatorPresets.forEach((preset, index) => {
+      const presets = translatorPresetOptions();
+      state.translatorPreset = Math.min(state.translatorPreset, presets.length - 1);
+      presets.forEach((preset, index) => {
         const button = document.createElement("button");
         button.className = `chip-button${index === state.translatorPreset ? " active" : ""}`;
         button.type = "button";
         button.textContent = preset.label;
         button.addEventListener("click", () => {
           state.translatorPreset = index;
+          byId("kwhInput").value = formatCompactNumber(preset.kwh, 2);
           renderTranslator();
         });
         chips.appendChild(button);
       });
 
       const data = currentHousehold();
-      const preset = translatorPresets[state.translatorPreset];
+      const preset = presets[state.translatorPreset] || presets[0];
       const kwh = Number(byId("kwhInput").value) || 0;
       byId("costNow").textContent = formatEuro(kwh * data.currentRate);
       byId("costSmart").textContent = formatEuro(kwh * data.bestRate);
       byId("equivLabel").textContent = preset.unit;
-      const equivalent = preset.label === "EV range" ? kwh / preset.kwh : kwh / preset.kwh;
-      byId("equivValue").textContent = preset.label === "EV range" ? `${Math.round(equivalent)} km` : equivalent.toFixed(1);
+      const selectedRuns = preset.kwh ? kwh / preset.kwh : 0;
+      byId("equivValue").textContent = Math.abs(selectedRuns - 1) < 0.05
+        ? preset.value
+        : `${formatCompactNumber(selectedRuns, 1)} x ${preset.value}`;
     }
 
     function renderComparison() {
@@ -7982,6 +8699,28 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         <p>${selected.body}</p>
         <ul>${selected.bullets.map((bullet) => `<li>${bullet}</li>`).join("")}</ul>
       `;
+    }
+
+    function translatorPresetOptions() {
+      const dynamic = state.addedHomeDevices
+        .map((device) => {
+          const cycleKwh = optionalProductNumber(device.rawEnergyProfile?.cycle_kwh);
+          if (cycleKwh === null) return null;
+          return {
+            label: device.model.length > 18 ? `${device.type} added` : device.model,
+            kwh: cycleKwh,
+            unit: "Selected device",
+            value: device.model
+          };
+        })
+        .filter(Boolean);
+      const seen = new Set();
+      return [...dynamic, ...translatorPresets].filter((preset) => {
+        const key = `${preset.label}:${preset.kwh}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
     }
 
     function detectCompanionIntent(question) {
@@ -8229,6 +8968,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         if (!plan) throw new Error("Missing EV recommendation fields");
 
         applyApiEvPlan(plan);
+        syncDeviceRegistry(payload.home_devices);
         setApiStatus("live", "Connected data", buildApiSourceNote(plan));
         updateBackendStateFromPlan(plan, {
           method: "GET",
@@ -8376,6 +9116,11 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
     byId("backendRecalculate").addEventListener("click", recalculateEvRecommendation);
     byId("refreshConnectors").addEventListener("click", () => refreshDataSources());
     byId("productLookupButton").addEventListener("click", lookupProductModel);
+    byId("productProfileButton").addEventListener("click", buildProductUsageProfile);
+    byId("addProductToHomeButton").addEventListener("click", addLatestProductToHome);
+    byId("productLookupInput").addEventListener("input", markProductInputDirty);
+    byId("productCategoryInput").addEventListener("change", markProductInputDirty);
+    byId("productProfileText").addEventListener("input", markProductInputDirty);
     byId("contractParserButton").addEventListener("click", parseContractSnippet);
     let suppressCompanionFabClick = false;
     byId("openCompanion").addEventListener("click", () => {
@@ -8383,7 +9128,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         suppressCompanionFabClick = false;
         return;
       }
-      openCompanion();
+      toggleCompanion();
     });
     (() => {
       const fab = byId("openCompanion");
@@ -8468,6 +9213,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       });
     });
 
+    renderProductAddPanel();
     updateComputedSections();
     loadEnergyState();
     refreshDataSources({ silent: true });

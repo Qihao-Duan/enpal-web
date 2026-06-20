@@ -138,7 +138,9 @@ lib/
 | `ContractService` | Parsed contract fields, tariff rules, fixed fees, feed-in value, user confirmation. | Public market price fetching. | Promote `parseContractText` output into a typed contract result. |
 | `ConnectorRetrievalService` | Connector registry, source refresh, normalized signals, provider health. | Optimizing plans or assistant prose. | Split connector status and refresh logic from lookup/parser adapters. |
 | `ForecastService` | PV, load, weather, price horizon, confidence, freshness. | Final customer price without tariff normalization. | Keep fixture forecast shape but add validation and stale-state labels. |
-| `ProductRecognitionService` | Product/model lookup, standard energy labels, confirmation requirement. | Treating labels as metered truth. | Preserve `user_confirmation_required` in every response. |
+| `ProductRecognitionService` | Product/model lookup, natural-text intake, OCR label text, standard energy labels, confirmation requirement. | Treating labels as metered truth. | Preserve `user_confirmation_required` in every response. |
+| `DeviceRegistryService` | Confirmed household devices, product-profile promotion, device ids, user-added registry. | Raw lookup candidates or live telemetry. | Store confirmed profiles in `data/runtime/home-devices.json`. |
+| `ApplianceTelemetryService` | Read-only same-day appliance interval kWh, daily summaries, optimizer input snapshots. | Device control or tariff decisions. | Store actual readings separately from estimates and label freshness. |
 | `PowerCalculationService` | Convert kW/W and intervals into kWh. | Tariff policy or AI explanations. | Isolate interval power math from recommendation assembly. |
 | `TariffCalculationService` | Final import/export prices by interval from contract rules. | Public market prices as customer prices. | Make final-price provenance explicit in every price interval. |
 | `CostCalculationService` | Cost, bill forecast, base fee allocation, export credit. | Control decisions. | Keep bill forecast deterministic and auditable. |
@@ -160,6 +162,8 @@ Core entities:
 | `TariffContract` | Final import price, low-price window, feed-in value, fixed fees, source documents, confirmation state. |
 | `ForecastHorizon` | 24-hour interval horizon, granularity, PV forecast, load forecast, final customer price, confidence. |
 | `DeviceState` | Observed time, EV required energy and deadline, wallbox limits, battery SOC, heat pump state, smart meter state. |
+| `HomeDevice` | Confirmed home device id, category, model, energy profile, planning status, data quality. |
+| `ApplianceTelemetryReading` | Same-day per-device interval kWh, power, source adapter, confidence, flexible-load flag. |
 | `EvChargingRecommendation` | Decision, request, naive plan, smart plan, savings, trust, audit steps, calculation metadata. |
 | `SourceQuality` | Field, source, status, unit, value, timestamp or interval, confidence. |
 | `ConnectorStatus` | Connector id, mode, status, auth requirement, last observed time, output fields. |
@@ -188,8 +192,15 @@ Current routes to preserve:
 | `/api/connectors/status` | GET | Connector retrieval service | Connector registry, mode, auth requirement, freshness, confidence. |
 | `/api/connectors/refresh` | POST | Connector retrieval service | Normalized signals for calculation input. |
 | `/api/products/lookup` | POST | Product recognition service | Candidate products and user-confirmation requirement. |
+| `/api/products/profile` | POST | Product recognition service | Normalize model/type/OCR/manual power fields into kWh formula, cost preview, and usage recommendation. |
+| `/api/devices` | GET | Device registry service | Return system and user-added devices for Home Devices and schedule panels. |
+| `/api/devices` | POST | Device registry service | Promote a confirmed product profile into the household device registry. |
 | `/api/contracts/parse` | POST | Contract service | Extracted tariff fields and confidence by field. |
 | `/api/assistant/ask` | POST | AI orchestrator | Grounded answer, prompt contract, evidence, limitations. |
+| `/api/appliance-telemetry/today` | GET | Appliance telemetry service | Today's actual per-device kWh, flexible load total, source quality, optimizer inputs. |
+| `/api/appliance-telemetry/readings` | POST | Appliance telemetry service | Ingest one or more read-only appliance interval readings into the runtime store. |
+
+`/api/products/profile` is intentionally the single product-intake route for the prototype. The UI may pass exact fields (`cycle_kwh`, `power_kw`, `runtime_minutes`), natural language (`natural_text`), or scan-derived text (`photo_ocr_text`). A production camera path should run QR/barcode decoding and OCR/vision extraction before calling the same route, then require user confirmation before the profile affects bill forecasts or schedules.
 
 Recommended next routes:
 

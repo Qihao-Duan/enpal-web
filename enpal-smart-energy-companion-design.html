@@ -724,7 +724,7 @@
           一个面向德国普通家庭的 AI 能源助手，把太阳能、电池、EV、热泵、智能电表、动态电价和合同信息，翻译成用户能立刻理解、行动并信任的家庭能源调度建议。
         </p>
         <div class="meta">
-          <span class="pill">核心场景: 每度电最佳去向</span>
+          <span class="pill">Core slogan: Every kWh, routed to its best use.</span>
           <span class="pill">国家配置: 德国</span>
           <span class="pill">目标: use · store · sell · buy</span>
         </div>
@@ -771,7 +771,7 @@
         </div>
         <div class="card amber">
           <h3>冠军记忆点</h3>
-          <p class="muted">从“便宜时段充电”升级为“每度电最佳路由”，每个数字都附带 Trust Receipt。</p>
+          <p class="muted">从“便宜时段充电”升级为 “Every kWh, routed to its best use.”，每个数字都附带 Trust Receipt。</p>
         </div>
       </div>
       <h3>快速目录</h3>
@@ -813,7 +813,7 @@
         这不是一个传统能源仪表盘，而是一个家庭能源决策层。产品不要求用户理解工程术语，而是直接回答三个问题：
       </p>
       <div class="callout">
-        <strong>最新 slogan:</strong> Not "charge when grid is cheap", but route every kWh to its highest-value use: use, store, sell, or buy from the grid.
+        <strong>最新 slogan:</strong> Every kWh, routed to its best use.
       </div>
       <div class="grid">
         <div class="card green">
@@ -988,7 +988,7 @@
     <section class="section" id="ui-content-blueprint">
       <h2>6. 新版 UI 内容蓝图：Decision Workbench</h2>
       <p>
-        结合 UI/UX skill 的数据产品原则和 TypeUI 的 dual-sidebar application shell 模板，新版内容不做营销式首页，而做一个安静、密集、可审计的家庭能源工作台。用户第一眼看到“今天该做什么”，第二眼看到每度电为什么被分配到 use / store / sell / buy，第三眼可以打开 Trust Receipt 审计每个数字。
+        结合 UI/UX skill 的数据产品原则和 TypeUI 的 dual-sidebar application shell 模板，新版内容不做营销式首页，而做一个安静、密集、可审计的家庭能源工作台。用户第一眼看到“今天该做什么”，第二眼看到每一度电为什么被分配到 use / store / sell / buy，第三眼可以打开 Trust Receipt 审计每个数字。
       </p>
       <div class="callout">
         <strong>模板转译:</strong> TypeUI 的左侧栏用于能源对象与页面导航，中间主区域用于实时决策和时间线，右侧栏用于用户约束、设备状态和可信收据。移动端折叠为顶部 household switcher + 主决策卡 + 可展开的 Trust bottom sheet。
@@ -1159,7 +1159,7 @@
     </section>
 
     <section class="section" id="optimizer">
-      <h2>7. 实时计算引擎与每度电路由优化</h2>
+      <h2>7. 实时计算引擎与每一度电路由优化</h2>
       <p>
         功耗、电费、节省金额和调度建议必须由后端数学计算引擎实时计算，AI 只负责解释结果。每次设备状态、电价、天气预测、合同规则、用户 deadline 或电池状态改变时，后端重新计算 recommendation，并写入 calculation audit。
       </p>
@@ -1182,7 +1182,7 @@ DeviceUse[i,t] =
   设备 i 在时间片 t 的用电量 kWh</div>
         </div>
         <div class="card amber">
-          <h3>每度电的真实成本</h3>
+          <h3>每一度电的真实成本</h3>
           <div class="formula">Solar_direct_cost[t] = P_sell[t]
 
 Solar_battery_cost[t] =
@@ -1687,6 +1687,12 @@ day_cost = sum(interval_cost[t]) + daily_base_fee</div>
       <div class="callout">
         <strong>产品原则:</strong> 不承诺“自动精确识别所有设备”。更可信的承诺是：Start with a quick estimate. Scan your bill or energy label to improve accuracy. Connect live devices when you want real-time recommendations.
       </div>
+      <div class="callout">
+        <strong>新增产品录入接口:</strong> <code>POST /api/products/profile</code> 接收型号、设备类别、自然语言描述、OCR 后的 label text，以及用户确认的功率/每周期耗电。后端会输出 normalized energy profile、公式、当前电价成本、智能时间窗成本、单次节省、AI prompt facts 和 source quality。关键规则是：没有功耗证据时显示 <code>missing_energy_input</code>，不把未知值当作 0 kWh。
+      </div>
+      <div class="callout">
+        <strong>确认并添加设备:</strong> lookup/profile 只是候选和预览；用户点击 <code>Add to home</code> 后，前端调用 <code>POST /api/devices</code>，把确认后的 profile 存入 <code>data/runtime/home-devices.json</code>。Home Devices 面板和 Whole-home schedule details 从这个 registry 读取设备。缺少 kWh 的设备可以出现在 inventory，但不会进入节省金额和调度建议。
+      </div>
 
       <h3>产品型号、能效标签与扫描识别</h3>
       <p>
@@ -1725,9 +1731,63 @@ day_cost = sum(interval_cost[t]) + daily_base_fee</div>
         </div>
         <div class="timeline-item">
           <div class="time">04</div>
+          <div><strong>Add to home</strong>：用户确认后调用 <code>POST /api/devices</code>，设备进入家庭设备清单和调度候选。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="time">05</div>
           <div><strong>Upgrade with actuals</strong>：如果用户接入 smart plug/Home Assistant，则用实测 kWh 替换型号估算。</div>
         </div>
       </div>
+      <div class="table-scroll">
+        <table class="wide-table">
+          <thead>
+            <tr>
+              <th>用户入口</th>
+              <th>后端字段</th>
+              <th>计算用途</th>
+              <th>可信度处理</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>输入型号和类别</td>
+              <td><code>query</code>, <code>category</code></td>
+              <td>检索产品候选项和默认能耗档案。</td>
+              <td>候选结果必须用户确认，不能直接当作实测。</td>
+            </tr>
+            <tr>
+              <td>自然语言输入</td>
+              <td><code>natural_text</code></td>
+              <td>解析 “1.05 kWh per cycle / 150 min / 5 cycles per week”。</td>
+              <td>作为用户提供证据，进入 source quality。</td>
+            </tr>
+            <tr>
+              <td>照片识别</td>
+              <td><code>photo_ocr_text</code></td>
+              <td>先由 QR/条码/OCR/vision 抽取品牌、型号、功率、kWh/cycle。</td>
+              <td>显示“scan-derived”，要求用户确认关键数字。</td>
+            </tr>
+            <tr>
+              <td>手动补充功率</td>
+              <td><code>product_details.power_kw</code>, <code>runtime_minutes</code></td>
+              <td><code>energy_kwh = power_kw x runtime_hours</code>，再乘以实时电价。</td>
+              <td>若用户确认，标记为 user_confirmed。</td>
+            </tr>
+            <tr>
+              <td>没有功耗证据</td>
+              <td><code>missing_energy_input</code></td>
+              <td>不进入节省计算，只询问缺失字段。</td>
+              <td>避免把未知设备显示成 0 成本。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="formula">
+        <strong>调度公式：</strong> single_run_cost = cycle_kwh × tariff_eur_per_kwh；如果只有额定功率，则 cycle_kwh = power_kw × runtime_hours。AI 可以解释这个公式、询问 deadline/noise/comfort preference，并把设备加入 whole-home schedule；AI 不允许凭空发明型号功耗或实时设备状态。
+      </div>
+      <p>
+        可检索来源的优先级：1) EU energy label / EPREL 或 label QR；2) 品牌说明书和技术数据表；3) 零售商规格页；4) 用户拍照 OCR；5) 用户手动确认。照片引擎的设计优先顺序是先读 QR/条码，再 OCR，最后用 vision model 判断字段位置，减少纯视觉猜测。
+      </p>
 
       <h3>合同扫描与更好的人机交互</h3>
       <p>
@@ -1928,11 +1988,14 @@ contract_documents
 contract_extracted_fields
 tariff_rules
 meter_readings
+appliance_telemetry_readings
+appliance_daily_summaries
 device_registry
 device_states
 power_intervals
 price_intervals
 calculation_runs
+optimizer_input_snapshots
 product_models
 product_usage_assumptions
 source_credentials
@@ -1947,6 +2010,21 @@ recommendations
 calculation_audits</div>
       <p class="muted">
         合同 PDF、账单 PDF、energy label 照片和产品铭牌照片可放 object storage。合同条款片段可进入 vector store，用于回答“我的合同里写了什么”。产品型号和 EPREL 结果进入 product_models，但所有产品功耗都必须带来源类型：standard label、user confirmed、smart plug measured 或 inferred。
+      </p>
+      <div class="callout">
+        <strong>实时用电数据设计逻辑:</strong> 后端应把当天每个可识别用电器的 interval kWh 写入 <code>appliance_telemetry_readings</code>，按天汇总到 <code>appliance_daily_summaries</code>，再生成 <code>optimizer_input_snapshots</code>。优化器优先使用 actual telemetry，其次使用 smart plug measured profile，再退回 user-confirmed usage 和 product label estimate。
+      </div>
+      <div class="formula">POST /api/appliance-telemetry/readings
+  -> validate source, consent, interval, kWh
+  -> save appliance_telemetry_readings
+  -> update appliance_daily_summaries
+  -> build optimizer_inputs.actual_device_energy_kwh
+  -> recompute use/store/sell/buy routing
+
+GET /api/appliance-telemetry/today
+  -> per-device kWh, flexible-load kWh, source quality, optimizer input snapshot</div>
+      <p class="muted">
+        重要边界：实时读取是 read-only telemetry，不等于自动控制设备。没有设备级读数时，系统只能说“估算”或“未连接”，不能把总电表数据强行拆成精确 appliance usage。
       </p>
     </section>
 
@@ -2080,11 +2158,11 @@ show_source_audit()</div>
         </div>
         <div class="card">
           <h3>Originality</h3>
-          <p class="muted">从“便宜时段充电”升级为“每度电最佳去向”，覆盖太阳能自用、卖电、电池和动态市电。</p>
+          <p class="muted">从“便宜时段充电”升级为 “Every kWh, routed to its best use.”，覆盖太阳能自用、卖电、电池和动态市电。</p>
         </div>
       </div>
       <div class="callout">
-        <strong>最终 pitch:</strong> Enpal Smart Energy Companion routes every kWh to its highest-value use: use solar, store it, sell it, or buy cheaper grid power, with a trust receipt for every number.
+        <strong>最终 pitch:</strong> Every kWh, routed to its best use: use solar, store it, sell it, or wait for cheaper grid power, with a Trust Receipt for every number.
       </div>
     </section>
 

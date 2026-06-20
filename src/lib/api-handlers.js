@@ -9,6 +9,15 @@ const {
   loadEnergyRoutingPlan
 } = require("./energy-routing");
 const {
+  getTodayApplianceTelemetry,
+  ingestApplianceTelemetry
+} = require("./appliance-telemetry-store");
+const {
+  addHomeDevice,
+  listHomeDevices
+} = require("./home-device-store");
+const {
+  buildProductUsageProfile,
   lookupProduct,
   makeConnectorStatus,
   parseContractText,
@@ -73,7 +82,33 @@ function createApiHandlers(rootDir) {
 
       if (req.method === "GET" && url.pathname === "/api/energy-routing/plan") {
         const routingPlan = loadEnergyRoutingPlan(rootDir);
-        return sendJson(res, 200, calculateEnergyRouting(fixtures, { routingPlan }));
+        const applianceTelemetry = getTodayApplianceTelemetry(rootDir, fixtures, {
+          date: url.searchParams.get("date") || undefined
+        });
+        return sendJson(res, 200, calculateEnergyRouting(fixtures, {
+          routingPlan,
+          applianceTelemetry
+        }));
+      }
+
+      if (req.method === "GET" && url.pathname === "/api/appliance-telemetry/today") {
+        return sendJson(res, 200, getTodayApplianceTelemetry(rootDir, fixtures, {
+          date: url.searchParams.get("date") || undefined
+        }));
+      }
+
+      if (req.method === "POST" && url.pathname === "/api/appliance-telemetry/readings") {
+        const body = await readRequestJson(req);
+        return sendJson(res, 200, ingestApplianceTelemetry(rootDir, fixtures, body));
+      }
+
+      if (req.method === "GET" && url.pathname === "/api/devices") {
+        return sendJson(res, 200, listHomeDevices(rootDir, fixtures));
+      }
+
+      if (req.method === "POST" && url.pathname === "/api/devices") {
+        const body = await readRequestJson(req);
+        return sendJson(res, 200, addHomeDevice(rootDir, fixtures, body));
       }
 
       if (req.method === "GET" && url.pathname === "/api/connectors/status") {
@@ -87,6 +122,11 @@ function createApiHandlers(rootDir) {
       if (req.method === "POST" && url.pathname === "/api/products/lookup") {
         const body = await readRequestJson(req);
         return sendJson(res, 200, lookupProduct(fixtures, body));
+      }
+
+      if (req.method === "POST" && url.pathname === "/api/products/profile") {
+        const body = await readRequestJson(req);
+        return sendJson(res, 200, buildProductUsageProfile(fixtures, body));
       }
 
       if (req.method === "POST" && url.pathname === "/api/contracts/parse") {
@@ -104,13 +144,20 @@ function createApiHandlers(rootDir) {
         const recommendation = calculateEvRecommendation(fixtures);
         const connectorStatus = makeConnectorStatus(fixtures);
         const routingPlan = loadEnergyRoutingPlan(rootDir);
-        const energyRouting = calculateEnergyRouting(fixtures, { routingPlan });
+        const applianceTelemetry = getTodayApplianceTelemetry(rootDir, fixtures);
+        const homeDevices = listHomeDevices(rootDir, fixtures);
+        const energyRouting = calculateEnergyRouting(fixtures, {
+          routingPlan,
+          applianceTelemetry
+        });
         return sendJson(res, 200, {
           household: fixtures.household,
           contract: fixtures.contract,
           forecast: fixtures.forecast,
           device_state: fixtures.deviceState,
+          appliance_telemetry_today: applianceTelemetry,
           connectors: connectorStatus,
+          home_devices: homeDevices,
           recommendation,
           energy_routing: energyRouting,
           calculation: recommendation.calculation,

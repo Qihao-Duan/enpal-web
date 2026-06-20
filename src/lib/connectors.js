@@ -243,6 +243,254 @@ function lookupProduct(fixtures, request = {}) {
   };
 }
 
+function extractProductHints(text) {
+  const value = String(text || "");
+  const kwMatch = value.match(/(\d+(?:[.,]\d+)?)\s*kW\b/i);
+  const wattMatch = value.match(/(\d+(?:[.,]\d+)?)\s*W\b/i);
+  const cycleMatch = value.match(/(\d+(?:[.,]\d+)?)\s*kWh\s*(?:\/|\s*per\s*)?(?:cycle|run|wash|eco)/i);
+  const runtimeMatch = value.match(/(\d+(?:[.,]\d+)?)\s*(?:min|minutes|minute)\b/i);
+  const weeklyMatch = value.match(/(\d+(?:[.,]\d+)?)\s*(?:x|times|cycles|runs)\s*(?:\/|\s*per\s*)?(?:week|wk)/i);
+
+  return {
+    power_kw: kwMatch ? parseLocalizedNumber(kwMatch[1]) : (
+      wattMatch ? round(parseLocalizedNumber(wattMatch[1]) / 1000, 3) : null
+    ),
+    cycle_kwh: cycleMatch ? parseLocalizedNumber(cycleMatch[1]) : null,
+    runtime_minutes: runtimeMatch ? parseLocalizedNumber(runtimeMatch[1]) : null,
+    cycles_per_week: weeklyMatch ? parseLocalizedNumber(weeklyMatch[1]) : null
+  };
+}
+
+function firstNumber(...values) {
+  for (const value of values) {
+    const number = parseLocalizedNumber(value);
+    if (Number.isFinite(number) && number >= 0) return number;
+  }
+  return null;
+}
+
+function inferCategoryFromText(text, fallback = "") {
+  const normalized = normalizeText(text);
+  if (fallback) return fallback;
+  if (normalized.includes("dish")) return "dishwasher";
+  if (normalized.includes("wash")) return "washing_machine";
+  if (normalized.includes("dryer")) return "dryer";
+  if (normalized.includes("heat pump") || normalized.includes("heizung") || normalized.includes("warmepumpe")) return "heat_pump";
+  if (normalized.includes("ev") || normalized.includes("vehicle") || normalized.includes("car")) return "ev";
+  if (normalized.includes("fridge") || normalized.includes("freezer")) return "fridge";
+  return "unknown";
+}
+
+function energyProfileCycleKwh(profile) {
+  if (!profile) return null;
+  return firstNumber(
+    profile.typical_cycle_kwh,
+    profile.eco_cycle_kwh,
+    profile.recommended_home_charge_kwh
+  );
+}
+
+function categoryDefaultRuntimeMinutes(category) {
+  if (category === "dishwasher") return 150;
+  if (category === "washing_machine") return 180;
+  if (category === "dryer") return 120;
+  if (category === "heat_pump") return 120;
+  if (category === "ev") return 180;
+  return 60;
+}
+
+function formatTimeFromIso(timestamp) {
+  const match = String(timestamp || "").match(/T(\d{2}):(\d{2})/);
+  return match ? `${match[1]}:${match[2]}` : "the cheapest available window";
+}
+
+function cheapestForecastWindow(fixtures) {
+  const hours = fixtures.forecast.hours || [];
+  const cheapest = hours.reduce((best, hour) => {
+    if (!best) return hour;
+    return Number(hour.grid_import_price_eur_per_kwh) < Number(best.grid_import_price_eur_per_kwh)
+      ? hour
+      : best;
+  }, null);
+
+  return {
+    interval_start: cheapest?.hour_start || fixtures.forecast.horizon?.start,
+    interval_end: cheapest ? fixtures.forecast.hours[hours.indexOf(cheapest) + 1]?.hour_start || fixtures.forecast.horizon?.end : fixtures.forecast.horizon?.end,
+    price_eur_per_kwh: cheapest?.grid_import_price_eur_per_kwh || fixtures.forecast.summary?.lowest_import_price_eur_per_kwh || fixtures.contract.price_rules.current_import_price_eur_per_kwh,
+    source: "data/forecasts-24h.json"
+  };
+}
+
+function buildProductUsageProfile(fixtures, request = {}) {
+  const sourceText = [
+    request.query,
+    request.model_text,
+    request.natural_text,
+    request.label_text,
+    request.photo_ocr_text,
+    request.description
+  ].filter(Boolean).join(" ");
+  const manual = request.product_details || request.manual_profile || {};
+  const category = inferCategoryFromText(sourceText, request.category ? String(request.category).trim() : "");
+  const lookup = sourceText.trim()
+    ? lookupProduct(fixtures, { query: sourceText, category: category === "unknown" ? "" : category })
+    : { match_status: "manual_only", candidates: [] };
+  const topCandidate = lookup.candidates?.[0] || null;
+  const candidate = topCandidate && (category === "unknown" || topCandidate.category === category)
+    ? topCandidate
+    : null;
+  const candidateProfile = candidate?.energy_profile || {};
+  const hints = extractProductHints(sourceText);
+
+  const runtimeMinutes = firstNumber(
+    manual.runtime_minutes,
+    request.runtime_minutes,
+    hints.runtime_minutes,
+    categoryDefaultRuntimeMinutes(category)
+  );
+  const runtimeHours = runtimeMinutes / 60;
+  const powerKw = firstNumber(
+    manual.power_kw,
+    request.power_kw,
+    hints.power_kw,
+    manual.power_w !== undefined ? Number(manual.power_w) / 1000 : undefined
+  );
+  const cycleKwh = firstNumber(
+    manual.cycle_kwh,
+    request.cycle_kwh,
+    hints.cycle_kwh,
+    energyProfileCycleKwh(candidateProfile),
+    powerKw !== null ? powerKw * runtimeHours : undefined
+  );
+  const energyKnown = cycleKwh !== null;
+  const cyclesPerWeek = firstNumber(manual.cycles_per_week, request.cycles_per_week, hints.cycles_per_week, 1);
+  const flexibleLoad = manual.flexible_load !== undefined
+    ? Boolean(manual.flexible_load)
+    : candidateProfile.flexible_load !== undefined ? Boolean(candidateProfile.flexible_load) : (
+      ["dishwasher", "washing_machine", "dryer", "ev", "heat_pump"].includes(category)
+    );
+  const currentPrice = fixtures.contract.price_rules.current_import_price_eur_per_kwh;
+  const smartWindow = cheapestForecastWindow(fixtures);
+  const immediateCost = energyKnown ? cycleKwh * currentPrice : null;
+  const smartCost = energyKnown ? cycleKwh * smartWindow.price_eur_per_kwh : null;
+  const saving = energyKnown ? Math.max(0, immediateCost - smartCost) : null;
+  const confidenceParts = [
+    candidate?.confidence || 0,
+    manual.cycle_kwh || manual.power_kw || manual.power_w ? 0.9 : 0,
+    request.label_text || request.photo_ocr_text ? 0.72 : 0,
+    sourceText ? 0.62 : 0
+  ].filter(Boolean);
+  const confidence = confidenceParts.length
+    ? round(confidenceParts.reduce((sum, value) => sum + value, 0) / confidenceParts.length, 2)
+    : 0.45;
+  const productName = [
+    candidate?.brand,
+    candidate?.model
+  ].filter(Boolean).join(" ") || String(request.model_text || request.query || "User supplied product").trim();
+
+  return {
+    profile_id: `profile_${Date.now()}`,
+    connector_version: CONNECTOR_VERSION,
+    intake_modes: {
+      accepted_now: ["natural_text", "manual_power_fields", "ocr_text_from_photo"],
+      photo_pipeline_design: [
+        "Capture label or model plate photo in the app.",
+        "Run OCR/vision extraction to obtain model, category, rated W/kW, kWh per cycle, QR/barcode text.",
+        "Call this endpoint with label_text/photo_ocr_text plus any user-confirmed fields.",
+        "Ask the user to confirm before the value affects bill forecasts."
+      ]
+    },
+    product: {
+      name: productName,
+      category,
+      match_status: candidate ? lookup.match_status : (
+        lookup.match_status === "candidate_found" ? "no_category_match" : lookup.match_status
+      ),
+      candidate: candidate ? {
+        product_id: candidate.product_id,
+        brand: candidate.brand,
+        model: candidate.model,
+        source: candidate.source
+      } : null,
+      user_confirmation_required: true
+    },
+    normalized_energy_profile: {
+      cycle_kwh: energyKnown ? round(cycleKwh, 3) : null,
+      power_kw: powerKw === null ? null : round(powerKw, 3),
+      runtime_minutes: round(runtimeMinutes, 1),
+      cycles_per_week: round(cyclesPerWeek, 2),
+      weekly_kwh: energyKnown ? round(cycleKwh * cyclesPerWeek, 3) : null,
+      flexible_load: flexibleLoad,
+      formula: !energyKnown
+        ? "needs energy per cycle or power_kw plus runtime_hours"
+        : powerKw === null
+        ? "cycle_kwh from product label/catalog/user input"
+        : "energy_kwh = power_kw x runtime_hours"
+    },
+    optimization_preview: {
+      recommendation: !energyKnown
+        ? "Confirm kWh per cycle, rated W/kW, or a real meter reading before this product affects the schedule."
+        : flexibleLoad
+        ? `Run during the cheapest suitable window around ${formatTimeFromIso(smartWindow.interval_start)} if it does not conflict with the household routine.`
+        : "Keep this device in the baseline forecast; do not move it only for price optimization.",
+      current_tariff_cost_eur: energyKnown ? round(immediateCost, 2) : null,
+      smart_window_cost_eur: energyKnown ? round(smartCost, 2) : null,
+      estimated_saving_per_run_eur: energyKnown ? round(saving, 2) : null,
+      smart_window: smartWindow,
+      user_experience_rule: flexibleLoad
+        ? "Ask for a latest-finish time and noise/comfort preference before scheduling."
+        : "Avoid nudging the user for always-on or comfort-critical loads."
+    },
+    ai_planning_context: {
+      allowed_ai_role: "Explain the backend calculation, ask for missing comfort/deadline fields, and compare timing options.",
+      forbidden_ai_role: "Do not invent product specs, prices, or device state. Do not claim photo recognition is exact without user confirmation.",
+      prompt_facts: [
+        `Product: ${productName}`,
+        `Category: ${category}`,
+        energyKnown ? `Energy per run: ${round(cycleKwh, 3)} kWh` : "Energy per run: needs confirmation",
+        energyKnown ? `Current cost: ${round(immediateCost, 2)} EUR` : "Current cost: not calculated until energy is confirmed",
+        energyKnown ? `Smart-window cost: ${round(smartCost, 2)} EUR` : "Smart-window cost: not calculated until energy is confirmed",
+        `Flexible load: ${flexibleLoad ? "yes" : "no"}`
+      ]
+    },
+    source_quality: [
+      {
+        field: "product_match",
+        source: candidate?.source?.type || "user_supplied_text",
+        status: candidate ? "candidate_found" : "manual_or_ocr_text",
+        unit: "match",
+        value: lookup.match_status,
+        confidence
+      },
+      {
+        field: "energy_per_run",
+        source: manual.cycle_kwh || manual.power_kw || manual.power_w
+          ? "user_confirmed_input"
+          : candidate ? "data/product-catalog.json" : "parsed_text_estimate",
+        status: !energyKnown
+          ? "missing_energy_input"
+          : manual.cycle_kwh || manual.power_kw || manual.power_w ? "user_confirmed" : "needs_user_confirmation",
+        unit: "kWh",
+        value: energyKnown ? round(cycleKwh, 3) : null,
+        confidence: energyKnown ? confidence : 0.25
+      }
+    ],
+    external_retrieval_design: {
+      public_sources: [
+        "EU EPREL / energy label QR or product registration where available",
+        "Manufacturer manuals and technical data sheets",
+        "Retailer specification pages",
+        "Barcode/QR extraction from product label photos"
+      ],
+      recognition_engines: [
+        "OCR engine for label text extraction",
+        "Vision model for category/model/energy-label field extraction",
+        "Barcode or QR decoder before general OCR when a code is visible"
+      ]
+    }
+  };
+}
+
 function parseLocalizedNumber(value) {
   if (value === undefined || value === null) return null;
   const number = Number(String(value).replace(",", "."));
@@ -301,6 +549,7 @@ function parseContractText(fixtures, request = {}) {
 
 module.exports = {
   CONNECTOR_VERSION,
+  buildProductUsageProfile,
   lookupProduct,
   makeConnectorStatus,
   parseContractText,

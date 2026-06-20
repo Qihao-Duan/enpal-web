@@ -15,6 +15,8 @@ All data in `data/` is synthetic. It should be treated as backend fixture data, 
 | `data/ev-charging-recommendation.json` | Backend-calculated recommendation, schedule, savings, kWh explanation, and audit trail. | Today’s Best Move, Why Trust This, chat grounding |
 | `data/energy-routing-plan.json` | Planned use/store/sell/buy routing output for the Decision Workbench. | kWh routing board, price timeline, Trust Receipt |
 
+Runtime appliance telemetry and user-added devices are not committed to Git. The prototype stores same-day appliance readings in `data/runtime/appliance-telemetry.json` and confirmed device profiles in `data/runtime/home-devices.json`, simulating the production time-series database plus device registry.
+
 ## Contract Principles
 
 1. Contract prices beat public market prices. Public day-ahead or intraday prices are inputs, but customer-facing cost calculations must use the parsed tariff's final import price.
@@ -219,6 +221,58 @@ Decision Workbench invariants:
 | Constraints are displayed next to the recommendation. | The optimizer should not look like a price-only black box. |
 | `source_quality[]` is mandatory for all money-bearing outputs. | Trust Receipt needs auditability. |
 
+## Realtime Appliance Telemetry Schema
+
+The live backend should read same-day appliance consumption from read-only sources such as smart plugs, Home Assistant, wallbox/OCPP telemetry, heat-pump cloud APIs, inverter consumption channels, and smart-meter submetering when available. The goal is to replace generic product estimates with actual interval kWh before the optimizer ranks flexible loads.
+
+Production storage recommendation:
+
+| Store | Purpose |
+| --- | --- |
+| PostgreSQL | Household, device registry, consent scopes, connector accounts, product metadata. |
+| TimescaleDB hypertables | `appliance_telemetry_readings`, `meter_readings`, `power_intervals`, `price_intervals`, `battery_states`. |
+| Object storage | Contract PDFs, bills, energy-label photos, product manuals, OCR artifacts. |
+
+Prototype storage:
+
+| File | Status | Notes |
+| --- | --- | --- |
+| `data/runtime/appliance-telemetry.json` | Local runtime store, gitignored | Simulates same-day appliance interval readings for API and optimizer integration. |
+| `data/runtime/home-devices.json` | Local runtime store, gitignored | Stores user-added devices created from product lookup/profile confirmation. |
+
+Reading shape:
+
+```ts
+type ApplianceTelemetryReading = {
+  household_id: string
+  device_id: string
+  device_type: "ev" | "wallbox" | "dishwasher" | "heat_pump" | "battery" | string
+  interval_start: string
+  interval_end: string
+  observed_at: string
+  energy_kwh: number
+  power_kw?: number
+  flexible_load: boolean
+  source: {
+    name: string
+    adapter: "home_assistant" | "ocpp" | "smart_plug" | "inverter_cloud" | "prototype_ingest" | string
+    status: "actual" | "estimated" | "stale"
+    confidence: number
+  }
+}
+```
+
+Optimizer input priority:
+
+| Priority | Input source | Meaning |
+| --- | --- | --- |
+| 1 | `actual` appliance interval kWh | Use directly for today's load ranking and bill attribution. |
+| 2 | Smart plug / submeter measured profile | Use for device-specific baseline and flexible-window learning. |
+| 3 | User-confirmed appliance model or usage routine | Use when live telemetry is missing. |
+| 4 | Product label / catalog estimate | Use only as a starting estimate with visible confidence. |
+
+The optimizer receives `optimizer_inputs.actual_device_energy_kwh`, `flexible_load_actual_kwh`, `baseline_load_actual_kwh`, and `top_device_today`. Every value must remain source-labeled so the Trust Receipt can explain whether the plan used actual telemetry or estimates.
+
 ## Implemented Prototype Backend Endpoints
 
 The current no-dependency Node backend exposes a thin mock API from `src/server.js`. The API recomputes recommendation values from the fixture inputs rather than treating `ev-charging-recommendation.json` as trusted user input.
@@ -232,8 +286,13 @@ The current no-dependency Node backend exposes a thin mock API from `src/server.
 | `GET /api/connectors/status` | Connector registry + fixtures | Lists connector-ready adapters for tariff, solar/weather, device telemetry, contract parsing, and product lookup. |
 | `POST /api/connectors/refresh` | Connector registry + fixtures | Returns normalized signals that would feed calculations after a real external refresh. Current mode is `external_ready_fixture_adapters`. |
 | `POST /api/products/lookup` | `data/product-catalog.json` | Finds candidate appliance/EV models from model text or scan-derived labels. Results require user confirmation before bill forecasts. |
+| `POST /api/products/profile` | Product catalog + user text/OCR/manual fields + tariff forecast | Builds a normalized product usage profile with kWh formula, cost now vs smart-window cost, AI planning context, and photo-recognition adapter design. |
+| `GET /api/devices` | System fixture devices + `data/runtime/home-devices.json` | Returns the canonical home device registry used by the Home Devices UI. |
+| `POST /api/devices` | Product profile / manual device payload + tariff forecast | Confirms a product profile into a home device, stores it in the runtime registry, and returns schedule-ready advice. |
 | `POST /api/contracts/parse` | Rule parser + `tariff-contract.json` fallback | Extracts calculation terms from pasted contract text, such as import price, monthly fee, feed-in credit, and notice period. |
 | `GET /api/energy-routing/plan` | Forecast, contract, device state, battery state, routing engine | Returns use/store/sell/buy allocation, opportunity costs, constraints, source quality, and Trust Receipt audit steps. |
+| `GET /api/appliance-telemetry/today` | `data/runtime/appliance-telemetry.json` | Returns today's per-device actual kWh, flexible-load totals, source quality, and optimizer input snapshot. |
+| `POST /api/appliance-telemetry/readings` | Request body + local runtime store | Ingests one or more appliance interval readings. Accepts `energy_kwh` directly or derives it from `power_kw * interval_hours`. |
 
 Savings-bearing API responses must include:
 
@@ -256,9 +315,54 @@ The current retrieval layer is connector-ready rather than fully live. It uses d
 | Connector status | `makeConnectorStatus()` in `src/lib/connectors.js` | Connector registry with OAuth/consent state and health checks |
 | Source refresh | `refreshConnectors()` returns normalized fixture signals | Scheduled and on-demand provider fetch jobs |
 | Product lookup | Demo catalog in `data/product-catalog.json` | EPREL, manufacturer manuals, retailer specs, barcode/OCR |
+| Product usage profile | `buildProductUsageProfile()` merges catalog match, natural text, OCR text, and user-confirmed power fields | EPREL QR/API, manufacturer manuals, retailer specs, barcode decoder, OCR/vision model |
 | Contract parsing | Rule-based text parser with fixture fallback | OCR/PDF parser plus user confirmation UI |
 
 The frontend panel "Automatic data retrieval" calls these endpoints directly, making the backend interaction visible without claiming that private user accounts are already connected.
+
+### Product Usage Profile Contract
+
+`POST /api/products/profile` is the entry point for user-added appliances. It accepts structured fields when the UI has them, but also supports natural text so a homeowner can type what they see on a label or manual.
+
+Input fields:
+
+| Field | Example | Purpose |
+| --- | --- | --- |
+| `query` | `Bosch Serie 6 dishwasher` | Model lookup against catalog or external providers. |
+| `category` | `dishwasher` | Optional hint when the model text is ambiguous. |
+| `natural_text` | `1.05 kWh per cycle, 150 min, 5 cycles per week` | Human-entered usage details. |
+| `photo_ocr_text` | `Energy label: 0.47 kWh/cycle` | Text extracted by a future camera/OCR pipeline. |
+| `product_details.cycle_kwh` | `1.05` | User-confirmed energy per run. |
+| `product_details.power_kw` + `runtime_minutes` | `1.2`, `45` | Converts rated power into `energy_kwh = power_kw x runtime_hours`. |
+
+Output fields:
+
+| Field | Meaning |
+| --- | --- |
+| `normalized_energy_profile` | Category, kWh per run, weekly kWh, flexible-load flag, and the formula used. |
+| `optimization_preview` | Cost now, cost in the cheapest suitable window, estimated saving per run, and user-experience guardrail. |
+| `ai_planning_context` | Prompt facts the conversational layer may use; it must not invent missing specs. |
+| `source_quality[]` | Whether values came from a catalog, OCR/user text, or user-confirmed input. Missing energy remains `missing_energy_input`, not `0 kWh`. |
+| `external_retrieval_design` | Production source plan: EPREL/energy label, manufacturer manuals, retailer specs, barcode/QR, OCR, and vision extraction. |
+
+### Home Device Registry Contract
+
+`POST /api/devices` is the missing confirmation step after lookup/profile. It turns a candidate product into a household device that the UI can show and the planner can consider.
+
+| Input | Meaning |
+| --- | --- |
+| `product_profile` | Preferred payload from `/api/products/profile`. |
+| `category`, `model`, `energy_profile` | Manual fallback when no profile endpoint is available. |
+| `energy_profile.cycle_kwh` | Required before cost or schedule advice can be calculated. |
+| `energy_profile.power_kw` + `runtime_minutes` | Converted into kWh when cycle kWh is missing. |
+
+| Output | Meaning |
+| --- | --- |
+| `device` | Canonical home device with id, category, model, energy profile, data quality, and advice. |
+| `device_registry` | Full list of system and user-added devices for the Home Devices panel. |
+| `device.advice` | Cost now, smart-window cost, saving per run, formula, and recommendation. |
+
+Unknown energy remains `needs_energy_confirmation`; it appears in Home Devices but does not become a money-saving schedule card until a kWh value is confirmed.
 
 ## Future Connectors
 

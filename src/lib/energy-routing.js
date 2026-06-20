@@ -490,12 +490,12 @@ function averageForecastConfidence(fixtures) {
   return round(confidences.reduce((sum, value) => sum + value, 0) / confidences.length, 2);
 }
 
-function buildRoutingSourceQuality(fixtures, plan) {
+function buildRoutingSourceQuality(fixtures, plan, applianceTelemetry) {
   const forecastConfidence = averageForecastConfidence(fixtures);
   const solarSurplusKwh = fixtures.forecast.summary?.ev_usable_solar_surplus_kwh ??
     sumBy(fixtures.forecast.hours, null, "ev_usable_solar_surplus_kwh");
 
-  return [
+  const sourceQuality = [
     {
       field: "routing_plan",
       source: "data/energy-routing-plan.json",
@@ -569,9 +569,22 @@ function buildRoutingSourceQuality(fixtures, plan) {
       confidence: 0.94
     }
   ];
+
+  if (applianceTelemetry) {
+    sourceQuality.push({
+      field: "appliance_telemetry_today",
+      source: applianceTelemetry.storage?.path || "data/runtime/appliance-telemetry.json",
+      status: applianceTelemetry.status === "actual_readings_available" ? "actual" : "not_connected",
+      unit: "kWh",
+      value: applianceTelemetry.total_actual_kwh || 0,
+      confidence: applianceTelemetry.device_count ? 0.86 : 0
+    });
+  }
+
+  return sourceQuality;
 }
 
-function makeCalculationMetadata(fixtures, plan, sourceQuality) {
+function makeCalculationMetadata(fixtures, plan, sourceQuality, applianceTelemetry) {
   return {
     calculated_at: fixtures.forecast.generated_at || fixtures.deviceState.observed_at,
     valid_until: fixtures.forecast.horizon?.end || fixtures.deviceState.ev.departure_deadline,
@@ -579,7 +592,8 @@ function makeCalculationMetadata(fixtures, plan, sourceQuality) {
       fixtures.household?.household_id || fixtures.forecast.household_id,
       fixtures.deviceState.observed_at,
       fixtures.forecast.forecast_id,
-      plan.plan_id
+      plan.plan_id,
+      applianceTelemetry?.optimizer_inputs?.input_snapshot_id
     ].filter(Boolean).join(":"),
     routing_version: ROUTING_VERSION,
     routing_mode: plan.routing_mode,
@@ -617,12 +631,13 @@ function buildAuditSteps(summary, opportunityCost, deadlineNotes) {
 function calculateEnergyRouting(fixtures, options = {}) {
   validateFixtures(fixtures);
   const plan = resolveRoutingPlan(options);
+  const applianceTelemetry = options.applianceTelemetry || options.appliance_telemetry || null;
   const route_allocations = calculateRouteAllocations(fixtures, { routingPlan: plan });
   const summary = summarizeRouteAllocations(route_allocations);
   const opportunity_cost = buildOpportunityCost(route_allocations, fixtures, summary);
   const deadline_notes = buildDeadlineNotes(fixtures, route_allocations);
-  const source_quality = buildRoutingSourceQuality(fixtures, plan);
-  const calculation = makeCalculationMetadata(fixtures, plan, source_quality);
+  const source_quality = buildRoutingSourceQuality(fixtures, plan, applianceTelemetry);
+  const calculation = makeCalculationMetadata(fixtures, plan, source_quality, applianceTelemetry);
 
   return {
     schema_version: "0.1.0",
@@ -653,6 +668,7 @@ function calculateEnergyRouting(fixtures, options = {}) {
     },
     route_allocations,
     summary,
+    appliance_telemetry: applianceTelemetry,
     opportunity_cost,
     deadline_notes,
     source_quality,
