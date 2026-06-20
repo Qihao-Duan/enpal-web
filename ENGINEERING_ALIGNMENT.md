@@ -35,6 +35,9 @@ The prototype should prioritize depth over breadth. The main demo scenario is EV
 
 - Product challenge brief: `requirement.md`
 - Research and design document: `enpal-smart-energy-companion-design.html`
+- Sprint architecture plan: `docs/software-framework-plan.md`
+- Data contract and routing schema: `docs/data-contract.md`
+- QA review and demo readiness notes: `docs/qa-review.md`
 
 The design document includes competitor analysis, Germany data source mapping, Octopus Energy Explore analysis, UI concepts, backend architecture, trust/audit requirements, and MVP scope.
 
@@ -42,13 +45,48 @@ The design document includes competitor analysis, Germany data source mapping, O
 
 | Role | Owner | Scope | Write Ownership |
 |---|---|---|---|
-| Software Architecture Lead | agent | Architecture brief, stack, service boundaries, risks | No file edits unless asked |
-| Frontend Implementation Worker | agent | Static English prototype UI and interactions | `prototype.html`, optional `assets/` |
-| Data/Backend Simulation Worker | agent | Mock Germany household data and schemas | `data/`, `docs/data-contract.md` |
-| QA/Test Engineering Reviewer | agent | Review plan, calculation checks, accessibility/responsiveness checklist | No file edits unless asked |
+| Software Architecture Lead | Dewey | Software framework, service boundaries, rollout plan | `docs/software-framework-plan.md` |
+| Frontend Product Worker | Dalton | English Decision Workbench UI and prototype interaction updates | `prototype.html` |
+| Backend/Data Worker | Carver | Deterministic use/store/sell/buy routing layer and routing tests | `src/lib/energy-routing.js`, `data/energy-routing-plan.json`, `tests/energy-routing.test.js` |
+| QA/Test Engineering Reviewer | Meitner | Engineering risk review, test gaps, demo readiness, accessibility notes | `docs/qa-review.md` |
 | Main Integrator | Codex main thread | Keep this alignment document current; integrate outputs; resolve conflicts | `ENGINEERING_ALIGNMENT.md` and final integration edits |
 
 Workers are not alone in the codebase. They must not revert or overwrite work outside their assigned paths.
+
+### 4.1 Active Agent Team Launch - 2026-06-20
+
+The team is now running as a coordinated multi-agent sprint. All UI, API fields, code identifiers, documentation deliverables, and demo copy must remain English. Chinese can appear only in internal discussion with the user, not in the product platform.
+
+| Agent | Role | Current task | Integration expectation |
+|---|---|---|---|
+| Dewey | Software Architecture Lead | Produce the next-sprint software framework plan. | Main integrator reviews `docs/software-framework-plan.md` and folds accepted decisions into this alignment file. |
+| Dalton | Frontend Product Worker | Implement the Decision Workbench direction in `prototype.html`. | Main integrator verifies responsive behavior, API fallback, and English-only UI after worker output. |
+| Carver | Backend/Data Worker | Add deterministic energy routing outputs for use/store/sell/buy. | Main integrator decides whether to wire the new routing module into existing API handlers after reviewing the exported functions. |
+| Meitner | QA/Test Engineering Reviewer | Write QA findings and demo readiness review. | Main integrator uses `docs/qa-review.md` to prioritize fixes and test additions. |
+
+Coordination rules:
+
+- Disjoint write ownership is mandatory until the main integrator merges or reconciles work.
+- No worker may revert user edits or other agents' changes.
+- New user-facing content must use plain English and avoid energy jargon unless immediately explained.
+- Money, savings, kWh allocations, and trust claims must be deterministic outputs or clearly marked fixture values.
+- The demo remains advice-only unless explicit consent/control states are implemented.
+
+Architecture decisions accepted from Dewey's plan:
+
+- Keep the no-dependency Node prototype stable while extracting clearer service boundaries.
+- Add schema guardrails, consent/control states, and reusable audit metadata before migrating to a full framework.
+- Keep AI behind deterministic tool/evidence contracts.
+- Treat live device control as preview-only until explicit consent, command audit, and rollback paths exist.
+
+QA gates accepted from Meitner's review:
+
+- Recalculated EV requests must not claim `deadline_met=true` unless the returned schedule supplies the requested energy or an explicit fallback/shortfall is shown.
+- `source_quality` must reflect user-supplied overrides instead of silently keeping fixture values.
+- Backend-generated schedules, fixtures, assistant copy, and docs must agree on the canonical low-price window.
+- Raw schedule timestamps must use a consistent display timezone or include display fields.
+- API fallback state must be visible near the primary recommendation, not only in secondary panels.
+- Segmented controls and drawers need explicit selected-state semantics and focus handling before a judged demo.
 
 ## 5. Recommended Prototype Stack
 
@@ -103,14 +141,14 @@ The immediate sprint should not scaffold the full future app. It should make the
 
 ## 5.0 Current Development Sprint
 
-Goal: turn the existing static prototype and mock data into a runnable MVP with a real calculation API.
+Goal: evolve the runnable MVP into a decision workbench that routes each kWh to its best use: use, store, sell, or buy from the grid.
 
 | Role | Current owner | Write scope |
 |---|---|---|
-| Architecture lead | agent | Read-only implementation guidance |
-| Backend/data worker | agent | `package.json`, `src/`, `tests/energy-calculations.test.js` |
-| Frontend worker | agent | `prototype.html` only |
-| QA reviewer | agent | Read-only QA checklist/review |
+| Architecture lead | Dewey | `docs/software-framework-plan.md` |
+| Backend/data worker | Carver | `src/lib/energy-routing.js`, `data/energy-routing-plan.json`, `tests/energy-routing.test.js` |
+| Frontend worker | Dalton | `prototype.html` only |
+| QA reviewer | Meitner | `docs/qa-review.md` |
 | Main integrator | Codex main thread | Integration, verification, `ENGINEERING_ALIGNMENT.md` |
 
 Target API contract:
@@ -125,6 +163,7 @@ Target API contract:
 | `/api/connectors/refresh` | POST | Refresh fixture adapters into normalized calculation signals |
 | `/api/products/lookup` | POST | Product/model lookup from demo catalog with user-confirmation flag |
 | `/api/contracts/parse` | POST | Rule-based tariff text parser with fixture fallback terms |
+| `/api/energy-routing/plan` | GET | Deterministic use/store/sell/buy route allocation, opportunity costs, source quality, and deadline notes |
 
 Backend responses that display savings must include:
 
@@ -142,6 +181,17 @@ Frontend behavior:
 - When opened as `file://` or API is unavailable, the existing inline canonical values remain as graceful fallback.
 - The "Automatic data retrieval" panel should call the connector endpoints so users can see backend retrieval, source quality, and confirmation boundaries.
 - UI remains English-only.
+
+Current agent-team outputs:
+
+| Output | Owner | Status |
+|---|---|---|
+| `docs/software-framework-plan.md` | Dewey | Delivered and referenced by this alignment file. |
+| `src/lib/energy-routing.js` | Carver | Delivered and integrated into `/api/energy-routing/plan` and `/api/demo-state`. |
+| `data/energy-routing-plan.json` | Carver | Delivered as deterministic routing policy fixture. |
+| `tests/energy-routing.test.js` | Carver | Delivered and added to `npm test`. |
+| `prototype.html` Decision Workbench | Dalton | Delivered; first screen now has routing board and Trust Receipt. |
+| `docs/qa-review.md` | Meitner | Delivered; P1/P2 gates recorded above. |
 
 ## 5.1 Service Boundaries
 

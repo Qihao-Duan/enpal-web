@@ -13,6 +13,7 @@ All data in `data/` is synthetic. It should be treated as backend fixture data, 
 | `data/forecasts-24h.json` | Hourly 24-hour price, PV, household load, and EV-usable solar surplus forecast. | Recommendation engine, charts, timeline |
 | `data/device-state.json` | Current mock actual state for PV, battery, EV, wallbox, heat pump, and smart meter. | Live dashboard, EV charging request |
 | `data/ev-charging-recommendation.json` | Backend-calculated recommendation, schedule, savings, kWh explanation, and audit trail. | Today’s Best Move, Why Trust This, chat grounding |
+| `data/energy-routing-plan.json` | Planned use/store/sell/buy routing output for the Decision Workbench. | kWh routing board, price timeline, Trust Receipt |
 
 ## Contract Principles
 
@@ -171,6 +172,53 @@ EV demo invariants:
 
 The UI can use `savings.headline_metric` to decide whether to show cash savings or economic savings. For this prototype it is set to `cash_savings_eur`, matching the demo narrative.
 
+## Energy Routing Plan Schema
+
+`energy-routing-plan.json` is the planned backend output for the Decision Workbench. It generalizes the EV charging demo from "charge now vs smart charge" into a route allocation problem: each flexible kWh should be assigned to use, store, sell, or buy.
+
+Required top-level fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `routing_plan_id` | string | Stable identifier for the calculation run. |
+| `created_at` | string | Calculation timestamp. |
+| `formula_version` | string | Routing formula version. |
+| `horizon` | object | Start and end timestamps for the plan. |
+| `headline_decision` | object | User-facing recommendation and primary action. |
+| `routes` | object[] | Use/store/sell/buy allocation rows. |
+| `timeline` | object[] | Time-indexed routing, price, solar, and device constraint entries. |
+| `constraints` | object[] | EV, wallbox, battery, heat pump, comfort, and consent constraints. |
+| `source_quality` | object[] | Source, status, unit, value, confidence, and freshness records. |
+| `audit_steps` | object[] | Ordered calculation trace for Trust Receipt. |
+
+Route row shape:
+
+```ts
+type EnergyRoute = {
+  route: "use" | "store" | "sell" | "buy"
+  label: string
+  energy_kwh: number
+  cash_cost_eur: number
+  opportunity_cost_eur: number
+  effective_cost_eur: number
+  price_basis: "contract" | "feed_in" | "forecast" | "battery_model"
+  reason: string
+  source_status: "actual" | "forecast" | "estimate" | "user_confirmed_mock"
+  confidence: number
+}
+```
+
+Decision Workbench invariants:
+
+| Invariant | Reason |
+| --- | --- |
+| Every route must include `energy_kwh`, `effective_cost_eur`, and `reason`. | The UI must explain why a kWh was routed there. |
+| `sell` uses export/feed-in revenue as the value basis. | Solar self-use has an opportunity cost. |
+| `store` includes battery efficiency and degradation cost. | Stored energy is not free energy. |
+| `buy` uses the user's final import price, not raw market price. | Public market data is not a bill. |
+| Constraints are displayed next to the recommendation. | The optimizer should not look like a price-only black box. |
+| `source_quality[]` is mandatory for all money-bearing outputs. | Trust Receipt needs auditability. |
+
 ## Implemented Prototype Backend Endpoints
 
 The current no-dependency Node backend exposes a thin mock API from `src/server.js`. The API recomputes recommendation values from the fixture inputs rather than treating `ev-charging-recommendation.json` as trusted user input.
@@ -185,6 +233,7 @@ The current no-dependency Node backend exposes a thin mock API from `src/server.
 | `POST /api/connectors/refresh` | Connector registry + fixtures | Returns normalized signals that would feed calculations after a real external refresh. Current mode is `external_ready_fixture_adapters`. |
 | `POST /api/products/lookup` | `data/product-catalog.json` | Finds candidate appliance/EV models from model text or scan-derived labels. Results require user confirmation before bill forecasts. |
 | `POST /api/contracts/parse` | Rule parser + `tariff-contract.json` fallback | Extracts calculation terms from pasted contract text, such as import price, monthly fee, feed-in credit, and notice period. |
+| `GET /api/energy-routing/plan` | Forecast, contract, device state, battery state, routing engine | Returns use/store/sell/buy allocation, opportunity costs, constraints, source quality, and Trust Receipt audit steps. |
 
 Savings-bearing API responses must include:
 

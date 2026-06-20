@@ -456,6 +456,138 @@
       font-size: 14px;
     }
 
+    .ui-shell-blueprint {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr) 220px;
+      gap: 12px;
+      margin-top: 16px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #eef3ef;
+    }
+
+    .ui-sidebar,
+    .ui-main,
+    .ui-rightbar {
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+
+    .ui-nav-list,
+    .receipt-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .ui-nav-item,
+    .receipt-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 44px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .ui-nav-item.active,
+    .receipt-item.active {
+      color: var(--green);
+      background: var(--green-soft);
+      border-color: #c6dfd0;
+    }
+
+    .ui-command {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid #c6dfd0;
+      border-radius: var(--radius);
+      background: var(--green-soft);
+    }
+
+    .ui-command .button {
+      min-height: 44px;
+      border: 0;
+    }
+
+    .route-board {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .route-lane {
+      min-height: 126px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfa;
+    }
+
+    .route-lane strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .lane-meter {
+      height: 8px;
+      margin-top: 12px;
+      border-radius: 999px;
+      background: #e7ece7;
+      overflow: hidden;
+    }
+
+    .lane-fill {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--green);
+    }
+
+    .lane-fill.blue {
+      background: var(--blue);
+    }
+
+    .lane-fill.amber {
+      background: var(--amber);
+    }
+
+    .lane-fill.violet {
+      background: var(--violet);
+    }
+
+    .timeline-mini {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .timeline-mini span {
+      min-height: 58px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fbfcfa;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
     .demo-box {
       display: grid;
       grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
@@ -538,8 +670,27 @@
       .grid.two,
       .grid.four,
       .architecture,
-      .usage-options {
+      .usage-options,
+      .ui-shell-blueprint,
+      .route-board,
+      .timeline-mini {
         grid-template-columns: 1fr;
+      }
+
+      .ui-command {
+        grid-template-columns: 1fr;
+      }
+
+      .ui-main {
+        order: 1;
+      }
+
+      .ui-sidebar {
+        order: 2;
+      }
+
+      .ui-rightbar {
+        order: 3;
       }
     }
 
@@ -627,6 +778,7 @@
       <div class="meta">
         <a class="pill" href="#product-positioning">产品定位</a>
         <a class="pill" href="#mvp-scenario">MVP 场景</a>
+        <a class="pill" href="#ui-content-blueprint">UI 内容</a>
         <a class="pill" href="#optimizer">核心公式</a>
         <a class="pill" href="#data-trust">数据可信</a>
         <a class="pill" href="#backend-architecture">系统架构</a>
@@ -642,7 +794,7 @@
         </div>
         <div class="timeline-item">
           <div class="time">02</div>
-          <div><strong>再看体验</strong>：核心页面和首页信息架构，明确 demo 第一屏如何打动评委。</div>
+          <div><strong>再看体验</strong>：核心页面、首页信息架构和 UI 内容蓝图，明确 demo 第一屏如何打动评委。</div>
         </div>
         <div class="timeline-item">
           <div class="time">03</div>
@@ -833,8 +985,181 @@
       </div>
     </section>
 
+    <section class="section" id="ui-content-blueprint">
+      <h2>6. 新版 UI 内容蓝图：Decision Workbench</h2>
+      <p>
+        结合 UI/UX skill 的数据产品原则和 TypeUI 的 dual-sidebar application shell 模板，新版内容不做营销式首页，而做一个安静、密集、可审计的家庭能源工作台。用户第一眼看到“今天该做什么”，第二眼看到每度电为什么被分配到 use / store / sell / buy，第三眼可以打开 Trust Receipt 审计每个数字。
+      </p>
+      <div class="callout">
+        <strong>模板转译:</strong> TypeUI 的左侧栏用于能源对象与页面导航，中间主区域用于实时决策和时间线，右侧栏用于用户约束、设备状态和可信收据。移动端折叠为顶部 household switcher + 主决策卡 + 可展开的 Trust bottom sheet。
+      </div>
+
+      <div class="ui-shell-blueprint" aria-label="Decision Workbench UI blueprint">
+        <aside class="ui-sidebar">
+          <h3>Left Rail</h3>
+          <p class="muted">导航不是装饰，而是按家庭能源对象组织。</p>
+          <div class="ui-nav-list">
+            <div class="ui-nav-item active"><span>Today</span><span>1</span></div>
+            <div class="ui-nav-item"><span>Solar</span><span>PV</span></div>
+            <div class="ui-nav-item"><span>Battery</span><span>64%</span></div>
+            <div class="ui-nav-item"><span>EV</span><span>08:00</span></div>
+            <div class="ui-nav-item"><span>Tariff</span><span>Live</span></div>
+            <div class="ui-nav-item"><span>Bill</span><span>Audit</span></div>
+          </div>
+        </aside>
+
+        <div class="ui-main">
+          <div class="ui-command">
+            <div>
+              <h3>Best action now</h3>
+              <p>Sell midday surplus if export price beats future grid cost; finish EV with low-price grid power before 08:00.</p>
+            </div>
+            <button class="button" type="button">Review plan</button>
+          </div>
+          <div class="route-board">
+            <div class="route-lane">
+              <span class="mini-tag">Use</span>
+              <strong>6.0 kWh</strong>
+              <p class="muted">Solar to EV or home load when avoided grid price is higher than export value.</p>
+              <div class="lane-meter"><span class="lane-fill" style="width: 74%"></span></div>
+            </div>
+            <div class="route-lane">
+              <span class="mini-tag">Store</span>
+              <strong>3.2 kWh</strong>
+              <p class="muted">Battery charge only when future avoided cost beats feed-in plus degradation.</p>
+              <div class="lane-meter"><span class="lane-fill blue" style="width: 46%"></span></div>
+            </div>
+            <div class="route-lane">
+              <span class="mini-tag">Sell</span>
+              <strong>4.8 kWh</strong>
+              <p class="muted">Export surplus during high feed-in value or when low-price grid is cheaper later.</p>
+              <div class="lane-meter"><span class="lane-fill amber" style="width: 62%"></span></div>
+            </div>
+            <div class="route-lane">
+              <span class="mini-tag">Buy</span>
+              <strong>18.0 kWh</strong>
+              <p class="muted">Grid power is scheduled in the cheapest window and bounded by EV deadline.</p>
+              <div class="lane-meter"><span class="lane-fill violet" style="width: 88%"></span></div>
+            </div>
+          </div>
+          <div class="timeline-mini" aria-label="Price and routing timeline">
+            <span>10:00<br>avoid buy<br>0.35 €/kWh</span>
+            <span>12:00<br>sell PV<br>export high</span>
+            <span>14:00<br>use solar<br>EV/home</span>
+            <span>18:00<br>battery<br>peak cover</span>
+            <span>22:00<br>buy grid<br>0.18 €/kWh</span>
+            <span>08:00<br>ready<br>deadline met</span>
+          </div>
+        </div>
+
+        <aside class="ui-rightbar">
+          <h3>Right Rail</h3>
+          <p class="muted">把用户约束和可信依据固定在决策旁边。</p>
+          <div class="receipt-list">
+            <div class="receipt-item active"><span>Deadline</span><span>08:00</span></div>
+            <div class="receipt-item"><span>Contract</span><span>0.35 €/kWh</span></div>
+            <div class="receipt-item"><span>Export</span><span>0.08 €/kWh</span></div>
+            <div class="receipt-item"><span>Battery</span><span>90% η</span></div>
+            <div class="receipt-item"><span>Formula</span><span>v0.1</span></div>
+          </div>
+        </aside>
+      </div>
+
+      <h3>新版内容模块</h3>
+      <div class="table-scroll">
+        <table class="wide-table">
+          <thead>
+            <tr>
+              <th>模块</th>
+              <th>用户看到的内容</th>
+              <th>设计规则</th>
+              <th>后端字段</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Decision Command</td>
+              <td>一句话行动建议、预计节省、deadline 是否满足、主按钮 Review plan。</td>
+              <td>一个屏幕只保留一个主行动；金额必须来自后端，不由 AI 文案生成。</td>
+              <td><code>decision</code>, <code>savings</code>, <code>valid_until</code></td>
+            </tr>
+            <tr>
+              <td>kWh Routing Board</td>
+              <td>Use / Store / Sell / Buy 四个去向，每个显示 kWh、成本依据和置信度。</td>
+              <td>不用颜色单独表达含义；每个色块都有文字标签和单位。</td>
+              <td><code>energy_routing_plan[]</code>, <code>source_quality[]</code></td>
+            </tr>
+            <tr>
+              <td>Price Timeline</td>
+              <td>按 15 分钟或 1 小时显示电价、太阳能、EV deadline、关键动作。</td>
+              <td>时间序列用清晰标签，不在移动端塞过密坐标轴；支持点按查看明细。</td>
+              <td><code>price_intervals[]</code>, <code>power_intervals[]</code></td>
+            </tr>
+            <tr>
+              <td>Constraint Rail</td>
+              <td>EV 需要电量、出发时间、Wallbox 上限、电池 reserve、热泵舒适区。</td>
+              <td>约束与建议并排出现，避免用户误以为系统只按价格贪心优化。</td>
+              <td><code>device_constraints[]</code>, <code>battery_states[]</code></td>
+            </tr>
+            <tr>
+              <td>Trust Receipt</td>
+              <td>来源、更新时间、公式版本、Actual/Forecast/Estimate 标签和限制说明。</td>
+              <td>默认展示摘要；展开后显示公式和输入快照，适合评委追问。</td>
+              <td><code>calculation</code>, <code>calculation_audits[]</code></td>
+            </tr>
+            <tr>
+              <td>Energy Companion Drawer</td>
+              <td>用户问“为什么要卖太阳能？”“5.16 € 怎么算？”并看到来源引用。</td>
+              <td>AI 只解释被选中的数字和公式；回答必须附带 evidence chips。</td>
+              <td><code>assistant.answer</code>, <code>evidence[]</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>界面文案与状态</h3>
+      <div class="grid two">
+        <div class="card green">
+          <h3>Primary copy</h3>
+          <p><strong>Headline:</strong> Route today's energy before the price curve moves.</p>
+          <p><strong>Action:</strong> Review plan</p>
+          <p><strong>Secondary:</strong> Show trust receipt</p>
+          <p class="muted">标题必须是行动，不是品牌口号；按钮文案对应真实任务。</p>
+        </div>
+        <div class="card amber">
+          <h3>Empty / fallback states</h3>
+          <p><strong>No contract:</strong> Upload or paste your tariff to turn estimates into final prices.</p>
+          <p><strong>No live meter:</strong> Using forecast and last known household profile.</p>
+          <p><strong>No EV deadline:</strong> Add departure time before smart charging can optimize.</p>
+        </div>
+        <div class="card blue">
+          <h3>Interaction rules</h3>
+          <ul class="plain-list">
+            <li>每个可点击控件保持 44px 以上触达区域。</li>
+            <li>图表 hover 之外必须支持 tap / keyboard 查看数值。</li>
+            <li>异步 API 显示 checking、live、fallback 三种状态。</li>
+            <li>所有金额使用 tabular number，减少刷新时跳动。</li>
+          </ul>
+        </div>
+        <div class="card violet">
+          <h3>Responsive behavior</h3>
+          <ul class="plain-list">
+            <li>桌面：左导航 + 中间决策 + 右侧 Trust Receipt。</li>
+            <li>平板：右侧 Trust Receipt 变成可展开 panel。</li>
+            <li>手机：先显示 Best action，再显示四路由卡片，Trust 作为 bottom sheet。</li>
+            <li>避免嵌套滚动；主页面保留单一垂直滚动。</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>为什么这套 UI 有优势</h3>
+      <div class="callout">
+        <strong>评委记忆点:</strong> 大多数队伍会做“聊天 + 图表 + 便宜时段”。我们的 UI 直接把家庭能源变成一个可审计的路由问题：这一度电现在应该用、存、卖还是买，每个选择旁边都有价格、约束、deadline 和可信收据。
+      </div>
+    </section>
+
     <section class="section" id="optimizer">
-      <h2>6. 实时计算引擎与每度电路由优化</h2>
+      <h2>7. 实时计算引擎与每度电路由优化</h2>
       <p>
         功耗、电费、节省金额和调度建议必须由后端数学计算引擎实时计算，AI 只负责解释结果。每次设备状态、电价、天气预测、合同规则、用户 deadline 或电池状态改变时，后端重新计算 recommendation，并写入 calculation audit。
       </p>
@@ -1083,7 +1408,7 @@ day_cost = sum(interval_cost[t]) + daily_base_fee</div>
     </section>
 
     <section class="section" id="data-trust">
-      <h2>7. 数据来源、可信度与德国约束</h2>
+      <h2>8. 数据来源、可信度与德国约束</h2>
       <table>
         <thead>
           <tr>
@@ -1507,7 +1832,7 @@ day_cost = sum(interval_cost[t]) + daily_base_fee</div>
     </section>
 
     <section class="section" id="germany-profile">
-      <h2>8. 德国国家配置</h2>
+      <h2>9. 德国国家配置</h2>
       <p>后端需要一个 Germany Profile，用于统一时区、币种、电力市场区域、默认结算粒度和本地化展示。</p>
       <div class="formula">{
   country: "DE",
@@ -1543,7 +1868,7 @@ day_cost = sum(interval_cost[t]) + daily_base_fee</div>
     </section>
 
     <section class="section" id="backend-architecture">
-      <h2>9. 后端架构</h2>
+      <h2>10. 后端架构</h2>
       <div class="architecture">
         <div class="arch-node">
           <strong>PublicDataService</strong>
@@ -1577,7 +1902,7 @@ day_cost = sum(interval_cost[t]) + daily_base_fee</div>
     </section>
 
     <section class="section" id="device-adapters">
-      <h2>10. 设备适配层</h2>
+      <h2>11. 设备适配层</h2>
       <p>建议使用 Connector Registry，把真实平台和 mock 数据都适配成同一套 household state。</p>
       <div class="grid four">
         <div class="card"><h3>MockAdapter</h3><p class="muted">黑客松演示主数据源。</p></div>
@@ -1595,7 +1920,7 @@ day_cost = sum(interval_cost[t]) + daily_base_fee</div>
     </section>
 
     <section class="section" id="database-design">
-      <h2>11. 数据库设计</h2>
+      <h2>12. 数据库设计</h2>
       <p>推荐 PostgreSQL + TimescaleDB。时间序列数据用于价格、天气、设备状态和电表读数。</p>
       <div class="formula">households
 contracts
@@ -1626,7 +1951,7 @@ calculation_audits</div>
     </section>
 
     <section class="section" id="ai-principles">
-      <h2>12. AI 设计原则</h2>
+      <h2>13. AI 设计原则</h2>
       <div class="grid two">
         <div class="card green">
           <h3>AI 应该做</h3>
@@ -1670,7 +1995,7 @@ show_source_audit()</div>
     </section>
 
     <section class="section" id="implementation-roadmap">
-      <h2>13. MVP 实施路线</h2>
+      <h2>14. MVP 实施路线</h2>
       <table>
         <thead>
           <tr>
@@ -1720,7 +2045,7 @@ show_source_audit()</div>
     </section>
 
     <section class="section" id="trust-template">
-      <h2>14. 可信解释模板</h2>
+      <h2>15. 可信解释模板</h2>
       <div class="card blue">
         <h3>Why Trust This?</h3>
         <p>这个数字基于你的合同电价、上网售电价值、实时电表、EV 充电需求、太阳能预测、电池状态和 Wallbox 功率限制。</p>
@@ -1739,7 +2064,7 @@ show_source_audit()</div>
     </section>
 
     <section class="section" id="judge-highlights">
-      <h2>15. 评委视角亮点</h2>
+      <h2>16. 评委视角亮点</h2>
       <div class="grid">
         <div class="card">
           <h3>Clarity &amp; UX</h3>
@@ -1764,7 +2089,7 @@ show_source_audit()</div>
     </section>
 
     <section class="section" id="market-gap">
-      <h2>16. 市场空位与竞品分析</h2>
+      <h2>17. 市场空位与竞品分析</h2>
       <p>
         现有产品已经覆盖了动态电价、智能充电、家庭能源监控、硬件级负载控制等能力，但很少同时完成“德国本地合同/电价解释 + 多设备调度 + 账单归因 + 普通用户可理解的 AI 对话”。Enpal 的机会点不是再做一个能源仪表盘，而是做可信的家庭能源解释与决策层。
       </p>
@@ -1883,7 +2208,7 @@ show_source_audit()</div>
     </section>
 
     <section class="section" id="ui-reference">
-      <h2>17. 合规 UI 参考与转译</h2>
+      <h2>18. 合规 UI 参考与转译</h2>
       <p>
         参考 Octopus Energy quote 页面时，只借鉴可复用的信息架构和交互模式，不复制品牌、视觉资产、插图、商标或具体营销表达。该页面的强项是把复杂能源报价拆成低压力的逐步输入：先定位住址，再选择能源类型，再让用户用 Low/Medium/High/Actual usage 估算用量，并在旁边用 Good to know 解释估算依据和真实账单更准确。
       </p>
@@ -1959,7 +2284,7 @@ show_source_audit()</div>
     </section>
 
     <section class="section" id="octopus-appendix">
-      <h2>18. 研究附录：Octopus Energy Explore 深度拆解</h2>
+      <h2>19. 研究附录：Octopus Energy Explore 深度拆解</h2>
       <p>
         研究对象为 <a href="https://octopus.energy/energy-explore/">Octopus Energy Explore</a>。截至 2026-06-20，该页面本身不是实时能源数据看板，而是一个 CMS 驱动的能源主题入口页：用清晰的主题索引、邮编报价入口和重复图文 section，把用户导向家庭能源、商业能源、智能电价、奖励、节能和绿色能源等更深层页面。
       </p>
@@ -2363,7 +2688,7 @@ type EnergyOffer = {
     </section>
 
     <section class="section" id="sources">
-      <h2>19. 参考数据源</h2>
+      <h2>20. 参考数据源</h2>
       <ul class="plain-list">
         <li><a href="https://1komma5.com/de/heartbeat/">1KOMMA5° Heartbeat AI</a></li>
         <li><a href="https://1komma5.com/de/heartbeat/dynamischer-stromtarif-dynamic-pulse/">1KOMMA5° Dynamic Pulse</a></li>

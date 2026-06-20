@@ -5,6 +5,10 @@ const {
   calculateLiveState
 } = require("./energy-calculations");
 const {
+  calculateEnergyRouting,
+  loadEnergyRoutingPlan
+} = require("./energy-routing");
+const {
   lookupProduct,
   makeConnectorStatus,
   parseContractText,
@@ -67,6 +71,11 @@ function createApiHandlers(rootDir) {
         return sendJson(res, 200, calculateLiveState(fixtures));
       }
 
+      if (req.method === "GET" && url.pathname === "/api/energy-routing/plan") {
+        const routingPlan = loadEnergyRoutingPlan(rootDir);
+        return sendJson(res, 200, calculateEnergyRouting(fixtures, { routingPlan }));
+      }
+
       if (req.method === "GET" && url.pathname === "/api/connectors/status") {
         return sendJson(res, 200, makeConnectorStatus(fixtures));
       }
@@ -94,6 +103,8 @@ function createApiHandlers(rootDir) {
         const live = calculateLiveState(fixtures);
         const recommendation = calculateEvRecommendation(fixtures);
         const connectorStatus = makeConnectorStatus(fixtures);
+        const routingPlan = loadEnergyRoutingPlan(rootDir);
+        const energyRouting = calculateEnergyRouting(fixtures, { routingPlan });
         return sendJson(res, 200, {
           household: fixtures.household,
           contract: fixtures.contract,
@@ -101,6 +112,7 @@ function createApiHandlers(rootDir) {
           device_state: fixtures.deviceState,
           connectors: connectorStatus,
           recommendation,
+          energy_routing: energyRouting,
           calculation: recommendation.calculation,
           source_quality: recommendation.calculation.source_quality,
           live_calculation: live
