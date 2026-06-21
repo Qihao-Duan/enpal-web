@@ -2094,8 +2094,44 @@
 
     .post-route-summary {
       display: grid;
-      gap: 16px;
+      gap: 18px;
       min-width: 0;
+    }
+
+    .route-workbench-layout {
+      display: grid;
+      gap: clamp(14px, 1.8vw, 22px);
+      min-width: 0;
+      align-items: start;
+      border: 1px solid var(--ds-border-default);
+      border-radius: var(--ds-radius-base);
+      background:
+        linear-gradient(135deg, rgba(164, 255, 0, 0.06), rgba(255, 160, 52, 0.035)),
+        color-mix(in srgb, var(--ds-neutral-secondary-soft) 72%, var(--ds-neutral-primary-soft));
+      padding: clamp(14px, 1.6vw, 22px);
+    }
+
+    .route-workbench-layout .workbench-rail {
+      min-width: 0;
+      border-color: color-mix(in srgb, var(--ds-border-default) 74%, transparent);
+      background: color-mix(in srgb, var(--ds-neutral-primary-soft) 78%, transparent);
+      padding: clamp(16px, 1.6vw, 22px);
+    }
+
+    .route-workbench-layout .workbench-nav {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .route-workbench-layout .support-section.route-spotlight {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      gap: clamp(16px, 1.8vw, 22px);
+    }
+
+    .route-workbench-layout .routing-board {
+      background: color-mix(in srgb, var(--ds-neutral-primary-soft) 82%, var(--ds-brand-softer));
+      border-color: color-mix(in srgb, var(--ds-border-brand-subtle) 62%, var(--ds-border-default));
     }
 
     .post-route-summary .advice-scoreboard {
@@ -2115,6 +2151,14 @@
     .route-support-controls .decision-meta,
     .route-support-controls .plan-tier-strip {
       max-width: none;
+    }
+
+    .route-workbench-layout .workbench-rail {
+      align-self: stretch;
+    }
+
+    .route-workbench-layout .workbench-nav {
+      gap: 12px;
     }
 
     .advice-scoreboard {
@@ -4615,9 +4659,15 @@
 
     .receipt-card-header {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 10px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
       align-items: start;
+    }
+
+    .receipt-card-header .tag {
+      justify-self: start;
+      max-width: 100%;
+      white-space: normal;
     }
 
     .receipt-card-header h3 {
@@ -4643,8 +4693,8 @@
     }
 
     .receipt-item {
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+      align-items: start;
     }
 
     .receipt-item.active {
@@ -4659,6 +4709,7 @@
       font-weight: 600;
       line-height: 1.25;
       overflow-wrap: anywhere;
+      min-width: 0;
       text-align: right;
     }
 
@@ -5267,7 +5318,7 @@
 
     /* Spacious template refinement: keep the first screen calm and scannable. */
     .advice-copy {
-      gap: 20px;
+      gap: 16px;
     }
 
     .decision-meta {
@@ -5357,9 +5408,9 @@
     }
 
     .advice-score {
-      min-height: 152px;
-      padding: 24px;
-      gap: 14px;
+      min-height: 132px;
+      padding: 20px;
+      gap: 12px;
     }
 
     .advice-score strong {
@@ -5387,8 +5438,8 @@
 
     @media (min-width: 900px) {
       .advice-layout {
-        grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
-        gap: 24px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 26px;
       }
 
       .workbench-center {
@@ -5397,19 +5448,106 @@
       }
 
       .receipt-rail {
-        grid-column: 1;
+        grid-column: 1 / -1;
         grid-row: 2;
         position: static;
         top: auto;
       }
 
-      .workbench-rail {
-        grid-column: 2;
-        grid-row: 2;
+      .route-workbench-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
       }
 
-      .workbench-rail .workbench-nav {
-        grid-template-columns: 1fr;
+      .route-workbench-layout > .workbench-rail {
+        grid-column: auto;
+        grid-row: auto;
+        height: auto;
+      }
+
+      .route-workbench-layout .workbench-nav {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .route-workbench-layout .workbench-nav-item {
+        min-height: 104px;
+        padding: 16px;
+      }
+
+      .post-route-summary {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 20px;
+        align-items: start;
+      }
+
+      .post-route-summary .advice-scoreboard {
+        grid-column: 1 / -1;
+      }
+
+      .post-route-summary .advice-plan {
+        grid-column: 1;
+      }
+
+      .post-route-summary .route-support-controls {
+        grid-column: 1;
+      }
+
+      .route-support-controls {
+        grid-template-columns: minmax(0, 1fr) minmax(250px, 0.34fr);
+        align-items: start;
+      }
+
+      .route-support-controls .decision-meta {
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .route-support-controls .plan-tier-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .route-support-controls .decision-meta-item:last-child {
+        grid-column: auto;
+      }
+
+      .route-support-controls .advice-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: start;
+      }
+
+      .route-support-controls .primary-button,
+      .route-support-controls .ghost-button {
+        justify-content: center;
+        width: 100%;
+      }
+
+      .receipt-rail .trust-receipt-card {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px 22px;
+        align-items: start;
+      }
+
+      .receipt-rail .receipt-list {
+        grid-column: 1;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .receipt-rail .api-source-note {
+        grid-column: 1;
+        margin: 0;
+      }
+
+      .receipt-rail .receipt-card-header {
+        grid-column: 1 / -1;
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+
+      .receipt-rail .trust-receipt-card .ghost-button {
+        grid-column: 2;
+        grid-row: 2 / 4;
+        align-self: end;
+        min-width: 168px;
       }
 
       .receipt-list {
@@ -5428,12 +5566,30 @@
 
     @media (min-width: 1181px) {
       .advice-layout {
-        grid-template-columns: minmax(0, 1fr) minmax(340px, 380px);
-        gap: 32px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 30px;
       }
 
       .workbench-nav {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .route-workbench-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+      }
+
+      .route-workbench-layout > .workbench-rail {
+        height: auto;
+      }
+
+      .route-workbench-layout .workbench-nav {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .route-workbench-layout .workbench-nav-item {
+        min-height: 100px;
+        padding: 16px;
       }
 
       .decision-meta {
@@ -5445,14 +5601,70 @@
       }
 
       .route-detail-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     @media (min-width: 1400px) {
       .advice-layout {
-        grid-template-columns: minmax(0, 1fr) 392px;
-        gap: 40px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 34px;
+      }
+
+      .route-workbench-layout {
+        grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+        gap: 24px;
+      }
+
+      .route-workbench-layout > .workbench-rail {
+        height: 100%;
+      }
+
+      .route-workbench-layout .workbench-nav {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .route-workbench-layout .workbench-nav-item {
+        min-height: 92px;
+        padding: 15px 16px;
+      }
+
+      .post-route-summary {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .post-route-summary .advice-plan {
+        grid-column: 1;
+      }
+
+      .post-route-summary .route-support-controls {
+        grid-column: 1;
+        grid-template-columns: minmax(0, 1fr) minmax(250px, 0.34fr);
+      }
+
+      .route-support-controls .decision-meta {
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .route-support-controls .plan-tier-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .route-support-controls .advice-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: start;
+      }
+
+      .route-detail-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1600px) {
+      .route-detail-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
       }
     }
 
@@ -5519,7 +5731,15 @@
         text-align: left;
       }
 
+      .route-workbench-layout {
+        padding: 12px;
+      }
+
       .post-route-summary .advice-scoreboard {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .receipt-rail .trust-receipt-card {
         grid-template-columns: minmax(0, 1fr);
       }
 
@@ -5879,16 +6099,44 @@
               <p id="adviceHeroCopy">The optimizer checks EV charging, dishwasher timing, heat-pump comfort, battery reserve, and flexible appliances. EV charging is the top action today, while smaller appliances stay in the plan with user-friendly deadlines.</p>
             </div>
 
-            <section class="support-section route-spotlight hero-route-stack" id="energyRouteDetails" aria-labelledby="routingIntroTitle">
-              <div class="routing-intro">
-                <div>
-                  <p class="section-kicker">Routing map</p>
-                  <h3 id="routingIntroTitle">Use the cheapest clean energy first.</h3>
+            <div class="route-workbench-layout">
+              <section class="support-section route-spotlight hero-route-stack" id="energyRouteDetails" aria-labelledby="routingIntroTitle">
+                <div class="routing-intro">
+                  <div>
+                    <p class="section-kicker">Routing map</p>
+                    <h3 id="routingIntroTitle">Use the cheapest clean energy first.</h3>
+                  </div>
+                  <p id="routingIntroCopy">Solar is used before buying grid power. The battery is kept for the evening, comfort loads are protected, the dishwasher is only delayed if convenient, and the EV finishes in the low-price window.</p>
                 </div>
-                <p id="routingIntroCopy">Solar is used before buying grid power. The battery is kept for the evening, comfort loads are protected, the dishwasher is only delayed if convenient, and the EV finishes in the low-price window.</p>
-              </div>
-              <section class="routing-board" id="routingBoard" aria-label="Today’s energy route from solar first to cheap grid power later"></section>
-            </section>
+                <section class="routing-board" id="routingBoard" aria-label="Today’s energy route from solar first to cheap grid power later"></section>
+              </section>
+
+              <aside class="workbench-rail" aria-label="Energy objects">
+                <p class="section-kicker">Decision workbench</p>
+                <nav class="workbench-nav" aria-label="Workbench sections">
+                  <button class="workbench-nav-item active" type="button" data-open-panel="chargingDetails">
+                    <span>Today’s decision</span>
+                    <strong id="navTodayMeta">1 decision</strong>
+                    <small>The action, timing, and expected saving.</small>
+                  </button>
+                  <button class="workbench-nav-item" type="button" data-open-panel="energyRouteDetails">
+                    <span>Energy routing</span>
+                    <strong id="navSolarMeta">6 kWh solar</strong>
+                    <small>Route map, price windows, solar, and battery.</small>
+                  </button>
+                  <button class="workbench-nav-item" type="button" data-open-panel="deviceDetails">
+                    <span>Devices</span>
+                    <strong id="navEvMeta">24 kWh to add</strong>
+                    <small>Profile equipment, constraints, and flexible loads.</small>
+                  </button>
+                  <button class="workbench-nav-item" type="button" data-open-panel="trustReceiptDetails">
+                    <span>Trust receipt</span>
+                    <strong id="navReceiptMeta">Sources + formula</strong>
+                    <small>Audit trail for this advice.</small>
+                  </button>
+                </nav>
+              </aside>
+            </div>
 
             <div class="post-route-summary" aria-label="Recommendation summary below energy route">
               <div class="advice-scoreboard" aria-label="Recommendation summary">
@@ -6016,31 +6264,6 @@
             </section>
           </aside>
 
-          <aside class="workbench-rail" aria-label="Energy objects">
-            <p class="section-kicker">Decision workbench</p>
-            <nav class="workbench-nav" aria-label="Workbench sections">
-              <button class="workbench-nav-item active" type="button" data-open-panel="chargingDetails">
-                <span>Today’s decision</span>
-                <strong id="navTodayMeta">1 decision</strong>
-                <small>The action, timing, and expected saving.</small>
-              </button>
-              <button class="workbench-nav-item" type="button" data-open-panel="energyRouteDetails">
-                <span>Energy routing</span>
-                <strong id="navSolarMeta">6 kWh solar</strong>
-                <small>Route map, price windows, solar, and battery.</small>
-              </button>
-              <button class="workbench-nav-item" type="button" data-open-panel="deviceDetails">
-                <span>Devices</span>
-                <strong id="navEvMeta">24 kWh to add</strong>
-                <small>Profile equipment, constraints, and flexible loads.</small>
-              </button>
-              <button class="workbench-nav-item" type="button" data-open-panel="trustReceiptDetails">
-                <span>Trust receipt</span>
-                <strong id="navReceiptMeta">Sources + formula</strong>
-                <small>Audit trail for this advice.</small>
-              </button>
-            </nav>
-          </aside>
         </div>
       </article>
 
@@ -8799,12 +9022,12 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
                 active: true
               },
               {
-                label: "Deadline",
-                value: currentHousehold().businessImpact?.productionDeadline || "06:00"
+                label: "Shift handover",
+                value: formatTimeLabel(plan.departureDeadline)
               },
               {
                 label: "Inputs",
-                value: "Tariff, PV, load"
+                value: "Tariff + PV + load"
               }
             ]
           : [
