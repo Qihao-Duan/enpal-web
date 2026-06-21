@@ -1,0 +1,243 @@
+.pi-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  font-family: var(--font-body);
+  color: var(--text);
+}
+
+.pi-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.82;
+}
+
+.pi-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--surface) 0%, var(--surface-2) 42%, var(--surface) 100%);
+  opacity: 0.72;
+}
+
+.pi-title {
+  position: absolute;
+  left: 96px;
+  top: 78px;
+  width: 680px;
+  z-index: 4;
+}
+
+.pi-title h2 {
+  margin: 20px 0 0;
+  font-family: var(--font-display-en);
+  font-size: 72px;
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.pi-core {
+  position: absolute;
+  left: 780px;
+  top: 392px;
+  width: 360px;
+  height: 220px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 18px;
+  background: var(--surface-2);
+  box-shadow:
+    inset 0 0 0 2px var(--accent),
+    0 0 80px var(--accent-glow);
+  z-index: 6;
+  animation: pi-core-pulse 2400ms var(--ease-soft) infinite;
+}
+
+.pi-core strong {
+  font-family: var(--font-display-en);
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.pi-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.pi-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 18 16;
+  stroke-dashoffset: 420;
+  opacity: 0;
+  filter: drop-shadow(0 0 16px var(--accent-glow));
+}
+
+.pi-scene.is-factory .pi-line-left-a,
+.pi-scene.is-factory .pi-line-left-b,
+.pi-scene.is-external .pi-line-right-a,
+.pi-scene.is-external .pi-line-right-b,
+.pi-scene.is-plan .pi-line-plan {
+  opacity: 1;
+  animation: pi-line-draw 900ms var(--ease-quart) both;
+}
+
+.pi-input-column {
+  position: absolute;
+  z-index: 5;
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--dur-base) var(--ease-quart),
+    transform var(--dur-base) var(--ease-quart);
+}
+
+.pi-factory-inputs {
+  left: 96px;
+  top: 300px;
+  width: 500px;
+}
+
+.pi-external-inputs {
+  right: 96px;
+  top: 302px;
+  width: 430px;
+}
+
+.pi-scene.is-factory .pi-factory-inputs,
+.pi-scene.is-external .pi-external-inputs {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pi-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.pi-chip-grid-small {
+  grid-template-columns: 1fr;
+}
+
+.pi-chip {
+  min-height: 70px;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  background: var(--surface-2);
+  font-size: 22px;
+  line-height: 1.08;
+  text-align: center;
+  letter-spacing: 0;
+}
+
+.pi-plan {
+  position: absolute;
+  left: 384px;
+  bottom: 80px;
+  width: 1152px;
+  padding: 28px 34px 32px;
+  background: var(--surface-2);
+  z-index: 7;
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity var(--dur-base) var(--ease-quart),
+    transform var(--dur-base) var(--ease-quart);
+}
+
+.pi-scene.is-plan .pi-plan {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pi-plan-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.pi-plan-head strong {
+  font-family: var(--font-display-en);
+  font-size: 34px;
+  letter-spacing: 0;
+}
+
+.pi-timeline {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  margin-top: 30px;
+}
+
+.pi-tick {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-2);
+  letter-spacing: 0;
+}
+
+.pi-tick i {
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.pi-tick b {
+  position: absolute;
+  left: 54%;
+  top: 8px;
+  width: 92%;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+.pi-scene.is-plan .pi-tick b {
+  animation: pi-grow 700ms var(--ease-quart) both;
+}
+
+.pi-scene.is-plan .pi-tick:nth-child(2) b {
+  animation-delay: 100ms;
+}
+
+.pi-scene.is-plan .pi-tick:nth-child(3) b {
+  animation-delay: 200ms;
+}
+
+.pi-scene.is-plan .pi-tick:nth-child(4) b {
+  animation-delay: 300ms;
+}
+
+@keyframes pi-line-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pi-grow {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes pi-core-pulse {
+  50% {
+    transform: scale(1.02);
+  }
+}

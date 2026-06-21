@@ -174,7 +174,7 @@ function answerForIntent(intent, question, context) {
 function buildPromptContract(question, context, intent) {
   return {
     version: PROMPT_VERSION,
-    system_role: "You are Enpal Smart Energy Companion, an energy explainer for non-technical German households.",
+    system_role: "You are Enpal Smart Energy Companion, an energy explainer for German homes and energy sites.",
     content_understanding: {
       detected_intent: intent,
       user_question: question,

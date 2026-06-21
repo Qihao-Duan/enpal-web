@@ -1,0 +1,128 @@
+[
+  {
+    "chapter": "factory-waste",
+    "step": 1,
+    "text": "Imagine a medium-sized factory with a large solar rooftop.",
+    "audio": "factory-waste/1.mp3"
+  },
+  {
+    "chapter": "factory-waste",
+    "step": 2,
+    "text": "At noon, it produces more solar energy than it can use.",
+    "audio": "factory-waste/2.mp3"
+  },
+  {
+    "chapter": "factory-waste",
+    "step": 3,
+    "text": "Without an intelligent planning layer, that surplus often gets sold to the grid at a low price.",
+    "audio": "factory-waste/3.mp3"
+  },
+  {
+    "chapter": "factory-waste",
+    "step": 4,
+    "text": "Then later, when machines, forklifts, cooling systems, and batteries need power, the factory buys electricity back at a higher price.",
+    "audio": "factory-waste/4.mp3"
+  },
+  {
+    "chapter": "factory-waste",
+    "step": 5,
+    "text": "So the problem is not only energy supply.",
+    "audio": "factory-waste/5.mp3"
+  },
+  {
+    "chapter": "factory-waste",
+    "step": 6,
+    "text": "The real question is: where should every kilowatt-hour go next?",
+    "audio": "factory-waste/6.mp3"
+  },
+  {
+    "chapter": "planner-inputs",
+    "step": 1,
+    "text": "Our project is Energy Profit Planner.",
+    "audio": "planner-inputs/1.mp3"
+  },
+  {
+    "chapter": "planner-inputs",
+    "step": 2,
+    "text": "It connects to the factory's energy profile: solar panels, batteries, EVs, production equipment, heating, cooling, and historical consumption.",
+    "audio": "planner-inputs/2.mp3"
+  },
+  {
+    "chapter": "planner-inputs",
+    "step": 3,
+    "text": "It also reads contract terms, dynamic prices, weather forecasts, and device specifications.",
+    "audio": "planner-inputs/3.mp3"
+  },
+  {
+    "chapter": "planner-inputs",
+    "step": 4,
+    "text": "From that, it creates an optimized 24-hour energy plan, broken into short time intervals.",
+    "audio": "planner-inputs/4.mp3"
+  },
+  {
+    "chapter": "optimization-example",
+    "step": 1,
+    "text": "If solar generation peaks at noon, the system can charge batteries and electric forklifts during that window.",
+    "audio": "optimization-example/1.mp3"
+  },
+  {
+    "chapter": "optimization-example",
+    "step": 2,
+    "text": "If prices rise later, it can save stored energy for expensive periods.",
+    "audio": "optimization-example/2.mp3"
+  },
+  {
+    "chapter": "optimization-example",
+    "step": 3,
+    "text": "If the market price is attractive, it can recommend selling surplus energy instead of storing it.",
+    "audio": "optimization-example/3.mp3"
+  },
+  {
+    "chapter": "optimization-example",
+    "step": 4,
+    "text": "The user does not see raw energy data.",
+    "audio": "optimization-example/4.mp3"
+  },
+  {
+    "chapter": "optimization-example",
+    "step": 5,
+    "text": "They see a direct comparison: normal cost, optimized cost, and how much money they can save or earn.",
+    "audio": "optimization-example/5.mp3"
+  },
+  {
+    "chapter": "service-levels-close",
+    "step": 1,
+    "text": "We offer two service levels.",
+    "audio": "service-levels-close/1.mp3"
+  },
+  {
+    "chapter": "service-levels-close",
+    "step": 2,
+    "text": "The basic plan focuses on smart charging and appliance scheduling, so regular users reduce cost without changing daily routines.",
+    "audio": "service-levels-close/2.mp3"
+  },
+  {
+    "chapter": "service-levels-close",
+    "step": 3,
+    "text": "The premium plan adds solar trading and storage optimization for factories, solar households, and battery-heavy sites.",
+    "audio": "service-levels-close/3.mp3"
+  },
+  {
+    "chapter": "service-levels-close",
+    "step": 4,
+    "text": "That is the shift: we do not just monitor energy consumption.",
+    "audio": "service-levels-close/4.mp3"
+  },
+  {
+    "chapter": "service-levels-close",
+    "step": 5,
+    "text": "We plan energy usage and energy sales.",
+    "audio": "service-levels-close/5.mp3"
+  },
+  {
+    "chapter": "service-levels-close",
+    "step": 6,
+    "text": "Every kilowatt-hour moves to the place where it creates the most economic value.",
+    "audio": "service-levels-close/6.mp3"
+  }
+]

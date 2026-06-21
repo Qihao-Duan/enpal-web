@@ -59,6 +59,20 @@ function callApi(method, pathname, body) {
   assert.ok(premium.payload.profile_readiness.readiness_percent >= 60);
   assert.ok(premium.payload.home_devices.device_count >= 4);
 
+  const factoryPremium = await callApi("POST", "/api/plans/optimize", {
+    plan_tier: "premium",
+    site_type: "factory_demo",
+    profile_key: "munich"
+  });
+  assert.strictEqual(factoryPremium.status, 200);
+  assert.strictEqual(factoryPremium.payload.status, "optimized");
+  assert.strictEqual(factoryPremium.payload.site_context.site_type, "factory_demo");
+  assert.strictEqual(factoryPremium.payload.summary.premium_demo_value_eur, 876.73);
+  assert.ok(factoryPremium.payload.summary.premium_demo_value_eur > factoryPremium.payload.summary.basic_demo_value_eur * 10);
+  assert.strictEqual(factoryPremium.payload.profile_readiness.site_id, "factory_de_munich_001");
+  assert.ok(factoryPremium.payload.home_devices.devices.some((item) => item.equipment_id === "forklift_fleet"));
+  assert.ok(factoryPremium.payload.limitations.some((item) => /not measured profit/i.test(item)));
+
   const basic = await callApi("POST", "/api/plans/optimize", {
     plan_tier: "basic",
     ev_request: { required_energy_kwh: 12 }

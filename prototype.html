@@ -2092,6 +2092,31 @@
       line-height: 1;
     }
 
+    .post-route-summary {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .post-route-summary .advice-scoreboard {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .post-route-summary .advice-plan {
+      max-width: none;
+    }
+
+    .route-support-controls {
+      display: grid;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .route-support-controls .decision-meta,
+    .route-support-controls .plan-tier-strip {
+      max-width: none;
+    }
+
     .advice-scoreboard {
       display: grid;
       grid-template-columns: 1fr;
@@ -2172,6 +2197,27 @@
     .support-section.emphasis {
       background: color-mix(in srgb, var(--ds-brand-softer) 46%, var(--ds-neutral-primary-soft));
       border-color: var(--ds-border-brand-subtle);
+    }
+
+    .support-section.route-spotlight {
+      background:
+        linear-gradient(135deg, rgba(164, 255, 0, 0.08), rgba(255, 160, 52, 0.05)),
+        var(--ds-neutral-primary-soft);
+      border-color: color-mix(in srgb, var(--ds-brand) 44%, var(--ds-border-default));
+      gap: 20px;
+    }
+
+    .route-spotlight .routing-intro {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      grid-template-columns: minmax(0, 0.72fr) minmax(280px, 1.28fr);
+      align-items: end;
+    }
+
+    .route-spotlight .routing-board {
+      background: color-mix(in srgb, var(--ds-brand-softer) 28%, var(--ds-neutral-secondary-soft));
+      border-color: color-mix(in srgb, var(--ds-brand) 32%, var(--ds-border-default));
     }
 
     .support-header {
@@ -5346,23 +5392,26 @@
       }
 
       .workbench-center {
-        grid-column: 1;
+        grid-column: 1 / -1;
         grid-row: 1;
       }
 
       .receipt-rail {
-        grid-column: 2;
-        grid-row: 1;
-        position: sticky;
-        top: 96px;
+        grid-column: 1;
+        grid-row: 2;
+        position: static;
+        top: auto;
       }
 
       .workbench-rail {
-        grid-column: 1 / -1;
+        grid-column: 2;
         grid-row: 2;
       }
 
-      .advice-scoreboard,
+      .workbench-rail .workbench-nav {
+        grid-template-columns: 1fr;
+      }
+
       .receipt-list {
         grid-template-columns: 1fr;
       }
@@ -5470,12 +5519,21 @@
         text-align: left;
       }
 
+      .post-route-summary .advice-scoreboard {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
       .support-section {
         padding: 16px;
       }
 
       .support-header {
         grid-template-columns: 1fr;
+      }
+
+      .route-spotlight .routing-intro {
+        grid-template-columns: 1fr;
+        align-items: start;
       }
 
       #priceDetails .source-price-grid {
@@ -5804,7 +5862,7 @@
           <select class="profile-select" id="scenarioSelect" aria-label="Household scenario">
             <option value="berlin">Berlin whole-home profile</option>
             <option value="hamburg">Hamburg family home</option>
-            <option value="munich">Munich apartment</option>
+            <option value="munich">Munich factory profile</option>
             <option value="leipzig">Leipzig EV household</option>
           </select>
         </label>
@@ -5819,212 +5877,125 @@
               <p class="section-kicker">Best action now</p>
               <h2 id="decisionBoardTitle">Best action now: use clean energy first.</h2>
               <p id="adviceHeroCopy">The optimizer checks EV charging, dishwasher timing, heat-pump comfort, battery reserve, and flexible appliances. EV charging is the top action today, while smaller appliances stay in the plan with user-friendly deadlines.</p>
-              <div class="decision-meta" aria-label="Current planning context">
-                <div class="decision-meta-item">
-                  <span class="decision-meta-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M13 2 4 14h7l-1 8 10-13h-7l0-7Z"></path>
-                    </svg>
-                  </span>
-                  <span>Grid now<strong id="contextGridPrice">EUR 0.35/kWh</strong></span>
-                </div>
-                <div class="decision-meta-item">
-                  <span class="decision-meta-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="4"></circle>
-                      <path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m4.93 19.07 1.41-1.41"></path><path d="m17.66 6.34 1.41-1.41"></path>
-                    </svg>
-                  </span>
-                  <span>Solar route<strong id="contextSolar">6 kWh</strong></span>
-                </div>
-                <div class="decision-meta-item">
-                  <span class="decision-meta-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="9"></circle>
-                      <path d="M12 7v5l3 2"></path>
-                    </svg>
-                  </span>
-                  <span>Low-price window<strong id="contextWindow">22:00-01:00</strong></span>
-                </div>
-              </div>
-              <div class="plan-tier-strip" aria-label="Plan service level">
-                <article class="plan-tier-card">
-                  <span>Basic</span>
-                  <strong>EV smart charging</strong>
-                  <small>Find the cheapest safe charging window before departure.</small>
-                </article>
-                <article class="plan-tier-card active">
-                  <span>Premium active</span>
-                  <strong>Solar use, store, sell, buy</strong>
-                  <small>Include feed-in value, battery reserve, and low-price grid buys.</small>
-                </article>
-              </div>
-              <div class="advice-actions">
-                <button class="primary-button" type="button" onclick="openPanel('chargingDetails')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M5 12h14"></path>
-                    <path d="m13 6 6 6-6 6"></path>
-                  </svg>
-                  <span>Review plan</span>
-                </button>
-                <button class="ghost-button" type="button" onclick="openPanel('trustReceiptDetails')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7Z"></path>
-                    <path d="M14 2v5h5"></path>
-                    <path d="M9 13h6"></path>
-                    <path d="M9 17h4"></path>
-                  </svg>
-                  <span>Show trust receipt</span>
-                </button>
-                <button class="ghost-button" type="button" onclick="openCompanion()">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"></path>
-                    <path d="M8 9h8"></path>
-                    <path d="M8 13h5"></path>
-                  </svg>
-                  <span>Ask Energy Companion</span>
-                </button>
-              </div>
             </div>
 
-            <div class="routing-intro">
-              <div>
-                <p class="section-kicker">Today’s energy plan</p>
-                <h3>Use the cheapest clean energy first.</h3>
+            <section class="support-section route-spotlight hero-route-stack" id="energyRouteDetails" aria-labelledby="routingIntroTitle">
+              <div class="routing-intro">
+                <div>
+                  <p class="section-kicker">Routing map</p>
+                  <h3 id="routingIntroTitle">Use the cheapest clean energy first.</h3>
+                </div>
+                <p id="routingIntroCopy">Solar is used before buying grid power. The battery is kept for the evening, comfort loads are protected, the dishwasher is only delayed if convenient, and the EV finishes in the low-price window.</p>
               </div>
-              <p>Solar is used before buying grid power. The battery is kept for the evening, comfort loads are protected, the dishwasher is only delayed if convenient, and the EV finishes in the low-price window.</p>
-            </div>
-
-            <section class="routing-board" id="routingBoard" aria-label="Today’s energy route from solar first to cheap grid power later">
-              <div class="route-flow" role="list" aria-label="Energy route steps">
-                <article class="route-step route-use" role="listitem">
-                  <span class="route-node" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path></svg>
-                    <span class="route-index">1</span>
-                  </span>
-                  <span class="route-step-copy">
-                    <span class="route-label">Use solar now</span>
-                    <strong>6 kWh</strong>
-                    <small>14:00-18:00</small>
-                  </span>
-                </article>
-                <article class="route-step route-store" role="listitem">
-                  <span class="route-node" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="16" height="10" rx="2"></rect><path d="M21 11v2"></path><path d="M7 11h3"></path><path d="M8.5 9.5v3"></path><path d="M12 11h3"></path></svg>
-                    <span class="route-index">2</span>
-                  </span>
-                  <span class="route-step-copy">
-                    <span class="route-label">Store solar for evening</span>
-                    <strong>2.9 kWh</strong>
-                    <small>Evening peak reserve</small>
-                  </span>
-                </article>
-                <article class="route-step route-sell" role="listitem">
-                  <span class="route-node" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"></path><path d="M9 7h8v8"></path><path d="M4 20h16"></path></svg>
-                    <span class="route-index">3</span>
-                  </span>
-                  <span class="route-step-copy">
-                    <span class="route-label">Sell extra solar</span>
-                    <strong>3 kWh</strong>
-                    <small>After home needs</small>
-                  </span>
-                </article>
-                <article class="route-step route-buy" role="listitem">
-                  <span class="route-node" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 10-13h-7l0-7Z"></path></svg>
-                    <span class="route-index">4</span>
-                  </span>
-                  <span class="route-step-copy">
-                    <span class="route-label">Buy low-price grid later</span>
-                    <strong>18 kWh</strong>
-                    <small>22:00-01:00</small>
-                  </span>
-                </article>
-              </div>
-              <div class="route-detail-grid" aria-label="Energy route details">
-                <article class="route-detail-card route-use">
-                  <div class="route-detail-head">
-                    <span class="route-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path></svg></span>
-                    <span class="route-detail-copy">
-                      <span class="route-detail-title">Use solar now</span>
-                      <span class="route-source">Solar forecast</span>
-                    </span>
-                  </div>
-                  <p>Solar to EV and home load before buying from the grid.</p>
-                  <div class="route-meter" aria-hidden="true"><span style="width: 38%"></span></div>
-                </article>
-                <article class="route-detail-card route-store">
-                  <div class="route-detail-head">
-                    <span class="route-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="16" height="10" rx="2"></rect><path d="M21 11v2"></path><path d="M7 11h3"></path><path d="M8.5 9.5v3"></path><path d="M12 11h3"></path></svg></span>
-                    <span class="route-detail-copy">
-                      <span class="route-detail-title">Store solar for evening</span>
-                      <span class="route-source">Battery reserve</span>
-                    </span>
-                  </div>
-                  <p>Keep surplus solar in the home battery for tonight’s higher demand.</p>
-                  <div class="route-meter" aria-hidden="true"><span style="width: 18%"></span></div>
-                </article>
-                <article class="route-detail-card route-sell">
-                  <div class="route-detail-head">
-                    <span class="route-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"></path><path d="M9 7h8v8"></path><path d="M4 20h16"></path></svg></span>
-                    <span class="route-detail-copy">
-                      <span class="route-detail-title">Sell extra solar</span>
-                      <span class="route-source">Export estimate</span>
-                    </span>
-                  </div>
-                  <p>Export only after home, EV, and reserve needs are covered.</p>
-                  <div class="route-meter" aria-hidden="true"><span style="width: 19%"></span></div>
-                </article>
-                <article class="route-detail-card route-buy">
-                  <div class="route-detail-head">
-                    <span class="route-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 10-13h-7l0-7Z"></path></svg></span>
-                    <span class="route-detail-copy">
-                      <span class="route-detail-title">Buy low-price grid later</span>
-                      <span class="route-source">Low-price tariff</span>
-                    </span>
-                  </div>
-                  <p>Grid power waits for the low-price window.</p>
-                  <div class="route-meter" aria-hidden="true"><span style="width: 100%"></span></div>
-                </article>
-              </div>
+              <section class="routing-board" id="routingBoard" aria-label="Today’s energy route from solar first to cheap grid power later"></section>
             </section>
 
-            <div class="advice-plan" aria-label="Charging advice summary">
-              <strong>Recommended routing schedule</strong>
-              <ol id="advicePlanSteps">
-                <li>Do not charge immediately at the current grid price.</li>
-                <li>Use rooftop solar this afternoon.</li>
-                <li>Finish with cheaper grid electricity tonight.</li>
-              </ol>
+            <div class="post-route-summary" aria-label="Recommendation summary below energy route">
+              <div class="advice-scoreboard" aria-label="Recommendation summary">
+                <div class="advice-score score-save">
+                    <span id="adviceSavingsLabel">Savings vs charging now</span>
+                  <div class="advice-score-row">
+                    <strong id="adviceSavings">EUR 5.16</strong>
+                  </div>
+                  <small id="adviceSavingsCopy">Compared with charging immediately.</small>
+                </div>
+                <div class="advice-score score-cost">
+                    <span id="adviceSmartCostLabel">Recommended cost</span>
+                  <div class="advice-score-row">
+                    <strong id="adviceSmartCost">EUR 3.24</strong>
+                  </div>
+                  <small id="advicePlanCopy">6 kWh solar + 18 kWh cheaper grid electricity.</small>
+                </div>
+                <div class="advice-score score-time">
+                    <span id="adviceReadyByLabel">Ready by</span>
+                  <div class="advice-score-row">
+                    <strong id="adviceReadyBy">01:00</strong>
+                  </div>
+                  <small id="adviceDeadlineCopy">Before the 08:00 departure deadline.</small>
+                </div>
+              </div>
+
+              <div class="advice-plan" aria-label="Charging advice summary">
+                <strong>Recommended routing schedule</strong>
+                <ol id="advicePlanSteps">
+                  <li>Do not charge immediately at the current grid price.</li>
+                  <li>Use rooftop solar this afternoon.</li>
+                  <li>Finish with cheaper grid electricity tonight.</li>
+                </ol>
+              </div>
+
+              <div class="route-support-controls" aria-label="Plan controls and service level">
+                <div class="decision-meta" aria-label="Current planning context">
+                  <div class="decision-meta-item">
+                    <span class="decision-meta-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2 4 14h7l-1 8 10-13h-7l0-7Z"></path>
+                      </svg>
+                    </span>
+                    <span>Grid now<strong id="contextGridPrice">EUR 0.35/kWh</strong></span>
+                  </div>
+                  <div class="decision-meta-item">
+                    <span class="decision-meta-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m4.93 19.07 1.41-1.41"></path><path d="m17.66 6.34 1.41-1.41"></path>
+                      </svg>
+                    </span>
+                    <span>Solar route<strong id="contextSolar">6 kWh</strong></span>
+                  </div>
+                  <div class="decision-meta-item">
+                    <span class="decision-meta-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <path d="M12 7v5l3 2"></path>
+                      </svg>
+                    </span>
+                    <span>Low-price window<strong id="contextWindow">22:00-01:00</strong></span>
+                  </div>
+                </div>
+                <div class="plan-tier-strip" aria-label="Plan service level">
+                  <article class="plan-tier-card">
+                    <span id="planTierBasicEyebrow">Basic</span>
+                    <strong id="planTierBasicTitle">EV smart charging</strong>
+                    <small id="planTierBasicCopy">Find the cheapest safe charging window before departure.</small>
+                  </article>
+                  <article class="plan-tier-card active">
+                    <span id="planTierPremiumEyebrow">Premium active</span>
+                    <strong id="planTierPremiumTitle">Solar use, store, sell, buy</strong>
+                    <small id="planTierPremiumCopy">Include feed-in value, battery reserve, and low-price grid buys.</small>
+                  </article>
+                </div>
+                <div class="advice-actions">
+                  <button class="primary-button" type="button" onclick="openPanel('chargingDetails')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M5 12h14"></path>
+                      <path d="m13 6 6 6-6 6"></path>
+                    </svg>
+                    <span>Review plan</span>
+                  </button>
+                  <button class="ghost-button" type="button" onclick="openPanel('trustReceiptDetails')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7Z"></path>
+                      <path d="M14 2v5h5"></path>
+                      <path d="M9 13h6"></path>
+                      <path d="M9 17h4"></path>
+                    </svg>
+                    <span>Show trust receipt</span>
+                  </button>
+                  <button class="ghost-button" type="button" onclick="openCompanion()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"></path>
+                      <path d="M8 9h8"></path>
+                      <path d="M8 13h5"></path>
+                    </svg>
+                    <span>Ask Energy Companion</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
           <aside class="receipt-rail" aria-label="Recommendation receipt">
-            <div class="advice-scoreboard" aria-label="Recommendation summary">
-              <div class="advice-score score-save">
-                <span>Savings vs charging now</span>
-                <div class="advice-score-row">
-                  <strong id="adviceSavings">EUR 5.16</strong>
-                </div>
-                <small id="adviceSavingsCopy">Compared with charging immediately.</small>
-              </div>
-              <div class="advice-score score-cost">
-                <span>Recommended cost</span>
-                <div class="advice-score-row">
-                  <strong id="adviceSmartCost">EUR 3.24</strong>
-                </div>
-                <small id="advicePlanCopy">6 kWh solar + 18 kWh cheaper grid electricity.</small>
-              </div>
-              <div class="advice-score score-time">
-                <span>Ready by</span>
-                <div class="advice-score-row">
-                  <strong id="adviceReadyBy">01:00</strong>
-                </div>
-                <small id="adviceDeadlineCopy">Before the 08:00 departure deadline.</small>
-              </div>
-            </div>
-
             <section class="trust-receipt-card" aria-labelledby="receiptRailTitle">
               <div class="receipt-card-header">
                 <div>
@@ -6053,15 +6024,15 @@
                 <strong id="navTodayMeta">1 decision</strong>
                 <small>The action, timing, and expected saving.</small>
               </button>
-              <button class="workbench-nav-item" type="button" data-open-panel="priceDetails">
-                <span>Energy sources</span>
+              <button class="workbench-nav-item" type="button" data-open-panel="energyRouteDetails">
+                <span>Energy routing</span>
                 <strong id="navSolarMeta">6 kWh solar</strong>
-                <small>Solar, battery, grid price, and timing.</small>
+                <small>Route map, price windows, solar, and battery.</small>
               </button>
               <button class="workbench-nav-item" type="button" data-open-panel="deviceDetails">
-                <span>Home devices</span>
+                <span>Devices</span>
                 <strong id="navEvMeta">24 kWh to add</strong>
-                <small>EV, wallbox, battery, heat pump, and appliances.</small>
+                <small>Profile equipment, constraints, and flexible loads.</small>
               </button>
               <button class="workbench-nav-item" type="button" data-open-panel="trustReceiptDetails">
                 <span>Trust receipt</span>
@@ -6096,15 +6067,15 @@
 
         <div class="story-slider-shell">
           <div class="story-slider" id="productStorySlider" tabindex="0" aria-label="Clickable product story slides">
-            <button class="story-slide" type="button" data-open-panel="chargingDetails" style="--story-image: url('assets/banner-energy-home.png')">
+            <button class="story-slide" type="button" data-open-panel="energyRouteDetails" style="--story-image: url('assets/banner-energy-home.png')">
               <span class="story-slide-content">
                 <span class="story-slide-top">
                   <span class="story-slide-kicker">Decision engine</span>
                   <h3>Route every kWh before prices move.</h3>
-                  <p>Solar, battery, EV, home load, export, and grid purchases are planned as one household decision.</p>
+                  <p>Solar, battery, flexible loads, export, and grid purchases are planned as one site decision.</p>
                 </span>
                 <span class="story-slide-bottom">
-                  <span class="story-metric">EUR 5.16 saved today</span>
+                  <span class="story-metric">Home or factory scale</span>
                   <span class="story-link">Open plan <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span>
                 </span>
               </span>
@@ -6129,7 +6100,7 @@
                 <span class="story-slide-top">
                   <span class="story-slide-kicker">Premium optimizer</span>
                   <h3>Use, store, sell, or buy at the right time.</h3>
-                  <p>Premium weighs feed-in value, battery reserve, low-price grid windows, and comfort risk before recommending an action.</p>
+                  <p>Premium weighs feed-in value, battery reserve, low-price grid windows, and operating guardrails before recommending an action.</p>
                 </span>
                 <span class="story-slide-bottom">
                   <span class="story-metric">Solar opportunity cost included</span>
@@ -6163,7 +6134,7 @@
             <div class="support-title">
               <p class="section-kicker">Flexible schedule</p>
               <h2 id="scheduleTitle">Today's flexible device plan</h2>
-              <p>One schedule for the EV, appliances, and battery reserve, ordered by savings, comfort, and deadline risk.</p>
+              <p id="scheduleSubtitle">One schedule for the EV, appliances, and battery reserve, ordered by savings, comfort, and deadline risk.</p>
             </div>
             <span class="support-badge" id="chargingDetailsSummary">24 kWh needed, finish 01:00, EUR 5.16 saved.</span>
           </div>
@@ -6502,35 +6473,35 @@
           <div class="panel-header">
             <div class="panel-title">
               <h2 id="evPlanTitle">EV smart charging decision</h2>
-              <span>One grounded recommendation with the exact cost difference.</span>
+              <span id="evPlanSubtitle">One grounded recommendation with the exact cost difference.</span>
             </div>
             <span class="tag amber api-status checking" id="apiStatusTag" role="status" aria-live="polite">Syncing data</span>
           </div>
           <div class="ev-summary">
             <div class="decision-copy">
               <div class="move-time">
-                <span class="time-badge">14:00 solar + 22:00 low-price grid</span>
-                <span class="tag">Target met by 08:00</span>
+                <span class="time-badge" id="evDecisionTime">14:00 solar + 22:00 low-price grid</span>
+                <span class="tag" id="evDecisionTag">Target met by 08:00</span>
               </div>
-              <h3>Do not charge at full power right now.</h3>
-              <p>Use 6 kWh of expected solar surplus this afternoon, then finish with 18 kWh during the low-price window. The EV still reaches the 80% target before the morning departure.</p>
+              <h3 id="evDecisionTitle">Do not charge at full power right now.</h3>
+              <p id="evDecisionCopy">Use 6 kWh of expected solar surplus this afternoon, then finish with 18 kWh during the low-price window. The EV still reaches the 80% target before the morning departure.</p>
               <div class="formula-box" id="evFormula">Charge now: 24 kWh x EUR 0.35/kWh = EUR 8.40
 Smart plan: (6 kWh x EUR 0.00/kWh) + (18 kWh x EUR 0.18/kWh) = EUR 3.24
 Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
             </div>
             <div class="cost-cards" aria-label="EV cost comparison">
               <div class="cost-card">
-                <span>Charge now</span>
+                <span id="evChargeNowLabel">Charge now</span>
                 <strong id="evChargeNowCost">EUR 8.40</strong>
                 <small id="evChargeNowHint">24 kWh at the current final contract price.</small>
               </div>
               <div class="cost-card">
-                <span>Smart plan</span>
+                <span id="evSmartPlanLabel">Smart plan</span>
                 <strong id="evSmartPlanCost">EUR 3.24</strong>
                 <small id="evSmartPlanHint">Solar surplus plus the low-price grid window.</small>
               </div>
               <div class="cost-card save">
-                <span>You save</span>
+                <span id="evSavingsLabel">You save</span>
                 <strong id="evSavingsCost">EUR 5.16</strong>
                 <small id="evSavingsHint">61% less than charging immediately.</small>
               </div>
@@ -6934,43 +6905,188 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         ]
       },
       munich: {
-        label: "Munich apartment",
-        sync: "Smart meter synced 11 min ago",
+        label: "Munich factory",
+        profileMenuLabel: "Munich factory",
+        siteType: "factory",
+        sync: "Factory energy data synced at 09:30",
         city: "Munich",
-        residents: 2,
-        todayUse: 9.7,
-        lastHint: "0.9 kWh below yesterday",
-        solar: 3.2,
-        solarHint: "Balcony PV peak at 12:50",
-        bestWindow: "13:00",
-        bestRate: 0.25,
-        currentRate: 0.33,
-        smartSaving: 1.35,
-        fitBase: 64,
-        flexBase: 2.1,
-        battery: 31,
-        move: {
-          time: "13:00-15:00",
-          title: "Run laundry after lunch and avoid the evening price spike.",
-          copy: "The balcony PV forecast covers a smaller load, so the best move is shifting one flexible appliance out of the evening.",
-          saving: 0.72,
-          importAvoided: 1.3,
-          confidence: 79,
-          tag: "Low effort"
+        todayUse: 5840,
+        lastHint: "2,420 kWh flexible industrial demand is available",
+        solar: 4480,
+        solarHint: "980 kWp PV forecast; 610 kWh export candidate",
+        bestWindow: "01:00",
+        bestRate: 0.18,
+        currentRate: 0.42,
+        smartSaving: 876.73,
+        fitBase: 91,
+        flexBase: 42,
+        battery: 55,
+        businessImpact: {
+          basicDailyValueEur: 62.4,
+          basicMonthlyValueEur: 1372.8,
+          premiumDailyValueEur: 876.73,
+          premiumMonthlyValueEur: 19288.06,
+          monthlyLiftVsBasicEur: 17915.26,
+          premiumToBasicMultiple: 14.05,
+          flexibleEnergyKwh: 2420,
+          pvGenerationKwh: 4480,
+          exportedKwh: 610,
+          productionDeadline: "06:00 shift handover",
+          formulaVersion: "factory-margin-v0.1"
         },
+        move: {
+          time: "10:00-16:00 + 01:00-04:00",
+          title: "Shift factory demand into the profitable energy window.",
+          copy: "Premium compares line load, PV output, battery reserve, export value, off-peak procurement, and demand peak control while keeping the 06:00 shift handover intact.",
+          saving: 876.73,
+          importAvoided: 3170,
+          confidence: 86,
+          tag: "Premium factory value"
+        },
+        evPlan: {
+          requiredEnergyKwh: 2420,
+          naiveCostEur: 1274.73,
+          smartCostEur: 398.0,
+          savingsEur: 876.73,
+          savingsPercent: 68.8,
+          currentPriceEurPerKwh: 0.42,
+          lowPriceRateEurPerKwh: 0.18,
+          solarSurplusKwh: 1760,
+          lowPriceGridKwh: 620,
+          calculatedAt: "2026-06-21T09:30:00+02:00",
+          inputSnapshotId: "factory-de-munich-001-0930",
+          formulaVersion: "factory-margin-v0.1",
+          economicCostEur: 475.43,
+          economicSavingsEur: 799.3,
+          solarOpportunityCostEur: 132.0,
+          solarOpportunityCostEurPerKwh: 0.075,
+          wallboxMaxPowerKw: 600,
+          wallboxMinimumStablePowerKw: 110,
+          departureDeadline: "2026-06-22T06:00:00+02:00",
+          finishBy: "2026-06-22T04:00:00+02:00",
+          validUntil: "2026-06-22T06:00:00+02:00",
+          gridWindowStart: "2026-06-22T01:00:00+02:00",
+          gridWindowEnd: "2026-06-22T04:00:00+02:00",
+          controlMode: "advice_only",
+          schedule: [
+            { start: "2026-06-21T10:00:00+02:00", end: "2026-06-21T12:00:00+02:00", source: "solar_surplus", energy_kwh: 620, cash_price_eur_per_kwh: 0 },
+            { start: "2026-06-21T12:00:00+02:00", end: "2026-06-21T14:00:00+02:00", source: "solar_surplus", energy_kwh: 760, cash_price_eur_per_kwh: 0 },
+            { start: "2026-06-21T14:00:00+02:00", end: "2026-06-21T16:00:00+02:00", source: "solar_surplus", energy_kwh: 380, cash_price_eur_per_kwh: 0 },
+            { start: "2026-06-22T01:00:00+02:00", end: "2026-06-22T04:00:00+02:00", source: "grid_low_price", energy_kwh: 620, cash_price_eur_per_kwh: 0.18 }
+          ],
+          energyRoutingPlan: [
+            {
+              route: "use",
+              label: "Run line on solar",
+              energy_kwh: 1760,
+              basis: "PV self-use",
+              summary: "10:00-16:00",
+              copy: "Use onsite PV for process heat, cold storage pre-cooling, and compressed-air buffering before exporting energy.",
+              reason: "PV self-consumption beats the EUR 0.075/kWh export opportunity when a matching factory load exists."
+            },
+            {
+              route: "store",
+              label: "Reserve battery for peak",
+              energy_kwh: 900,
+              basis: "Battery arbitrage",
+              summary: "18:00-22:00",
+              copy: "Charge the 1.2 MWh battery from solar and discharge during the evening price peak while holding the safety reserve.",
+              reason: "Battery discharge avoids EUR 0.42/kWh peak imports after accounting for feed-in opportunity and degradation."
+            },
+            {
+              route: "sell",
+              label: "Export surplus after load",
+              energy_kwh: 610,
+              basis: "Export value",
+              summary: "After factory needs",
+              copy: "Export only after production load, flexible thermal buffers, and the battery reserve are covered.",
+              reason: "The synthetic export value is EUR 0.095/kWh after internal use and storage constraints are satisfied."
+            },
+            {
+              route: "buy",
+              label: "Buy off-peak grid power",
+              energy_kwh: 620,
+              basis: "Industrial tariff",
+              summary: "01:00-04:00",
+              copy: "Buy low-price grid power for overnight batches and chargers before the 06:00 shift handover.",
+              reason: "Off-peak imports at EUR 0.18/kWh replace loads that would otherwise run around EUR 0.38/kWh."
+            }
+          ],
+          formulaLines: [
+            "Basic: forklift fleet only = 480 kWh x (EUR 0.34 - EUR 0.21) = EUR 62.40/day",
+            "Premium: PV self-use + battery arbitrage + off-peak imports + export + peak reduction - degradation = EUR 876.73/day",
+            "Monthly lift: EUR 19,288.06 - EUR 1,372.80 = EUR 17,915.26"
+          ],
+          sources: [
+            { label: "Industrial tariff", value: "EUR 0.42/kWh now", note: "Synthetic final bill price for the factory demo." },
+            { label: "Factory load", value: "2,420 kWh flexible", note: "Approved synthetic operating windows for process heat, cold storage, compressed air, water treatment, and charging." },
+            { label: "PV forecast", value: "4,480 kWh today", note: "Synthetic Munich PV forecast for a 980 kWp roof system." },
+            { label: "Export value", value: "EUR 0.095/kWh", note: "Synthetic feed-in plus industrial export premium; used as opportunity cost." }
+          ]
+        },
+        factoryDevices: [
+          {
+            type: "CNC line",
+            model: "CNC machining line A",
+            source: "Synthetic production schedule",
+            energy: "2,100 kWh/day; fixed booked slots",
+            status: "Baseline production",
+            planning: "Production commitments stay fixed; Premium routes energy around them."
+          },
+          {
+            type: "Compressed air",
+            model: "Compressed air system",
+            source: "Synthetic pressure-band telemetry",
+            energy: "260 kWh flexible buffer; 180 kW rated",
+            status: "Premium flexible load",
+            planning: "Pressure buffering can move inside the approved operating band."
+          },
+          {
+            type: "Process heat",
+            model: "Low-temperature process heat",
+            source: "Synthetic thermal buffer",
+            energy: "740 kWh pre-heat window",
+            status: "Solar-first load",
+            planning: "Pre-heat during PV hours and protect production temperature limits."
+          },
+          {
+            type: "Cold storage",
+            model: "Cold storage and process cooling",
+            source: "Synthetic temperature guardrail",
+            energy: "420 kWh pre-cooling window",
+            status: "Guardrail load",
+            planning: "Pre-cool only inside temperature limits; never trade away product safety."
+          },
+          {
+            type: "Forklift fleet",
+            model: "Electric forklift fleet",
+            source: "Synthetic charger schedule",
+            energy: "480 kWh by 06:00",
+            status: "Basic + Premium load",
+            planning: "Basic can shift this one load; Premium coordinates it with the whole site."
+          },
+          {
+            type: "Battery",
+            model: "1.2 MWh factory battery",
+            source: "Synthetic battery telemetry",
+            energy: "55% full; 900 kWh solar charge plan",
+            status: "Peak reserve",
+            planning: "Reserve battery energy for the 18:00-22:00 price peak."
+          }
+        ],
         timeline: [
-          { hour: "06", price: 35, solar: 0.0, load: 0.5, battery: 0, note: "Quiet morning base" },
-          { hour: "08", price: 37, solar: 0.2, load: 0.9, battery: 0, note: "Coffee and lighting" },
-          { hour: "10", price: 30, solar: 0.7, load: 0.8, battery: 0, note: "PV almost covers standby" },
-          { hour: "12", price: 26, solar: 1.0, load: 1.1, battery: 0, note: "Good appliance window" },
-          { hour: "14", price: 25, solar: 1.1, load: 1.3, battery: 0, note: "Best laundry window" },
-          { hour: "16", price: 29, solar: 0.4, load: 1.2, battery: 0, note: "Solar fades" },
-          { hour: "18", price: 39, solar: 0.0, load: 2.0, battery: 0, note: "Cooking peak" },
-          { hour: "20", price: 42, solar: 0.0, load: 1.7, battery: 0, note: "Avoid flexible loads" },
-          { hour: "22", price: 34, solar: 0.0, load: 0.8, battery: 0, note: "Lower evening load" },
-          { hour: "00", price: 28, solar: 0.0, load: 0.4, battery: 0, note: "Quiet overnight" },
-          { hour: "02", price: 26, solar: 0.0, load: 0.3, battery: 0, note: "Lowest standby" },
-          { hour: "04", price: 29, solar: 0.0, load: 0.3, battery: 0, note: "Morning preheat off" }
+          { hour: "00", price: 20, solar: 0, load: 260, battery: 42, note: "Overnight water treatment and charging can use low-price imports" },
+          { hour: "01", price: 18, solar: 0, load: 410, battery: 40, note: "Lowest off-peak procurement window for factory loads" },
+          { hour: "02", price: 18, solar: 0, load: 420, battery: 38, note: "Run chargers and overnight batch before the 06:00 handover" },
+          { hour: "04", price: 22, solar: 0, load: 300, battery: 36, note: "Finish flexible overnight work before first shift" },
+          { hour: "08", price: 42, solar: 380, load: 620, battery: 46, note: "Production starts; avoid adding flexible demand at high import price" },
+          { hour: "10", price: 31, solar: 690, load: 760, battery: 58, note: "Route PV to process heat and compressed-air buffering" },
+          { hour: "12", price: 21, solar: 810, load: 830, battery: 72, note: "Best PV self-use window for Premium factory scheduling" },
+          { hour: "14", price: 22, solar: 620, load: 720, battery: 86, note: "Battery reserve reaches evening target" },
+          { hour: "16", price: 36, solar: 150, load: 580, battery: 82, note: "Solar fades; avoid new flexible production load" },
+          { hour: "18", price: 46, solar: 0, load: 640, battery: 76, note: "Evening peak: discharge battery instead of importing" },
+          { hour: "20", price: 37, solar: 0, load: 520, battery: 58, note: "Keep peak reduction active and delay chargers" },
+          { hour: "22", price: 25, solar: 0, load: 330, battery: 48, note: "Prepare next low-price import window" }
         ]
       },
       leipzig: {
@@ -7152,7 +7268,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
 
     const ENERGY_COMPANION_PROMPT = {
       version: "energy-companion.prompt.v0.1.0",
-      systemRole: "You are Enpal Smart Energy Companion, an energy explainer for non-technical German households.",
+      systemRole: "You are Enpal Smart Energy Companion, an energy explainer for German homes and energy sites.",
       contentUnderstanding: [
         "Classify the user's intent before answering.",
         "Ground every answer in contract terms, appliance deadlines, device state, forecast, or calculation outputs.",
@@ -7293,11 +7409,15 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       return households[state.householdKey];
     }
 
+    function isFactoryProfile(data = currentHousehold()) {
+      return data?.siteType === "factory";
+    }
+
     function updateProfileMenuLabel() {
       const label = byId("profileMenuLabel");
       if (!label) return;
       const data = currentHousehold();
-      label.textContent = data.city || data.label || "Profile";
+      label.textContent = data.profileMenuLabel || data.label || data.city || "Profile";
       label.title = `${data.label} profile`;
     }
 
@@ -7538,6 +7658,10 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
     }
 
     function homeInventoryDevices(fallbackDevices) {
+      const data = currentHousehold();
+      if (isFactoryProfile(data) && Array.isArray(data.factoryDevices)) {
+        return data.factoryDevices;
+      }
       const registryDevices = state.deviceRegistry?.devices;
       if (Array.isArray(registryDevices) && registryDevices.length) {
         return registryDevices.map(productDeviceFromRegistry).filter(Boolean);
@@ -8022,7 +8146,9 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         if (!target.tag || !target.note) return;
         target.tag.className = `tag api-status ${tone}`;
         target.tag.textContent = apiConnection.label;
-        target.note.textContent = apiConnection.note;
+        target.note.textContent = isFactoryProfile()
+          ? "Factory demo uses synthetic tariff, PV, load, battery, and export data. No live production control."
+          : apiConnection.note;
       });
       renderTrustReceipt();
     }
@@ -8443,42 +8569,46 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const storeKwh = Math.min(Math.max(0, forecastSurplusKwh - useKwh), batteryHeadroomKwh);
       const sellKwh = Math.max(0, forecastSurplusKwh - useKwh - storeKwh);
       const buyKwh = Math.max(0, plan.lowPriceGridKwh || 0);
+      const useOverride = routingOverride(plan, "use");
+      const storeOverride = routingOverride(plan, "store");
+      const sellOverride = routingOverride(plan, "sell");
+      const buyOverride = routingOverride(plan, "buy");
 
       const routes = [
         {
           key: "use",
-          label: "Use solar now",
-          value: routeKwhFromOverride(routingOverride(plan, "use"), useKwh),
-          basis: "Solar forecast",
-          summary: "14:00-18:00",
-          copy: `Send rooftop solar to the EV or home first, because using it is worth more than selling it for ${formatEurPerKwh(plan.solarOpportunityCostEurPerKwh || 0.081)}.`,
+          label: useOverride?.label || "Use solar now",
+          value: routeKwhFromOverride(useOverride, useKwh),
+          basis: useOverride?.basis || "Solar forecast",
+          summary: useOverride?.summary || "14:00-18:00",
+          copy: useOverride?.copy || `Send rooftop solar to the EV or home first, because using it is worth more than selling it for ${formatEurPerKwh(plan.solarOpportunityCostEurPerKwh || 0.081)}.`,
           className: "route-use"
         },
         {
           key: "store",
-          label: "Store solar for evening",
-          value: routeKwhFromOverride(routingOverride(plan, "store"), storeKwh),
-          basis: "Battery reserve",
-          summary: "Evening peak reserve",
-          copy: `Keep surplus solar in the home battery for tonight's higher demand; current charge is ${data.battery}% full.`,
+          label: storeOverride?.label || "Store solar for evening",
+          value: routeKwhFromOverride(storeOverride, storeKwh),
+          basis: storeOverride?.basis || "Battery reserve",
+          summary: storeOverride?.summary || "Evening peak reserve",
+          copy: storeOverride?.copy || `Keep surplus solar in the home battery for tonight's higher demand; current charge is ${data.battery}% full.`,
           className: "route-store"
         },
         {
           key: "sell",
-          label: "Sell extra solar",
-          value: routeKwhFromOverride(routingOverride(plan, "sell"), sellKwh),
-          basis: "Export estimate",
-          summary: "After home needs",
-          copy: "Export only after home load, EV solar charging, and battery reserve are covered.",
+          label: sellOverride?.label || "Sell extra solar",
+          value: routeKwhFromOverride(sellOverride, sellKwh),
+          basis: sellOverride?.basis || "Export estimate",
+          summary: sellOverride?.summary || "After home needs",
+          copy: sellOverride?.copy || "Export only after home load, EV solar charging, and battery reserve are covered.",
           className: "route-sell"
         },
         {
           key: "buy",
-          label: "Buy low-price grid later",
-          value: routeKwhFromOverride(routingOverride(plan, "buy"), buyKwh),
-          basis: "Low-price tariff",
-          summary: formatTimeRange(gridRange.start, gridRange.end),
-          copy: `Grid power waits for ${formatTimeRange(gridRange.start, gridRange.end)} at ${formatEurPerKwh(plan.lowPriceRateEurPerKwh)}.`,
+          label: buyOverride?.label || "Buy low-price grid later",
+          value: routeKwhFromOverride(buyOverride, buyKwh),
+          basis: buyOverride?.basis || "Low-price tariff",
+          summary: buyOverride?.summary || formatTimeRange(gridRange.start, gridRange.end),
+          copy: buyOverride?.copy || `Grid power waits for ${formatTimeRange(gridRange.start, gridRange.end)} at ${formatEurPerKwh(plan.lowPriceRateEurPerKwh)}.`,
           className: "route-buy"
         }
       ];
@@ -8581,6 +8711,41 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const plan = currentEvPlan();
       const finishAt = getChargingFinishTime(plan);
       const slackHours = Math.max(0, hoursBetween(finishAt, plan.departureDeadline));
+      if (isFactoryProfile(data)) {
+        return [
+          {
+            label: "Batch deadline",
+            value: data.businessImpact.productionDeadline,
+            note: `Premium plan finishes at ${formatTimeLabel(finishAt)} before shift handover.`,
+            active: true
+          },
+          {
+            label: "Current tariff",
+            value: formatEurPerKwh(plan.currentPriceEurPerKwh),
+            note: "Synthetic current final import price for the factory run-now baseline."
+          },
+          {
+            label: "Off-peak tariff",
+            value: formatEurPerKwh(plan.lowPriceRateEurPerKwh),
+            note: "Approved low-price procurement window used for overnight batch and charging loads."
+          },
+          {
+            label: "Solar opportunity",
+            value: formatEurPerKwh(plan.solarOpportunityCostEurPerKwh || 0.075),
+            note: "Export value counted before deciding to use, store, or sell PV."
+          },
+          {
+            label: "Battery reserve",
+            value: `${data.battery}% full`,
+            note: "Factory battery reserve protects the evening peak and process continuity."
+          },
+          {
+            label: "Formula",
+            value: data.businessImpact.formulaVersion,
+            note: "Synthetic energy-value fixture; not measured production profit."
+          }
+        ];
+      }
       return [
         {
           label: "Deadline",
@@ -8626,21 +8791,37 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
 
       if (compact) {
         compact.innerHTML = "";
-        const compactItems = [
-          {
-            label: "Ready by",
-            value: formatTimeLabel(getChargingFinishTime(plan)),
-            active: true
-          },
-          {
-            label: "Data status",
-            value: apiConnection.label
-          },
-          {
-            label: "Formula",
-            value: formatFormulaVersion(plan.formulaVersion)
-          }
-        ];
+        const compactItems = isFactoryProfile()
+          ? [
+              {
+                label: "Batch done",
+                value: formatTimeLabel(getChargingFinishTime(plan)),
+                active: true
+              },
+              {
+                label: "Deadline",
+                value: currentHousehold().businessImpact?.productionDeadline || "06:00"
+              },
+              {
+                label: "Inputs",
+                value: "Tariff, PV, load"
+              }
+            ]
+          : [
+              {
+                label: "Ready by",
+                value: formatTimeLabel(getChargingFinishTime(plan)),
+                active: true
+              },
+              {
+                label: "Data status",
+                value: apiConnection.label
+              },
+              {
+                label: "Formula",
+                value: formatFormulaVersion(plan.formulaVersion)
+              }
+            ];
         compactItems.forEach((item) => {
           const row = document.createElement("div");
           const label = document.createElement("span");
@@ -8671,15 +8852,28 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
 
       if (formula) {
         const formulaLines = Array.isArray(plan.formulaLines) ? plan.formulaLines : buildEvFormulaLines({}, plan);
-        formula.textContent = [
-          ...formulaLines,
-          `Economic cost: ${formatEuro(plan.economicCostEur || plan.smartCostEur)} including ${formatEuro(plan.solarOpportunityCostEur || 0)} missed feed-in credit.`,
-          `Data status: ${apiConnection.label}. ${apiConnection.note}`
-        ].join("\n");
+        formula.textContent = isFactoryProfile()
+          ? [
+              "Premium value = PV self-use + battery peak value + off-peak import saving + export value + peak reduction - battery wear.",
+              "Boundary: synthetic factory demo, not measured production profit.",
+              "Inputs: industrial tariff, PV forecast, flexible load model, battery reserve, and export value."
+            ].join("\n")
+          : [
+              ...formulaLines,
+              `Economic cost: ${formatEuro(plan.economicCostEur || plan.smartCostEur)} including ${formatEuro(plan.solarOpportunityCostEur || 0)} missed feed-in credit.`,
+              `Data status: ${apiConnection.label}. ${apiConnection.note}`
+            ].join("\n");
       }
 
       if (summary) {
-        summary.textContent = `${formatFormulaVersion(plan.formulaVersion)} | snapshot ${plan.inputSnapshotId || "home-snapshot-berlin-1042"} | ${apiConnection.label}.`;
+        summary.textContent = isFactoryProfile()
+          ? "Factory value uses tariff, PV forecast, load model, battery reserve, and export value. Synthetic demo only."
+          : `${formatFormulaVersion(plan.formulaVersion)} | snapshot ${plan.inputSnapshotId || "home-snapshot-berlin-1042"} | ${apiConnection.label}.`;
+      }
+
+      const railNote = byId("workbenchApiSourceNote");
+      if (railNote && isFactoryProfile()) {
+        railNote.textContent = "Synthetic factory demo: tariff, PV, load, battery, and export inputs are shown in the receipt.";
       }
     }
 
@@ -8689,7 +8883,12 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         Wallbox: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="10" height="14" rx="2"></rect><path d="M8 7h4"></path><path d="M10 17v2"></path><path d="M15 9h2a2 2 0 0 1 2 2v4"></path><path d="M17 15h4"></path><path d="M18 13v4"></path></svg>',
         Battery: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5 8 7l4 3.5"></path><path d="M6 9v9h12V9"></path><rect x="9" y="12" width="8" height="5" rx="1.2"></rect><path d="M17 14h2"></path><path d="m12.5 13-1.2 2.1h1.6L12 17"></path></svg>',
         "Heat pump": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"></rect><circle cx="9.5" cy="12" r="3"></circle><path d="M9.5 9v6"></path><path d="M7 13.5 12 10.5"></path><path d="M7 10.5 12 13.5"></path><path d="M18 8v8"></path><path d="M20 10v4"></path></svg>',
-        Dishwasher: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M5 8h14"></path><path d="M9 6h.01"></path><path d="M12 6h3"></path><path d="M8 15c2-2 6-2 8 0"></path><path d="M9 12h6"></path><path d="M10 18h4"></path></svg>'
+        Dishwasher: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M5 8h14"></path><path d="M9 6h.01"></path><path d="M12 6h3"></path><path d="M8 15c2-2 6-2 8 0"></path><path d="M9 12h6"></path><path d="M10 18h4"></path></svg>',
+        "CNC line": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18h16"></path><path d="M6 18V8h12v10"></path><path d="M9 8V5h6v3"></path><path d="M9 12h6"></path><path d="M11 15h2"></path></svg>',
+        "Compressed air": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="9" height="8" rx="2"></rect><path d="M13 12h4"></path><path d="M17 10v4"></path><path d="M20 9v6"></path><path d="M7 6v2"></path><path d="M10 6v2"></path></svg>',
+        "Process heat": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 14a4 4 0 1 0 8 0c0-3-4-6-4-10-2 2-4 5-4 10Z"></path><path d="M5 20h14"></path></svg>',
+        "Cold storage": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"></path><path d="m8 7 4 4 4-4"></path><path d="m8 17 4-4 4 4"></path><path d="M4 12h16"></path></svg>',
+        "Forklift fleet": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h9"></path><path d="M6 16V8h4l3 4h3"></path><path d="M18 7v9"></path><path d="M18 7h2"></path><circle cx="7" cy="18" r="1.5"></circle><circle cx="14" cy="18" r="1.5"></circle></svg>'
       };
       return icons[type] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg>';
     }
@@ -8740,7 +8939,32 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       if (!grid) return;
       const data = currentHousehold();
       const plan = currentEvPlan();
-      const cards = [
+      const cards = isFactoryProfile(data) ? [
+        {
+          label: "Import at current factory tariff",
+          value: formatEurPerKwh(plan.currentPriceEurPerKwh || data.currentRate),
+          meaning: "Run flexible equipment immediately at the current industrial price.",
+          note: "Synthetic final bill price used for the run-now baseline."
+        },
+        {
+          label: "Buy off-peak later",
+          value: formatEurPerKwh(plan.lowPriceRateEurPerKwh || data.bestRate),
+          meaning: "Procure grid power in approved overnight and midday low-price windows.",
+          note: `${data.bestWindow} window. Premium uses this only when PV, battery, or export value are worse.`
+        },
+        {
+          label: "Use onsite PV",
+          value: "EUR 0.00/kWh cash",
+          meaning: "Route factory solar to production and thermal buffers before export.",
+          note: `Economic cost still includes missed export value of ${formatEurPerKwh(plan.solarOpportunityCostEurPerKwh || 0.075)}.`
+        },
+        {
+          label: "Reserve factory battery",
+          value: `${data.battery}% full`,
+          meaning: "Stored solar supports peak reduction and evening production load.",
+          note: "Premium holds a safety reserve and values degradation before cycling."
+        }
+      ] : [
         {
           label: "Buy from grid now",
           value: formatEurPerKwh(plan.currentPriceEurPerKwh || data.currentRate),
@@ -8862,6 +9086,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       if (!grid) return;
       const data = currentHousehold();
       const plan = currentEvPlan();
+      const factoryProfile = isFactoryProfile(data);
       const fallbackDevices = [
         {
           type: "EV",
@@ -8912,7 +9137,16 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
 
       const policy = document.createElement("div");
       policy.className = "device-policy-card";
-      policy.innerHTML = `
+      policy.innerHTML = factoryProfile ? `
+        <h3>Factory planning policy</h3>
+        <p>Premium ranks each factory load by operating value, process guardrail, production deadline, export opportunity, and peak-demand risk. The schedule protects fixed production first, then moves flexible industrial demand into higher-margin energy windows.</p>
+        <div class="policy-grid" aria-label="Factory planning tiers">
+          <div class="policy-item"><span>Top action</span><strong>Flexible factory loads: ${escapeHtml(formatKwhCompact(data.businessImpact.flexibleEnergyKwh))} before handover</strong></div>
+          <div class="policy-item"><span>Guardrails</span><strong>Cold storage temperature + compressed-air pressure</strong></div>
+          <div class="policy-item"><span>User confirmation</span><strong>Forklift chargers, batch timing, and process windows</strong></div>
+          <div class="policy-item"><span>Baseline loads</span><strong>CNC booked slots, safety systems, lighting, server room</strong></div>
+        </div>
+      ` : `
         <h3>Whole-home planning policy</h3>
         <p>The optimizer ranks every known load by impact, flexibility, deadline, and comfort. EV charging is the top action today, while the dishwasher asks for confirmation and the heat pump stays inside comfort guardrails.</p>
         <div class="policy-grid" aria-label="Device planning tiers">
@@ -8993,6 +9227,67 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
     function buildApplianceSchedulePlan() {
       const data = currentHousehold();
       const plan = currentEvPlan();
+      if (isFactoryProfile(data)) {
+        return [
+          {
+            type: "Process heat",
+            title: "Process heat pre-heating",
+            priority: "Premium flexible load",
+            status: "Run on PV first",
+            window: "10:00-16:00",
+            energy: "740 kWh",
+            saving: "EUR 173.90",
+            comfort: "Keep process temperature inside approved limits.",
+            copy: "Move thermal buffer energy into the solar window before buying grid power or exporting PV.",
+            className: "priority-high"
+          },
+          {
+            type: "Cold storage",
+            title: "Cold storage pre-cooling",
+            priority: "Guardrail load",
+            status: "Temperature protected",
+            window: "11:00-17:00",
+            energy: "420 kWh",
+            saving: "Protects peak",
+            comfort: "Never cross product temperature limits.",
+            copy: "Pre-cool while PV is strong, then reduce compressor demand during the evening price peak.",
+            className: "guardrail"
+          },
+          {
+            type: "Compressed air",
+            title: "Compressed air pressure buffering",
+            priority: "Premium flexible load",
+            status: "Pressure band checked",
+            window: "09:00-18:00",
+            energy: "260 kWh",
+            saving: "EUR 61.10",
+            comfort: "Production pressure stays inside the approved band.",
+            copy: "Use compressor flexibility to absorb PV and reduce high-price grid imports later."
+          },
+          {
+            type: "Forklift fleet",
+            title: "Forklift fleet charging",
+            priority: "Basic + Premium load",
+            status: "Complete before shift",
+            window: "01:00-04:00",
+            energy: "480 kWh",
+            saving: "EUR 62.40",
+            comfort: "All vehicles ready before first shift.",
+            copy: "Basic can optimize this single load; Premium coordinates it with site PV, battery, and export value."
+          },
+          {
+            type: "Battery",
+            title: "Factory battery peak reserve",
+            priority: "Peak reduction",
+            status: "Hold reserve",
+            window: "18:00-22:00",
+            energy: "810 kWh delivered",
+            saving: "EUR 272.70",
+            comfort: "Invisible to production if reserve remains above limit.",
+            copy: "Charge from solar and discharge during the evening peak after accounting for degradation."
+          }
+        ];
+      }
       const dishwasherKwh = 1.2;
       const dishwasherNowRate = Math.max(data.currentRate, timelinePriceAt(20));
       const dishwasherSmartRate = Math.min(data.bestRate, timelinePriceAt(22));
@@ -9135,7 +9430,15 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const minimumDuration = plan.requiredEnergyKwh / maxPower;
       const finishAt = getChargingFinishTime(plan);
       const slackHours = Math.max(0, hoursBetween(finishAt, plan.departureDeadline));
-      const metrics = [
+      const data = currentHousehold();
+      const metrics = isFactoryProfile(data) ? [
+        { label: "Flexible factory load", value: formatKwhCompact(data.businessImpact.flexibleEnergyKwh), note: "Process heat, cooling, compressed air, water treatment, and charging windows." },
+        { label: "PV forecast", value: formatKwhCompact(data.businessImpact.pvGenerationKwh), note: "Synthetic 980 kWp factory roof forecast." },
+        { label: "Basic value", value: formatEuro(data.businessImpact.basicDailyValueEur), note: "Forklift fleet charging only." },
+        { label: "Premium daily value", value: formatEuro(data.businessImpact.premiumDailyValueEur), note: "Estimated energy operating value from full-site routing." },
+        { label: "Premium monthly value", value: formatEuro(data.businessImpact.premiumMonthlyValueEur), note: `${formatCompactNumber(data.businessImpact.premiumToBasicMultiple, 2)}x Basic in the synthetic demo.` },
+        { label: "Export after needs", value: formatKwhCompact(data.businessImpact.exportedKwh), note: `Sold only after factory load and battery reserve are covered.` }
+      ] : [
         { label: "Energy needed", value: formatKwhCompact(plan.requiredEnergyKwh), note: "From current EV charge, target charge, and usable battery capacity." },
         { label: "Fastest duration", value: formatHours(minimumDuration), note: `At ${formatCompactNumber(maxPower, 1)} kW wallbox max.` },
         { label: "Deadline slack", value: formatHours(slackHours), note: `Finish ${formatTimeLabel(finishAt)} before ${formatTimeLabel(plan.departureDeadline)}.` },
@@ -9185,6 +9488,54 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const gridConstraint = gridAverageKw <= (plan.wallboxMaxPowerKw || 11)
         ? `Below ${formatCompactNumber(plan.wallboxMaxPowerKw || 11, 1)} kW wallbox max`
         : "Exceeds wallbox max";
+      const data = currentHousehold();
+      if (isFactoryProfile(data)) {
+        const steps = [
+          {
+            window: "Basic",
+            title: "Shift forklift fleet charging only",
+            note: "480 kWh moves into the cheaper overnight window.",
+            cost: formatEuro(data.businessImpact.basicDailyValueEur)
+          },
+          {
+            window: "PV",
+            title: "Run flexible process load on solar",
+            note: `${formatKwhCompact(plan.solarSurplusKwh)} of PV self-use beats the export opportunity cost.`,
+            cost: "EUR 413.60"
+          },
+          {
+            window: "Peak",
+            title: "Discharge factory battery during evening peak",
+            note: "810 kWh delivered from solar-charged storage after degradation allowance.",
+            cost: "EUR 272.70"
+          },
+          {
+            window: "Premium",
+            title: "Coordinate import, export, battery, and peak demand",
+            note: "Total estimated energy value across the synthetic factory day.",
+            cost: formatEuro(data.businessImpact.premiumDailyValueEur)
+          }
+        ];
+
+        list.innerHTML = "";
+        steps.forEach((step) => {
+          const card = document.createElement("div");
+          const windowLabel = document.createElement("span");
+          const content = document.createElement("div");
+          const title = document.createElement("strong");
+          const note = document.createElement("small");
+          const cost = document.createElement("strong");
+          card.className = "plan-step";
+          windowLabel.textContent = step.window;
+          title.textContent = step.title;
+          note.textContent = step.note;
+          content.append(title, note);
+          cost.textContent = step.cost;
+          card.append(windowLabel, content, cost);
+          list.appendChild(card);
+        });
+        return;
+      }
 
       const steps = [
         {
@@ -9232,6 +9583,11 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const slackHours = Math.max(0, hoursBetween(finishAt, plan.departureDeadline));
       const summary = byId("chargingPlannerSummary");
       if (!summary) return;
+      const data = currentHousehold();
+      if (isFactoryProfile(data)) {
+        summary.textContent = `Objective: maximize estimated factory energy operating value without breaking production guardrails. Basic shifts only forklift charging for ${formatEuro(data.businessImpact.basicDailyValueEur)} per day; Premium routes PV, battery, exports, off-peak imports, and demand peak control for ${formatEuro(data.businessImpact.premiumDailyValueEur)} per day, finishing before ${data.businessImpact.productionDeadline}. Synthetic demo, not measured production profit.`;
+        return;
+      }
       summary.textContent = `Objective: minimize final customer cash cost without breaking household routines. The plan supplies the EV with ${formatKwhCompact(plan.solarSurplusKwh)} solar plus ${formatKwhCompact(plan.lowPriceGridKwh)} low-price grid, finishing at ${formatTimeLabel(finishAt)} with ${formatHours(slackHours)} slack. The dishwasher is delayed only with confirmation, heat-pump shifts stay inside comfort limits, and the battery reserve protects evening demand. Formula ${plan.formulaVersion}, snapshot ${plan.inputSnapshotId}.`;
     }
 
@@ -9249,6 +9605,62 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const routeValue = (key) => routes.find((route) => route.key === key)?.value || 0;
       const isCompactHero = window.matchMedia("(max-width: 560px)").matches;
 
+      if (isFactoryProfile(data)) {
+        const impact = data.businessImpact;
+        byId("decisionBoardTitle").textContent = "Best action now: shift production to the profitable energy window.";
+        byId("adviceSavingsLabel").textContent = "Premium value today";
+        byId("adviceSmartCostLabel").textContent = "Premium lift";
+        byId("adviceReadyByLabel").textContent = "Handover";
+        byId("adviceSavings").textContent = formatEuro(impact.premiumDailyValueEur);
+        byId("adviceSmartCost").textContent = `${formatCompactNumber(impact.premiumToBasicMultiple, 2)}x Basic`;
+        byId("adviceReadyBy").textContent = "06:00";
+        byId("adviceSavingsCopy").textContent = "Estimated energy operating value from synthetic factory routing.";
+        byId("advicePlanCopy").textContent = `${formatEuro(impact.premiumMonthlyValueEur)} monthly vs ${formatEuro(impact.basicMonthlyValueEur)} Basic.`;
+        byId("adviceDeadlineCopy").textContent = "Production batch complete before shift handover.";
+        byId("planTierBasicEyebrow").textContent = "Basic";
+        byId("planTierBasicTitle").textContent = "Single-load scheduling";
+        byId("planTierBasicCopy").textContent = "Shift forklift charging into the cheapest safe window before handover.";
+        byId("planTierPremiumEyebrow").textContent = "Premium active";
+        byId("planTierPremiumTitle").textContent = "Factory energy orchestration";
+        byId("planTierPremiumCopy").textContent = "Coordinate PV, battery reserve, export value, off-peak buys, and peak control.";
+        byId("adviceHeroCopy").textContent = isCompactHero
+          ? "Premium coordinates factory PV, battery, export value, off-peak buying, and production guardrails."
+          : "Premium compares line load, PV output, battery reserve, export value, and off-peak procurement. Today it keeps the production target intact while moving flexible factory demand into the highest-margin windows.";
+        byId("contextGridPrice").textContent = formatEurPerKwh(plan.currentPriceEurPerKwh);
+        byId("contextSolar").textContent = formatKwhCompact(routeValue("use"));
+        byId("contextWindow").textContent = formatTimeRange(gridRange.start, gridRange.end);
+        byId("routingIntroTitle").textContent = "Route factory energy before prices move.";
+        byId("routingIntroCopy").textContent = "This margin map sits above the price chart: run flexible loads on PV, reserve battery for the peak, export only after factory needs, and buy off-peak grid power.";
+        byId("advicePlanSteps").innerHTML = [
+          `Basic optimizes only forklift charging: ${formatKwhCompact(480)} shifted for ${formatEuro(impact.basicDailyValueEur)} per day.`,
+          `Premium routes ${formatKwhCompact(impact.flexibleEnergyKwh)} flexible factory demand across PV, battery, export, and low-price import windows.`,
+          `Estimated value: ${formatEuro(impact.premiumDailyValueEur)} today and ${formatEuro(impact.monthlyLiftVsBasicEur)} more than Basic per month.`
+        ].map((item) => `<li>${item}</li>`).join("");
+        byId("priceEvidenceTitle").textContent = "Energy routing and price windows";
+        byId("priceDetailsSummary").textContent = `Factory tariff now ${formatEurPerKwh(plan.currentPriceEurPerKwh)}, off-peak ${formatEurPerKwh(plan.lowPriceRateEurPerKwh)}, export opportunity ${formatEurPerKwh(plan.solarOpportunityCostEurPerKwh || 0.075)}.`;
+        byId("scheduleTitle").textContent = "Factory flexible load plan";
+        byId("scheduleSubtitle").textContent = "One plan for production load, thermal buffers, battery reserve, export value, and off-peak procurement.";
+        byId("chargingDetailsSummary").textContent = `Factory schedule: protect fixed CNC production, shift flexible thermal/load windows, complete charging before ${impact.productionDeadline}.`;
+        byId("navTodayMeta").textContent = `${formatEuro(impact.premiumDailyValueEur)} value`;
+        byId("navSolarMeta").textContent = `${formatKwhCompact(routeValue("use"))} PV | ${formatKwhCompact(routeValue("sell"))} export`;
+        byId("navEvMeta").textContent = `${formatKwhCompact(impact.flexibleEnergyKwh)} flexible load`;
+        const navReceiptMeta = byId("navReceiptMeta");
+        navReceiptMeta.textContent = impact.formulaVersion;
+        navReceiptMeta.title = "Synthetic factory demo value, not measured profit";
+        return;
+      }
+
+      byId("adviceSavingsLabel").textContent = "Savings vs charging now";
+      byId("adviceSmartCostLabel").textContent = "Recommended cost";
+      byId("adviceReadyByLabel").textContent = "Ready by";
+      byId("planTierBasicEyebrow").textContent = "Basic";
+      byId("planTierBasicTitle").textContent = "EV smart charging";
+      byId("planTierBasicCopy").textContent = "Find the cheapest safe charging window before departure.";
+      byId("planTierPremiumEyebrow").textContent = "Premium active";
+      byId("planTierPremiumTitle").textContent = "Solar use, store, sell, buy";
+      byId("planTierPremiumCopy").textContent = "Include feed-in value, battery reserve, and low-price grid buys.";
+      byId("scheduleTitle").textContent = "Today's flexible device plan";
+      byId("scheduleSubtitle").textContent = "One schedule for the EV, appliances, and battery reserve, ordered by savings, comfort, and deadline risk.";
       byId("decisionBoardTitle").textContent = "Best action now: use clean energy first.";
       byId("adviceSavings").textContent = formatEuro(plan.savingsEur);
       byId("adviceSmartCost").textContent = formatEuro(plan.smartCostEur);
@@ -9262,11 +9674,14 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       byId("contextGridPrice").textContent = formatEurPerKwh(plan.currentPriceEurPerKwh);
       byId("contextSolar").textContent = formatKwhCompact(plan.solarSurplusKwh);
       byId("contextWindow").textContent = formatTimeRange(gridRange.start, gridRange.end);
+      byId("routingIntroTitle").textContent = "Use the cheapest clean energy first.";
+      byId("routingIntroCopy").textContent = "Solar is used before buying grid power. The battery is kept for the evening, comfort loads are protected, the dishwasher is only delayed if convenient, and the EV finishes in the low-price window.";
       byId("advicePlanSteps").innerHTML = [
         `Do not charge now: ${formatKwhCompact(plan.requiredEnergyKwh)} at ${formatEurPerKwh(plan.currentPriceEurPerKwh)} would cost ${formatEuro(plan.naiveCostEur)}.`,
         `Use rooftop solar first: about ${formatKwhCompact(plan.solarSurplusKwh)} from 14:00-18:00.`,
         `Finish tonight: about ${formatKwhCompact(plan.lowPriceGridKwh)} from 22:00-01:00 at ${formatEurPerKwh(plan.lowPriceRateEurPerKwh)}, ready by ${formatTimeLabel(finishAt)}.`
       ].map((item) => `<li>${item}</li>`).join("");
+      byId("priceEvidenceTitle").textContent = "Sources and price windows";
       byId("priceDetailsSummary").textContent = `Grid now ${formatEurPerKwh(plan.currentPriceEurPerKwh)}, cheaper later ${formatEurPerKwh(plan.lowPriceRateEurPerKwh)}, solar has ${formatEurPerKwh(plan.solarOpportunityCostEurPerKwh || 0.081)} feed-in opportunity cost.`;
       byId("chargingDetailsSummary").textContent = `Whole-home schedule: EV is the top load, dishwasher asks before delay, heat pump stays inside comfort, ready by ${formatTimeLabel(finishAt)}.`;
       byId("navTodayMeta").textContent = `${formatEuro(plan.savingsEur)} saving`;
@@ -9309,19 +9724,23 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       byId("heroSaving").textContent = formatEuro(calculatePlanSaving());
       byId("heroSavingHint").textContent = "with a smart plan";
       byId("translatorRate").textContent = `${formatRate(data.currentRate)} now`;
-      byId("assistantContext").textContent = `Using ${data.city} profile`;
-      byId("companionContextProfile").textContent = `${data.city} profile`;
-      byId("companionContextPlan").textContent = `Using whole-home load plan`;
+      byId("assistantContext").textContent = `Using ${data.label} profile`;
+      byId("companionContextProfile").textContent = `${data.label} profile`;
+      byId("companionContextPlan").textContent = isFactoryProfile(data) ? "Using factory energy plan" : "Using whole-home load plan";
       byId("companionContextFormula").textContent = `Formula ${formatFormulaVersion(currentEvPlan().formulaVersion)}`;
       byId("solarFlow").style.width = `${Math.min(96, 28 + data.solar * 4)}%`;
       byId("homeFlow").style.width = `${Math.min(96, 24 + data.todayUse * 2)}%`;
       byId("gridFlow").style.width = `${Math.max(12, 72 - data.solar * 3)}%`;
       document.querySelector(".battery-fill").style.height = `${Math.max(12, data.battery)}%`;
       document.querySelector(".battery-fill").style.marginTop = `${100 - Math.max(12, data.battery)}%`;
-      byId("visualTitle").textContent = data.solar > 7 ? "Solar is covering the afternoon load." : "The next low-price window carries the day.";
-      byId("visualCopy").textContent = data.solar > 7
-        ? "Shift flexible devices into the bright window and the home imports less from the grid."
-        : "Small, well-timed changes make the biggest difference when solar is limited.";
+      byId("visualTitle").textContent = isFactoryProfile(data)
+        ? "Factory PV and storage are protecting margin."
+        : data.solar > 7 ? "Solar is covering the afternoon load." : "The next low-price window carries the day.";
+      byId("visualCopy").textContent = isFactoryProfile(data)
+        ? "Premium routes large industrial loads before the evening peak, then exports only after factory needs and battery reserve are covered."
+        : data.solar > 7
+          ? "Shift flexible devices into the bright window and the home imports less from the grid."
+          : "Small, well-timed changes make the biggest difference when solar is limited.";
     }
 
     function calculateWizardResult() {
@@ -9496,7 +9915,9 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       byId("moveImport").textContent = formatKwh(data.move.importAvoided * (state.flexibility / 58));
       byId("moveConfidence").textContent = `${Math.min(96, Math.round(data.move.confidence + (state.flexibility - 58) / 8))}%`;
       byId("lowestTariff").textContent = formatRate(data.bestRate);
-      byId("curveCaption").textContent = data.solar > 7 ? "Midday is the cleanest and cheapest window." : "Use the lowest tariff hour and keep solar loads modest.";
+      byId("curveCaption").textContent = isFactoryProfile(data)
+        ? "Premium selects PV, export, battery, and off-peak windows by estimated operating value."
+        : data.solar > 7 ? "Midday is the cleanest and cheapest window." : "Use the lowest tariff hour and keep solar loads modest.";
 
       const arc = byId("priceArc");
       const minPrice = Math.min(...data.timeline.map((point) => point.price));
@@ -9551,14 +9972,39 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const savingsPercent = plan.naiveCostEur > 0
         ? Math.round((plan.savingsEur / plan.naiveCostEur) * 100)
         : Math.round(plan.savingsPercent || 0);
+      const data = currentHousehold();
 
       byId("evFormula").textContent = plan.formulaLines.join("\n");
       byId("evChargeNowCost").textContent = formatEuro(plan.naiveCostEur);
       byId("evSmartPlanCost").textContent = formatEuro(plan.smartCostEur);
       byId("evSavingsCost").textContent = formatEuro(plan.savingsEur);
-      byId("evChargeNowHint").textContent = `${formatKwhCompact(plan.requiredEnergyKwh)} at the current final contract price.`;
-      byId("evSmartPlanHint").textContent = "Solar surplus plus the low-price grid window.";
-      byId("evSavingsHint").textContent = `${savingsPercent}% less than charging immediately.`;
+      if (isFactoryProfile(data)) {
+        byId("evPlanTitle").textContent = "Factory Premium optimization decision";
+        byId("evPlanSubtitle").textContent = "Estimated operating value with synthetic factory data.";
+        byId("evDecisionTime").textContent = "10:00 PV + 01:00 off-peak grid";
+        byId("evDecisionTag").textContent = "Batch ready by 06:00";
+        byId("evDecisionTitle").textContent = "Do not run all flexible factory loads at the current tariff.";
+        byId("evDecisionCopy").textContent = "Premium routes PV into process buffers, reserves the battery for the evening peak, exports only after factory needs, and buys low-price grid power for overnight charging and batches.";
+        byId("evChargeNowLabel").textContent = "Baseline exposure";
+        byId("evSmartPlanLabel").textContent = "Premium plan";
+        byId("evSavingsLabel").textContent = "Estimated value";
+        byId("evChargeNowHint").textContent = "Baseline operating-cost exposure before Premium routing.";
+        byId("evSmartPlanHint").textContent = "Residual estimated cost after PV, battery, export, and off-peak imports.";
+        byId("evSavingsHint").textContent = `${formatCompactNumber(data.businessImpact.premiumToBasicMultiple, 2)}x Basic factory value in the synthetic demo.`;
+      } else {
+        byId("evPlanTitle").textContent = "EV smart charging decision";
+        byId("evPlanSubtitle").textContent = "One grounded recommendation with the exact cost difference.";
+        byId("evDecisionTime").textContent = "14:00 solar + 22:00 low-price grid";
+        byId("evDecisionTag").textContent = "Target met by 08:00";
+        byId("evDecisionTitle").textContent = "Do not charge at full power right now.";
+        byId("evDecisionCopy").textContent = "Use expected solar surplus this afternoon, then finish during the low-price window. The EV still reaches the target before the morning departure.";
+        byId("evChargeNowLabel").textContent = "Charge now";
+        byId("evSmartPlanLabel").textContent = "Smart plan";
+        byId("evSavingsLabel").textContent = "You save";
+        byId("evChargeNowHint").textContent = `${formatKwhCompact(plan.requiredEnergyKwh)} at the current final contract price.`;
+        byId("evSmartPlanHint").textContent = "Solar surplus plus the low-price grid window.";
+        byId("evSavingsHint").textContent = `${savingsPercent}% less than charging immediately.`;
+      }
 
       const grid = byId("evSourceGrid");
       grid.innerHTML = "";
@@ -9612,6 +10058,39 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
     function renderComparison() {
       const data = currentHousehold();
       const multiplier = state.period === "today" ? 1 : state.period === "week" ? 7 : 30;
+      if (isFactoryProfile(data)) {
+        const periodLabel = state.period === "today" ? "today" : `this ${state.period}`;
+        const periodScale = state.period === "today" ? 1 : state.period === "week" ? 5 : 22;
+        const basicValue = data.businessImpact.basicDailyValueEur * periodScale;
+        const premiumValue = data.businessImpact.premiumDailyValueEur * periodScale;
+        const rows = [
+          { label: "Basic value", value: basicValue, max: premiumValue, className: "now", suffix: "EUR" },
+          { label: "Premium value", value: premiumValue, max: premiumValue, className: "smart", suffix: "EUR" },
+          { label: "PV self-use", value: currentEvPlan().solarSurplusKwh * periodScale, max: data.businessImpact.pvGenerationKwh * periodScale, className: "solar", suffix: "kWh" },
+          { label: "Flexible load", value: data.businessImpact.flexibleEnergyKwh * periodScale, max: data.todayUse * periodScale, className: "smart", suffix: "kWh" }
+        ];
+
+        const bars = byId("comparisonBars");
+        bars.innerHTML = "";
+        rows.forEach((row) => {
+          const width = Math.max(8, Math.min(100, (row.value / row.max) * 100));
+          const valueText = row.suffix === "EUR" ? formatEuro(row.value) : formatKwh(row.value);
+          const item = document.createElement("div");
+          item.className = "bar-row";
+          item.innerHTML = `
+            <div class="bar-label">${row.label}</div>
+            <div class="bar-track"><span class="bar-fill ${row.className}" style="width: ${width}%"></span></div>
+            <div class="bar-value">${valueText}</div>
+          `;
+          bars.appendChild(item);
+        });
+
+        byId("smartSaving").textContent = formatEuro(premiumValue);
+        byId("smartSavingCopy").textContent = `Estimated Premium energy operating value ${periodLabel}.`;
+        byId("comfortCopy").textContent = "Production guardrails stay active: cold storage, compressed air, CNC booked slots, and shift handover are protected.";
+        byId("heroSaving").textContent = formatEuro(data.businessImpact.premiumDailyValueEur);
+        return;
+      }
       const saving = calculatePlanSaving() * multiplier;
       const use = data.todayUse * multiplier;
       const smartUse = use * (1 - state.flexibility * 0.0018);
@@ -9710,7 +10189,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const selected = assistantPrompts.find((prompt) => prompt.id === state.assistantPrompt) || assistantPrompts[0];
       const data = currentHousehold();
       byId("assistantAnswer").innerHTML = `
-        <span class="tag">${data.city} household</span>
+        <span class="tag">${escapeHtml(isFactoryProfile(data) ? `${data.city} factory` : `${data.city} household`)}</span>
         <h3>${selected.title}</h3>
         <p>${selected.body}</p>
         <ul>${selected.bullets.map((bullet) => `<li>${bullet}</li>`).join("")}</ul>
@@ -9751,6 +10230,15 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
     }
 
     function buildCompanionEvidence(plan) {
+      const data = currentHousehold();
+      if (isFactoryProfile(data)) {
+        return [
+          { label: "Current factory tariff", value: formatEurPerKwh(plan.currentPriceEurPerKwh), source: "Synthetic industrial tariff" },
+          { label: "Flexible factory load", value: formatKwhCompact(data.businessImpact.flexibleEnergyKwh), source: "Synthetic factory load model" },
+          { label: "PV self-use route", value: formatKwhCompact(plan.solarSurplusKwh), source: "Synthetic PV forecast" },
+          { label: "Export opportunity", value: formatEurPerKwh(plan.solarOpportunityCostEurPerKwh), source: "Synthetic export value" }
+        ];
+      }
       return [
         { label: "Current grid price", value: formatEurPerKwh(plan.currentPriceEurPerKwh), source: "Contract tariff terms" },
         { label: "EV energy needed", value: formatKwhCompact(plan.requiredEnergyKwh), source: "Vehicle / wallbox state" },
@@ -9767,6 +10255,43 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const dailyCost = data.todayUse * data.currentRate;
       const commonTrust = "This answer uses the current household profile, tariff terms, appliance deadlines, EV state, solar forecast, and visible calculation outputs.";
       let answer;
+
+      if (isFactoryProfile(data)) {
+        const impact = data.businessImpact;
+        answer = {
+          short_answer: `Premium shows ${formatEuro(impact.premiumDailyValueEur)} of estimated factory energy value today.`,
+          explanation: `Basic only shifts forklift charging for ${formatEuro(impact.basicDailyValueEur)} per day. Premium coordinates PV self-use, battery peak discharge, off-peak procurement, export value, and demand peak reduction across ${formatKwhCompact(impact.flexibleEnergyKwh)} of flexible factory load.`,
+          calculation: `Premium monthly value ${formatEuro(impact.premiumMonthlyValueEur)} minus Basic monthly value ${formatEuro(impact.basicMonthlyValueEur)} = ${formatEuro(impact.monthlyLiftVsBasicEur)} lift. This is ${formatCompactNumber(impact.premiumToBasicMultiple, 2)}x Basic in the synthetic demo.`,
+          recommendation: "Review the factory route, then confirm equipment limits before any real automation.",
+          trust: "This is a synthetic factory demo fixture, not measured profit. The Trust Receipt names tariff, PV forecast, operating windows, export opportunity, formula version, and limitations."
+        };
+
+        return {
+          assistant: "Enpal Energy Companion",
+          question,
+          intent,
+          answer,
+          evidence: buildCompanionEvidence(plan),
+          prompt_contract: {
+            version: ENERGY_COMPANION_PROMPT.version,
+            system_role: ENERGY_COMPANION_PROMPT.systemRole,
+            content_understanding: {
+              detected_intent: intent,
+              user_question: question,
+              required_reasoning: ENERGY_COMPANION_PROMPT.contentUnderstanding
+            },
+            grounding_snapshot: {
+              household: data.label,
+              current_import_price_eur_per_kwh: plan.currentPriceEurPerKwh,
+              flexible_factory_load_kwh: impact.flexibleEnergyKwh,
+              premium_demo_value_eur: impact.premiumDailyValueEur,
+              basic_demo_value_eur: impact.basicDailyValueEur
+            },
+            answer_format: ENERGY_COMPANION_PROMPT.answerFormat
+          },
+          limitations: ["Offline answers use the current page context.", "Factory values are synthetic demo estimates, not measured profit."]
+        };
+      }
 
       if (intent === "ev_charging") {
         answer = {

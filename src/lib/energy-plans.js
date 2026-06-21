@@ -1,9 +1,12 @@
+const fs = require("fs");
+const path = require("path");
 const { calculateEvRecommendation, makeCalculationMetadata, round } = require("./energy-calculations");
 const { calculateEnergyRouting, loadEnergyRoutingPlan } = require("./energy-routing");
 const { buildProductUsageProfile, parseContractText } = require("./connectors");
 const { listHomeDevices } = require("./home-device-store");
 
 const PLAN_VERSION = "energy-plan.v0.1.0";
+const MUNICH_FACTORY_PROFILE_PATH = path.join("data", "munich-factory-profile.json");
 
 function normalizePlanTier(value) {
   const tier = String(value || "premium").trim().toLowerCase();
@@ -19,6 +22,136 @@ function sourceQualityStatus(items = []) {
   if (items.some((item) => String(item.status || "").includes("missing"))) return "incomplete";
   if (items.some((item) => String(item.status || "").includes("forecast"))) return "mixed_forecast";
   return "confirmed_or_fixture";
+}
+
+function loadMunichFactoryProfile(rootDir = process.cwd()) {
+  const filePath = path.join(rootDir, MUNICH_FACTORY_PROFILE_PATH);
+  const raw = fs.readFileSync(filePath, "utf8");
+  return JSON.parse(raw);
+}
+
+function isFactoryDemoRequest(request = {}) {
+  const marker = [
+    request.profile_key,
+    request.profile_id,
+    request.scenario,
+    request.site_id,
+    request.site_type,
+    request.business_context?.site_type
+  ].filter(Boolean).join(" ").toLowerCase();
+  return /\b(factory|industrial|munich)\b/.test(marker);
+}
+
+function sumFactoryPremiumComponents(factoryProfile) {
+  const components = factoryProfile.result_summary?.premium?.profit_components || [];
+  return round(components.reduce((sum, item) => sum + Number(item.daily_value_eur || 0), 0), 2);
+}
+
+function buildFactoryDemoOptimization(rootDir, request = {}) {
+  const factoryProfile = request.factory_profile || loadMunichFactoryProfile(rootDir);
+  const basic = factoryProfile.result_summary.basic;
+  const premium = factoryProfile.result_summary.premium;
+  const dailyPremiumValue = round(Number(premium.daily_profit_impact_eur || sumFactoryPremiumComponents(factoryProfile)), 2);
+  const monthlyPremiumValue = round(Number(premium.monthly_profit_impact_eur || dailyPremiumValue * factoryProfile.factory.working_days_per_month), 2);
+  const basicDailyValue = round(Number(basic.daily_profit_impact_eur || 0), 2);
+  const basicMonthlyValue = round(Number(basic.monthly_profit_impact_eur || 0), 2);
+  const monthlyLift = round(monthlyPremiumValue - basicMonthlyValue, 2);
+  const sourceQuality = (factoryProfile.trust_source_quality?.sources || []).map((source) => ({
+    field: source.name,
+    source: source.source_type,
+    status: source.status,
+    confidence: source.confidence
+  }));
+
+  return {
+    schema_version: "0.1.0",
+    plan_version: `${PLAN_VERSION}.factory-demo`,
+    plan_id: `plan_factory_premium_${factoryProfile.profile_id}`,
+    plan_tier: "premium",
+    created_at: factoryProfile.created_at,
+    site_context: {
+      site_id: factoryProfile.profile_id,
+      site_type: "factory_demo",
+      city: factoryProfile.factory.city,
+      display_name: factoryProfile.factory.display_name,
+      facility_type: factoryProfile.factory.site_type,
+      demo_scope: factoryProfile.industrial_profile_metadata.demo_role,
+      claim_boundary: "Synthetic estimated energy value; not measured production profit."
+    },
+    decision: {
+      title: "Shift factory demand into profitable energy windows",
+      headline: "Premium turns factory energy flexibility into estimated operating value.",
+      plain_english: factoryProfile.industrial_profile_metadata.narrative,
+      recommended_action: "review_factory_premium_route",
+      control_mode: "advice_only",
+      confidence: factoryProfile.trust_source_quality.confidence_score
+    },
+    baseline_plan: {
+      type: "basic_forklift_charging",
+      description: basic.optimized_scope,
+      energy_kwh: basic.energy_shifted_kwh,
+      cash_value_eur: basicDailyValue,
+      formula: basic.formula
+    },
+    optimized_plan: {
+      type: "factory_energy_value_route",
+      description: premium.optimized_scope,
+      cash_value_eur: dailyPremiumValue,
+      monthly_value_eur: monthlyPremiumValue,
+      formula: premium.formula
+    },
+    factory_equipment: factoryProfile.factory_equipment,
+    flexible_industrial_loads: factoryProfile.flexible_industrial_loads,
+    summary: {
+      basic_demo_value_eur: basicDailyValue,
+      basic_monthly_demo_value_eur: basicMonthlyValue,
+      premium_demo_value_eur: dailyPremiumValue,
+      premium_monthly_demo_value_eur: monthlyPremiumValue,
+      premium_lift_vs_basic_eur: monthlyLift,
+      premium_to_basic_multiple: premium.premium_to_basic_multiple,
+      flexible_energy_kwh: factoryProfile.flexible_industrial_loads.total_flexible_energy_kwh,
+      pv_generation_kwh: factoryProfile.pv_generation.forecast_day_generation_kwh,
+      exported_surplus_kwh: factoryProfile.feed_in_export_value.premium_exported_surplus_kwh
+    },
+    business_case: {
+      label: "Estimated factory energy value",
+      daily_value_eur: dailyPremiumValue,
+      monthly_value_eur: monthlyPremiumValue,
+      lift_vs_basic_monthly_eur: monthlyLift,
+      component_values: premium.profit_components,
+      boundary: "Demo operating-cost impact from synthetic energy routing, not audited profit."
+    },
+    source_quality: sourceQuality,
+    audit: {
+      calculated_at: factoryProfile.created_at,
+      input_snapshot_id: factoryProfile.profile_id,
+      formula_version: "factory-margin-v0.1",
+      source_quality: sourceQuality,
+      audit_steps: premium.profit_components.map((component) => ({
+        step: component.component,
+        formula: component.formula,
+        result: `EUR ${Number(component.daily_value_eur).toFixed(2)} daily estimated value`
+      })),
+      limitations: factoryProfile.trust_source_quality.limitations
+    },
+    algorithm_outputs: {
+      headline_metrics: {
+        basic_demo_value_eur: basicDailyValue,
+        premium_demo_value_eur: dailyPremiumValue,
+        premium_monthly_demo_value_eur: monthlyPremiumValue,
+        premium_lift_vs_basic_eur: monthlyLift,
+        value_multiple: premium.premium_to_basic_multiple
+      },
+      components: premium.profit_components,
+      flexible_loads: factoryProfile.flexible_industrial_loads.loads
+    },
+    limitations: [
+      "Factory values are synthetic demo estimates and are not measured profit.",
+      "Advice-only schedule; no live device control is performed.",
+      ...factoryProfile.trust_source_quality.limitations
+    ],
+    plan_access: makePlanAccess("premium")
+  };
 }
 
 function makePlanAccess(planTier) {
@@ -162,6 +295,10 @@ function buildBasicRouteAllocations(recommendation, fixtures) {
 }
 
 function calculateOptimizationPlan(fixtures, request = {}, options = {}) {
+  if (isFactoryDemoRequest(request)) {
+    return buildFactoryDemoOptimization(options.rootDir || process.cwd(), request);
+  }
+
   const planTier = normalizePlanTier(request.plan_tier || request.tier);
   const evRequest = request.ev_request || {};
   const recommendation = calculateEvRecommendation(fixtures, evRequest);
@@ -515,12 +652,14 @@ module.exports = {
   PLAN_VERSION,
   buildContractUpload,
   buildDeviceReadiness,
+  buildFactoryDemoOptimization,
   buildProfileCurrent,
   buildProfileReadiness,
   calculateOptimizationPlan,
   confirmContract,
   findDevice,
   getCurrentPlan,
+  loadMunichFactoryProfile,
   makePlanAccess,
   normalizePlanTier,
   scanProduct

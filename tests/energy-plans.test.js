@@ -12,6 +12,7 @@ const {
   confirmContract,
   findDevice,
   getCurrentPlan,
+  loadMunichFactoryProfile,
   scanProduct
 } = require("../src/lib/energy-plans");
 
@@ -69,6 +70,24 @@ assert.ok(premiumPlan.route_allocations.some((item) => item.action === "sell"));
 assert.ok(premiumPlan.route_allocations.some((item) => item.constraint_binding.includes("feed_in_opportunity_cost")));
 assert.ok(premiumPlan.source_quality.length >= basicPlan.source_quality.length);
 assert.ok(premiumPlan.audit.routing_version);
+
+const factoryProfile = loadMunichFactoryProfile(rootDir);
+assert.strictEqual(factoryProfile.factory.city, "Munich");
+assert.strictEqual(factoryProfile.profile_type, "synthetic_industrial_demo");
+
+const factoryPlan = calculateOptimizationPlan(fixtures, {
+  plan_tier: "premium",
+  site_type: "factory_demo",
+  profile_key: "munich"
+}, { rootDir });
+assert.strictEqual(factoryPlan.site_context.site_type, "factory_demo");
+assert.strictEqual(factoryPlan.site_context.city, "Munich");
+assert.ok(factoryPlan.summary.premium_demo_value_eur > factoryPlan.summary.basic_demo_value_eur * 10);
+assert.ok(factoryPlan.summary.premium_lift_vs_basic_eur > 17000);
+assert.ok(factoryPlan.algorithm_outputs.headline_metrics.premium_demo_value_eur);
+assert.ok(factoryPlan.limitations.some((item) => /synthetic demo/i.test(item)));
+assert.strictEqual(Object.prototype.hasOwnProperty.call(factoryPlan.summary, "measured_profit_eur"), false);
+assert.strictEqual(Object.prototype.hasOwnProperty.call(factoryPlan.business_case, "measured_profit_eur"), false);
 
 const baseEv = findDevice(registry, "base_ev");
 const evReadiness = buildDeviceReadiness(baseEv);

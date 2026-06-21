@@ -1,0 +1,235 @@
+.sl-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  font-family: var(--font-body);
+  color: var(--text);
+}
+
+.sl-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.88;
+}
+
+.sl-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--surface) 0%, var(--surface-2) 50%, var(--surface) 100%);
+  opacity: 0.68;
+}
+
+.sl-title {
+  position: absolute;
+  left: 96px;
+  top: 76px;
+  width: 760px;
+  z-index: 5;
+}
+
+.sl-title h2 {
+  margin: 18px 0 0;
+  font-family: var(--font-display-en);
+  font-size: 70px;
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.sl-tiers {
+  position: absolute;
+  left: 96px;
+  right: 96px;
+  bottom: 90px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  z-index: 5;
+}
+
+.sl-tier {
+  min-height: 360px;
+  padding: 34px;
+  background: var(--surface-2);
+  opacity: 0.3;
+  transform: translateY(24px);
+  transition:
+    opacity var(--dur-base) var(--ease-quart),
+    transform var(--dur-base) var(--ease-quart),
+    box-shadow var(--dur-base) var(--ease-quart);
+}
+
+.sl-tier strong {
+  display: block;
+  margin-top: 18px;
+  max-width: 600px;
+  font-size: 42px;
+  line-height: 1.04;
+  letter-spacing: 0;
+}
+
+.sl-scene.is-basic .sl-basic,
+.sl-scene.is-premium .sl-premium {
+  opacity: 1;
+  transform: translateY(0);
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.sl-scene.is-premium .sl-basic {
+  opacity: 0.58;
+}
+
+.sl-items {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 34px;
+}
+
+.sl-items span {
+  min-height: 76px;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  background: var(--surface-3);
+  font-family: var(--font-mono);
+  font-size: 19px;
+  text-align: center;
+  line-height: 1.12;
+  letter-spacing: 0;
+}
+
+.sl-shift {
+  position: absolute;
+  left: 502px;
+  top: 320px;
+  width: 916px;
+  padding: 32px 40px;
+  background: var(--surface-2);
+  z-index: 8;
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--dur-base) var(--ease-quart),
+    transform var(--dur-base) var(--ease-quart);
+}
+
+.sl-scene.is-shift .sl-shift {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sl-shift-row {
+  display: grid;
+  grid-template-columns: 1fr 140px 1fr;
+  align-items: center;
+  gap: 28px;
+  margin-top: 20px;
+}
+
+.sl-shift-row strong {
+  font-family: var(--font-display-en);
+  font-size: 58px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.sl-shift-row strong:first-child {
+  color: var(--text-mute);
+}
+
+.sl-shift-row strong:last-child {
+  color: var(--accent);
+}
+
+.sl-shift-row i {
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 18px var(--accent-glow);
+}
+
+.sl-plan-board {
+  position: absolute;
+  left: 452px;
+  top: 314px;
+  width: 1016px;
+  padding: 42px 46px;
+  background: var(--surface-2);
+  box-shadow:
+    inset 0 0 0 2px var(--accent),
+    0 0 70px var(--accent-glow);
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(22px) scale(0.98);
+  transition:
+    opacity var(--dur-base) var(--ease-quart),
+    transform var(--dur-base) var(--ease-quart);
+}
+
+.sl-scene.is-plan .sl-plan-board {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.sl-scene.is-plan .sl-shift {
+  opacity: 0;
+  transform: translateY(-24px);
+}
+
+.sl-plan-grid {
+  display: grid;
+  grid-template-columns: 1fr 150px 1fr;
+  align-items: center;
+  gap: 30px;
+  margin-top: 30px;
+  font-family: var(--font-display-en);
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.sl-plan-grid span {
+  padding: 26px 24px;
+  text-align: center;
+  background: var(--accent-soft);
+}
+
+.sl-plan-grid i {
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 18px var(--accent-glow);
+}
+
+.sl-final {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 26px;
+  padding: 120px 210px;
+  background: var(--surface);
+  opacity: 0;
+  transform: scale(0.98);
+  z-index: 12;
+  transition:
+    opacity var(--dur-slow) var(--ease-quart),
+    transform var(--dur-slow) var(--ease-quart);
+}
+
+.sl-final h2 {
+  margin: 0;
+  max-width: 1240px;
+  text-align: center;
+  font-family: var(--font-display-cn);
+  font-size: 88px;
+  line-height: 1.04;
+  letter-spacing: 0;
+}
+
+.sl-scene.is-final .sl-final {
+  opacity: 1;
+  transform: scale(1);
+}

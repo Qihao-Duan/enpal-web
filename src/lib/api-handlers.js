@@ -118,11 +118,30 @@ function createApiHandlers(rootDir) {
           applianceTelemetry
         });
         const homeDevices = listHomeDevices(rootDir, fixtures);
+        const factoryDemo = optimizedPlan.site_context?.site_type === "factory_demo";
         return sendJson(res, 200, {
           ...optimizedPlan,
           status: url.pathname === "/api/plan/simulate" ? "simulated" : "optimized",
-          profile_readiness: buildProfileReadiness(fixtures, homeDevices),
-          home_devices: homeDevices
+          profile_readiness: factoryDemo ? {
+            schema_version: "0.1.0",
+            site_id: optimizedPlan.site_context.site_id,
+            status: "synthetic_factory_ready_for_demo",
+            readiness_percent: 86,
+            checks: [
+              { id: "factory_load_model", label: "Factory load model", status: "synthetic", source: "data/munich-factory-profile.json" },
+              { id: "pv_forecast", label: "PV forecast", status: "forecast", source: "data/munich-factory-profile.json" },
+              { id: "industrial_tariff", label: "Industrial tariff", status: "synthetic", source: "data/munich-factory-profile.json" },
+              { id: "operating_windows", label: "Approved operating windows", status: "synthetic", source: "data/munich-factory-profile.json" }
+            ],
+            next_best_action: "Confirm factory equipment limits before allowing automated control."
+          } : buildProfileReadiness(fixtures, homeDevices),
+          home_devices: factoryDemo ? {
+            schema_version: "0.1.0",
+            site_id: optimizedPlan.site_context.site_id,
+            device_count: optimizedPlan.factory_equipment.length,
+            devices: optimizedPlan.factory_equipment,
+            storage: { path: "data/munich-factory-profile.json" }
+          } : homeDevices
         });
       }
 
