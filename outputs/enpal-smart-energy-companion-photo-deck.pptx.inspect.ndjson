@@ -1,0 +1,149 @@
+{"kind":"deck","id":"pr/kw6266","name":"Deck"}
+{"kind":"layout","layoutId":"1a5a7357-f70f-4cb1-9b64-3535604c66ce","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"2b4bdb0e-9a77-47df-965d-03019b710f54","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/ayiw9r","slide":1,"title":"Enpal Smart Energy Companion","textShapes":6}
+{"kind":"shape","id":"sh/ulwval87","slide":1,"bbox":[0,0,1280,720]}
+{"kind":"textbox","id":"sh/j6tovaho","slide":1,"text":"Enpal Smart Energy Companion","textPreview":"Enpal Smart Energy Companion","textChars":28,"textLines":1,"bbox":[62,68,930,126]}
+{"kind":"textbox","id":"sh/c3ylc7u5","slide":1,"text":"Every kWh, routed to its best use.","textPreview":"Every kWh, routed to its best use.","textChars":34,"textLines":1,"bbox":[66,218,680,42]}
+{"kind":"textbox","id":"sh/1kre1w7m","slide":1,"text":"For factories and homes with solar, batteries, EVs and dynamic tariffs: use it, store it, sell it, or buy cheaper grid power.","textPreview":"For factories and homes with solar, batteries, EVs and dynamic tariffs: use it, store it, sell it, or buy cheaper grid power.","textChars":125,"textLines":1,"bbox":[66,288,630,116]}
+{"kind":"shape","id":"sh/uxc3ylc7","slide":1,"bbox":[66,456,268,42]}
+{"kind":"textbox","id":"sh/ji5snelo","slide":1,"text":"2-minute hackathon pitch","textPreview":"2-minute hackathon pitch","textChars":24,"textLines":1,"bbox":[80,463,240,24]}
+{"kind":"shape","id":"sh/8bat47y1","slide":1,"bbox":[356,456,336,42]}
+{"kind":"textbox","id":"sh/1w7mp0bi","slide":1,"text":"AI explains · Backend calculates","textPreview":"AI explains · Backend calculates","textChars":32,"textLines":1,"bbox":[370,463,308,24]}
+{"kind":"textbox","id":"sh/d0z61032","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1152,648,68,32]}
+{"kind":"image","id":"im/szqtcj6t","slide":1,"name":"","alt":"German factory rooftop solar installation","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/ayiw9r","slide":1,"text":""}
+{"kind":"slide","id":"sl/91hkeo","slide":2,"title":"OPENING CASE","textShapes":11}
+{"kind":"textbox","id":"sh/j6tovaho","slide":2,"text":"OPENING CASE","textPreview":"OPENING CASE","textChars":12,"textLines":1,"bbox":[60,34,700,28]}
+{"kind":"textbox","id":"sh/crmhk3q5","slide":2,"text":"A factory has enough solar.\nIt sells it at the wrong time.","textPreview":"A factory has enough solar. | It sells it at the wrong time.","textChars":58,"textLines":2,"bbox":[60,76,620,126]}
+{"kind":"textbox","id":"sh/1cfa9w3m","slide":2,"text":"Midday surplus is exported cheaply. Later, forklifts, cooling and production loads buy electricity back at a higher price.","textPreview":"Midday surplus is exported cheaply. Later, forklifts, cooling and production loads buy electricity back at a higher price.","textChars":122,"textLines":1,"bbox":[62,220,590,98]}
+{"kind":"shape","id":"sh/ji5snelo","slide":2,"bbox":[706,64,508,572]}
+{"kind":"shape","id":"sh/c3ylc7u5","slide":2,"bbox":[60,354,178,112]}
+{"kind":"textbox","id":"sh/1kre1w7m","slide":2,"text":"12:00","textPreview":"12:00","textChars":5,"textLines":1,"bbox":[82,372,134,46]}
+{"kind":"textbox","id":"sh/q5o7qpg3","slide":2,"text":"solar surplus appears","textPreview":"solar surplus appears","textChars":21,"textLines":1,"bbox":[82,422,134,32]}
+{"kind":"shape","id":"sh/jqh0fepk","slide":2,"bbox":[262,354,178,112]}
+{"kind":"textbox","id":"sh/fmlkjm1c","slide":2,"text":"18:00","textPreview":"18:00","textChars":5,"textLines":1,"bbox":[284,372,134,46]}
+{"kind":"textbox","id":"sh/q1orytsv","slide":2,"text":"demand peak arrives","textPreview":"demand peak arrives","textChars":19,"textLines":1,"bbox":[284,422,134,32]}
+{"kind":"shape","id":"sh/xs72x4na","slide":2,"bbox":[464,354,178,112]}
+{"kind":"textbox","id":"sh/87ed8bat","slide":2,"text":"€ gap","textPreview":"€ gap","textChars":5,"textLines":1,"bbox":[486,372,134,46]}
+{"kind":"textbox","id":"sh/je9cvixc","slide":2,"text":"profit leaks in between","textPreview":"profit leaks in between","textChars":23,"textLines":1,"bbox":[486,422,134,32]}
+{"kind":"textbox","id":"sh/qtcj6tov","slide":2,"text":"The opportunity: route every kWh before value disappears.","textPreview":"The opportunity: route every kWh before value disappears.","textChars":57,"textLines":1,"bbox":[62,526,560,64]}
+{"kind":"textbox","id":"sh/1gvy90je","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1152,648,68,32]}
+{"kind":"image","id":"im/zidonyd0","slide":2,"name":"","alt":"Electric forklifts charging in a factory","bbox":[706,64,508,572]}
+{"kind":"notes","id":"nt/91hkeo","slide":2,"text":""}
+{"kind":"slide","id":"sl/5kgte8","slide":3,"title":"THE PRODUCT","textShapes":12}
+{"kind":"shape","id":"sh/7y1kre1w","slide":3,"bbox":[0,0,1280,720]}
+{"kind":"textbox","id":"sh/ed8v6psf","slide":3,"text":"THE PRODUCT","textPreview":"THE PRODUCT","textChars":11,"textLines":1,"bbox":[60,34,700,28]}
+{"kind":"textbox","id":"sh/pwb2hwfy","slide":3,"text":"Energy Profit Planner","textPreview":"Energy Profit Planner","textChars":21,"textLines":1,"bbox":[60,84,650,70]}
+{"kind":"textbox","id":"sh/0bi9s36h","slide":3,"text":"A planning layer that turns contracts, prices, weather and device profiles into one schedule for the next 24 hours.","textPreview":"A planning layer that turns contracts, prices, weather and device profiles into one schedule for the next 24 hours.","textChars":115,"textLines":1,"bbox":[62,174,590,96]}
+{"kind":"shape","id":"sh/7qpg3ex0","slide":3,"bbox":[62,326,544,48]}
+{"kind":"textbox","id":"sh/i5sneloj","slide":3,"text":"Read","textPreview":"Read","textChars":4,"textLines":1,"bbox":[86,336,110,24]}
+{"kind":"textbox","id":"sh/pkzupwb2","slide":3,"text":"contracts, smart meter, device profiles","textPreview":"contracts, smart meter, device profiles","textChars":39,"textLines":1,"bbox":[206,336,370,24]}
+{"kind":"shape","id":"sh/0z61032l","slide":3,"bbox":[62,390,544,48]}
+{"kind":"textbox","id":"sh/qpg3ex0n","slide":3,"text":"Predict","textPreview":"Predict","textChars":7,"textLines":1,"bbox":[86,400,110,24]}
+{"kind":"textbox","id":"sh/fa9w3m94","slide":3,"text":"PV surplus, demand, price windows","textPreview":"PV surplus, demand, price windows","textChars":33,"textLines":1,"bbox":[206,400,370,24]}
+{"kind":"shape","id":"sh/8v6psfil","slide":3,"bbox":[62,454,544,48]}
+{"kind":"textbox","id":"sh/xczed8v6","slide":3,"text":"Optimize","textPreview":"Optimize","textChars":8,"textLines":1,"bbox":[86,464,110,24]}
+{"kind":"textbox","id":"sh/qd4vmtwr","slide":3,"text":"use · store · sell · buy","textPreview":"use · store · sell · buy","textChars":24,"textLines":1,"bbox":[206,464,370,24]}
+{"kind":"shape","id":"sh/fyxobm58","slide":3,"bbox":[62,518,544,48]}
+{"kind":"textbox","id":"sh/8jqh0fep","slide":3,"text":"Explain","textPreview":"Explain","textChars":7,"textLines":1,"bbox":[86,528,110,24]}
+{"kind":"textbox","id":"sh/x4nap4r6","slide":3,"text":"savings, assumptions and evidence","textPreview":"savings, assumptions and evidence","textChars":33,"textLines":1,"bbox":[206,528,370,24]}
+{"kind":"textbox","id":"sh/q1orytsv","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1152,648,68,32]}
+{"kind":"image","id":"im/p4r65wju","slide":3,"name":"","alt":"Industrial energy control room with engineer","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/5kgte8","slide":3,"text":""}
+{"kind":"slide","id":"sl/wcj9f7","slide":4,"title":"CORE ALGORITHM","textShapes":13}
+{"kind":"shape","id":"sh/9cvixcze","slide":4,"bbox":[0,0,1280,720]}
+{"kind":"textbox","id":"sh/gr2p8nqx","slide":4,"text":"CORE ALGORITHM","textPreview":"CORE ALGORITHM","textChars":14,"textLines":1,"bbox":[60,34,700,28]}
+{"kind":"textbox","id":"sh/nih4byhg","slide":4,"text":"For each time slot, decide the best route.","textPreview":"For each time slot, decide the best route.","textChars":42,"textLines":1,"bbox":[60,82,690,96]}
+{"kind":"textbox","id":"sh/yxobm58z","slide":4,"text":"The optimizer compares real costs, opportunity costs and user constraints, then recalculates when prices, weather, SOC or deadlines change.","textPreview":"The optimizer compares real costs, opportunity costs and user constraints, then recalculates when prices, weather, SOC or deadlines change.","textChars":139,"textLines":1,"bbox":[62,194,620,94]}
+{"kind":"shape","id":"sh/5o7qpg3e","slide":4,"bbox":[62,354,128,124]}
+{"kind":"textbox","id":"sh/g3ex0nux","slide":4,"text":"USE","textPreview":"USE","textChars":3,"textLines":1,"bbox":[76,374,100,28]}
+{"kind":"textbox","id":"sh/rmhk3q5o","slide":4,"text":"Avoid grid import","textPreview":"Avoid grid import","textChars":17,"textLines":1,"bbox":[74,420,104,44]}
+{"kind":"shape","id":"sh/y1kre1w7","slide":4,"bbox":[210,354,128,124]}
+{"kind":"textbox","id":"sh/kjm1cfa9","slide":4,"text":"STORE","textPreview":"STORE","textChars":5,"textLines":1,"bbox":[224,374,100,28]}
+{"kind":"textbox","id":"sh/94fu18jq","slide":4,"text":"Save for peak","textPreview":"Save for peak","textChars":13,"textLines":1,"bbox":[222,420,104,44]}
+{"kind":"shape","id":"sh/2hwfyxob","slide":4,"bbox":[358,354,128,124]}
+{"kind":"textbox","id":"sh/r2p8nqxs","slide":4,"text":"SELL","textPreview":"SELL","textChars":4,"textLines":1,"bbox":[372,374,100,28]}
+{"kind":"textbox","id":"sh/gvy90je9","slide":4,"text":"Export when value wins","textPreview":"Export when value wins","textChars":22,"textLines":1,"bbox":[370,420,104,44]}
+{"kind":"shape","id":"sh/9gr2p8nq","slide":4,"bbox":[506,354,128,124]}
+{"kind":"textbox","id":"sh/2p8nqxs7","slide":4,"text":"BUY","textPreview":"BUY","textChars":3,"textLines":1,"bbox":[520,374,100,28]}
+{"kind":"textbox","id":"sh/ra5gbq1o","slide":4,"text":"Wait for cheap grid","textPreview":"Wait for cheap grid","textChars":19,"textLines":1,"bbox":[518,420,104,44]}
+{"kind":"textbox","id":"sh/kzupwb2h","slide":4,"text":"Objective: maximize net value while respecting deadlines, comfort, battery reserve and degradation.","textPreview":"Objective: maximize net value while respecting deadlines, comfort, battery reserve and degradation.","textChars":99,"textLines":1,"bbox":[62,548,640,54]}
+{"kind":"textbox","id":"sh/9knih4by","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1152,648,68,32]}
+{"kind":"image","id":"im/jm1cfa9w","slide":4,"name":"","alt":"Battery storage and inverter equipment","bbox":[682,0,598,720]}
+{"kind":"notes","id":"nt/wcj9f7","slide":4,"text":""}
+{"kind":"slide","id":"sl/cb5wsu","slide":5,"title":"BASIC PLAN","textShapes":8}
+{"kind":"shape","id":"sh/itgfmlkj","slide":5,"bbox":[0,0,1280,720]}
+{"kind":"textbox","id":"sh/7ed8bat4","slide":5,"text":"BASIC PLAN","textPreview":"BASIC PLAN","textChars":10,"textLines":1,"bbox":[60,34,700,28]}
+{"kind":"textbox","id":"sh/0nuxc3yl","slide":5,"text":"Smart charging without changing the user's life.","textPreview":"Smart charging without changing the user's life.","textChars":48,"textLines":1,"bbox":[60,82,680,104]}
+{"kind":"textbox","id":"sh/p8nqxs72","slide":5,"text":"For regular users, the value is simple: charge later if it saves money, but always meet the morning deadline.","textPreview":"For regular users, the value is simple: charge later if it saves money, but always meet the morning deadline.","textChars":109,"textLines":1,"bbox":[62,205,560,92]}
+{"kind":"shape","id":"sh/ih4byhgn","slide":5,"bbox":[66,356,10,10]}
+{"kind":"textbox","id":"sh/72x4nap4","slide":5,"text":"Translate 24 kWh into EV range and cost.","textPreview":"Translate 24 kWh into EV range and cost.","textChars":40,"textLines":1,"bbox":[88,348,520,54]}
+{"kind":"shape","id":"sh/wjudg7ad","slide":5,"bbox":[66,426,10,10]}
+{"kind":"textbox","id":"sh/p4r65wju","slide":5,"text":"Find the cheapest safe charging window.","textPreview":"Find the cheapest safe charging window.","textChars":39,"textLines":1,"bbox":[88,418,520,54]}
+{"kind":"shape","id":"sh/lwval87e","slide":5,"bbox":[66,496,10,10]}
+{"kind":"textbox","id":"sh/wb2hwfyx","slide":5,"text":"Show normal cost vs optimized cost.","textPreview":"Show normal cost vs optimized cost.","textChars":35,"textLines":1,"bbox":[88,488,520,54]}
+{"kind":"shape","id":"sh/3q5o7qpg","slide":5,"bbox":[64,590,440,54]}
+{"kind":"textbox","id":"sh/e9cvixcz","slide":5,"text":"Example: save 5.16 € by waiting","textPreview":"Example: save 5.16 € by waiting","textChars":31,"textLines":1,"bbox":[86,604,396,24]}
+{"kind":"textbox","id":"sh/loj2t83i","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1152,648,68,32]}
+{"kind":"image","id":"im/s72x4nap","slide":5,"name":"","alt":"Home EV charging with rooftop solar","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/cb5wsu","slide":5,"text":""}
+{"kind":"slide","id":"sl/ns5onr","slide":6,"title":"PREMIUM PLAN","textShapes":12}
+{"kind":"textbox","id":"sh/bulwval8","slide":6,"text":"PREMIUM PLAN","textPreview":"PREMIUM PLAN","textChars":12,"textLines":1,"bbox":[60,34,700,28]}
+{"kind":"textbox","id":"sh/0fepkzup","slide":6,"text":"Turn redundant solar into predictable profit.","textPreview":"Turn redundant solar into predictable profit.","textChars":45,"textLines":1,"bbox":[60,76,750,104]}
+{"kind":"textbox","id":"sh/p0bi9s36","slide":6,"text":"Premium users add batteries, solar export and risk controls. The planner decides when selling is better than storing or self-consuming.","textPreview":"Premium users add batteries, solar export and risk controls. The planner decides when selling is better than storing or self-consuming.","textChars":135,"textLines":1,"bbox":[62,194,610,92]}
+{"kind":"shape","id":"sh/bi9s36hc","slide":6,"bbox":[62,340,586,48]}
+{"kind":"textbox","id":"sh/032lszqt","slide":6,"text":"If export beats future grid cost","textPreview":"If export beats future grid cost","textChars":32,"textLines":1,"bbox":[84,352,348,24]}
+{"kind":"textbox","id":"sh/tovahoza","slide":6,"text":"sell surplus","textPreview":"sell surplus","textChars":12,"textLines":1,"bbox":[454,352,160,24]}
+{"kind":"shape","id":"sh/il0rqd4v","slide":6,"bbox":[62,402,586,48]}
+{"kind":"textbox","id":"sh/b6xkf6dc","slide":6,"text":"If future peak is expensive","textPreview":"If future peak is expensive","textChars":27,"textLines":1,"bbox":[84,414,348,24]}
+{"kind":"textbox","id":"sh/32lszqtc","slide":6,"text":"store energy","textPreview":"store energy","textChars":12,"textLines":1,"bbox":[454,414,160,24]}
+{"kind":"shape","id":"sh/ahoza1gv","slide":6,"bbox":[62,464,586,48]}
+{"kind":"textbox","id":"sh/l87ed8ba","slide":6,"text":"If home load is urgent","textPreview":"If home load is urgent","textChars":22,"textLines":1,"bbox":[84,476,348,24]}
+{"kind":"textbox","id":"sh/sneloj2t","slide":6,"text":"use solar now","textPreview":"use solar now","textChars":13,"textLines":1,"bbox":[454,476,160,24]}
+{"kind":"shape","id":"sh/3ex0nuxc","slide":6,"bbox":[62,526,586,48]}
+{"kind":"textbox","id":"sh/at47y1kr","slide":6,"text":"If night grid is cheap","textPreview":"If night grid is cheap","textChars":22,"textLines":1,"bbox":[84,538,348,24]}
+{"kind":"textbox","id":"sh/lkjm1cfa","slide":6,"text":"buy later","textPreview":"buy later","textChars":9,"textLines":1,"bbox":[454,538,160,24]}
+{"kind":"textbox","id":"sh/szqtcj6t","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1152,648,68,32]}
+{"kind":"image","id":"im/zqtcj6to","slide":6,"name":"","alt":"Homeowner reviewing energy plan on tablet","bbox":[720,70,500,570]}
+{"kind":"notes","id":"nt/ns5onr","slide":6,"text":""}
+{"kind":"slide","id":"sl/vztm7b","slide":7,"title":"WHY TRUST THIS?","textShapes":14}
+{"kind":"shape","id":"sh/36hcrmhk","slide":7,"bbox":[0,0,1280,720]}
+{"kind":"textbox","id":"sh/eloj2t83","slide":7,"text":"WHY TRUST THIS?","textPreview":"WHY TRUST THIS?","textChars":15,"textLines":1,"bbox":[60,34,700,28]}
+{"kind":"textbox","id":"sh/l0rqd4vm","slide":7,"text":"AI explains.\nBackend calculates.","textPreview":"AI explains. | Backend calculates.","textChars":32,"textLines":2,"bbox":[60,84,680,112]}
+{"kind":"textbox","id":"sh/wfyxobm5","slide":7,"text":"Every savings number carries a Trust Receipt: source, timestamp, formula version and Actual / Forecast / Estimate label.","textPreview":"Every savings number carries a Trust Receipt: source, timestamp, formula version and Actual / Forecast / Estimate label.","textChars":120,"textLines":1,"bbox":[62,222,650,86]}
+{"kind":"shape","id":"sh/7u54zido","slide":7,"bbox":[64,356,536,38]}
+{"kind":"textbox","id":"sh/ed8bat47","slide":7,"text":"Contract price","textPreview":"Contract price","textChars":14,"textLines":1,"bbox":[84,364,270,20]}
+{"kind":"textbox","id":"sh/psfil0rq","slide":7,"text":"0.35 €/kWh","textPreview":"0.35 €/kWh","textChars":10,"textLines":1,"bbox":[370,364,198,20]}
+{"kind":"shape","id":"sh/w7mp0bi9","slide":7,"bbox":[64,410,536,38]}
+{"kind":"textbox","id":"sh/eloj2t83","slide":7,"text":"Night window","textPreview":"Night window","textChars":12,"textLines":1,"bbox":[84,418,270,20]}
+{"kind":"textbox","id":"sh/36hcrmhk","slide":7,"text":"0.18 €/kWh","textPreview":"0.18 €/kWh","textChars":10,"textLines":1,"bbox":[370,418,198,20]}
+{"kind":"shape","id":"sh/wra5gbq1","slide":7,"bbox":[64,464,536,38]}
+{"kind":"textbox","id":"sh/lc7u54zi","slide":7,"text":"Feed-in value","textPreview":"Feed-in value","textChars":13,"textLines":1,"bbox":[84,472,270,20]}
+{"kind":"textbox","id":"sh/ed8bat47","slide":7,"text":"0.08 €/kWh","textPreview":"0.08 €/kWh","textChars":10,"textLines":1,"bbox":[370,472,198,20]}
+{"kind":"shape","id":"sh/7u54zido","slide":7,"bbox":[64,518,536,38]}
+{"kind":"textbox","id":"sh/wfyxobm5","slide":7,"text":"Battery efficiency","textPreview":"Battery efficiency","textChars":18,"textLines":1,"bbox":[84,526,270,20]}
+{"kind":"textbox","id":"sh/l0rqd4vm","slide":7,"text":"90%","textPreview":"90%","textChars":3,"textLines":1,"bbox":[370,526,198,20]}
+{"kind":"shape","id":"sh/e1w7mp0b","slide":7,"bbox":[64,572,536,38]}
+{"kind":"textbox","id":"sh/7mp0bi9s","slide":7,"text":"EV deadline","textPreview":"EV deadline","textChars":11,"textLines":1,"bbox":[84,580,270,20]}
+{"kind":"textbox","id":"sh/zed8v6ps","slide":7,"text":"08:00","textPreview":"08:00","textChars":5,"textLines":1,"bbox":[370,580,198,20]}
+{"kind":"textbox","id":"sh/6xkf6dcb","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1152,648,68,32]}
+{"kind":"image","id":"im/loj2t83i","slide":7,"name":"","alt":"Battery system used as trustworthy hardware context","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/vztm7b","slide":7,"text":""}
+{"kind":"slide","id":"sl/gndikk","slide":8,"title":"THE CLOSE","textShapes":11}
+{"kind":"textbox","id":"sh/6psfil0r","slide":8,"text":"THE CLOSE","textPreview":"THE CLOSE","textChars":9,"textLines":1,"bbox":[60,34,700,28]}
+{"kind":"textbox","id":"sh/dcbulwva","slide":8,"text":"Not another dashboard.\nA decision layer for energy profit.","textPreview":"Not another dashboard. | A decision layer for energy profit.","textChars":58,"textLines":2,"bbox":[60,80,650,118]}
+{"kind":"textbox","id":"sh/kre1w7mp","slide":8,"text":"For homes, we reduce bills. For factories, we turn surplus solar into a planned economic asset. For Enpal, it becomes a subscription and premium optimization product.","textPreview":"For homes, we reduce bills. For factories, we turn surplus solar into a planned economic asset. For Enpal, it becomes a subscription and ...","textChars":166,"textLines":1,"bbox":[62,226,660,122]}
+{"kind":"shape","id":"sh/2x4nap4r","slide":8,"bbox":[62,426,190,126]}
+{"kind":"textbox","id":"sh/donyd0z6","slide":8,"text":"Regular","textPreview":"Regular","textChars":7,"textLines":1,"bbox":[82,450,150,30]}
+{"kind":"textbox","id":"sh/k3q5o7qp","slide":8,"text":"smart charging","textPreview":"smart charging","textChars":14,"textLines":1,"bbox":[80,492,154,42]}
+{"kind":"shape","id":"sh/vu9knih4","slide":8,"bbox":[282,426,190,126]}
+{"kind":"textbox","id":"sh/29gr2p8n","slide":8,"text":"Premium","textPreview":"Premium","textChars":7,"textLines":1,"bbox":[302,450,150,30]}
+{"kind":"textbox","id":"sh/kre1w7mp","slide":8,"text":"solar trading + storage","textPreview":"solar trading + storage","textChars":23,"textLines":1,"bbox":[300,492,154,42]}
+{"kind":"shape","id":"sh/dcbulwva","slide":8,"bbox":[502,426,190,126]}
+{"kind":"textbox","id":"sh/6psfil0r","slide":8,"text":"Platform","textPreview":"Platform","textChars":8,"textLines":1,"bbox":[522,450,150,30]}
+{"kind":"textbox","id":"sh/val87ed8","slide":8,"text":"trusted AI energy companion","textPreview":"trusted AI energy companion","textChars":27,"textLines":1,"bbox":[520,492,154,42]}
+{"kind":"textbox","id":"sh/k3q5o7qp","slide":8,"text":"Every kWh, routed to its best use.","textPreview":"Every kWh, routed to its best use.","textChars":34,"textLines":1,"bbox":[62,606,650,44]}
+{"kind":"textbox","id":"sh/donyd0z6","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1152,648,68,32]}
+{"kind":"image","id":"im/6tovahoz","slide":8,"name":"","alt":"Factory rooftop solar as closing visual","bbox":[770,60,430,560]}
+{"kind":"notes","id":"nt/gndikk","slide":8,"text":""}

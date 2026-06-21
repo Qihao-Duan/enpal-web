@@ -1,0 +1,2766 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Enpal Smart Energy Companion Design Document</title>
+<style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8f5;
+      --paper: #ffffff;
+      --ink: #17211d;
+      --muted: #5f6f68;
+      --line: #dfe5df;
+      --green: #147a4b;
+      --green-soft: #e5f3eb;
+      --blue: #245f87;
+      --blue-soft: #e7f1f6;
+      --violet: #4e3475;
+      --violet-soft: #efe9f8;
+      --amber: #9a640d;
+      --amber-soft: #fff1d5;
+      --red: #a33d3d;
+      --red-soft: #fbe8e6;
+      --shadow: 0 18px 50px rgba(23, 33, 29, 0.08);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .page {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 40px 22px 72px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
+      gap: 28px;
+      align-items: stretch;
+      margin-bottom: 28px;
+    }
+
+    .hero-main,
+    .hero-side,
+    .section,
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      padding: 34px;
+    }
+
+    .hero-side {
+      padding: 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 750;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      letter-spacing: 0;
+      line-height: 1.18;
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      font-size: clamp(34px, 5vw, 64px);
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 18px;
+    }
+
+    h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    .lead {
+      max-width: 780px;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 20px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 28px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .side-title {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .summary-list li {
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .summary-list li:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .summary-number {
+      display: block;
+      color: var(--green);
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 28px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card {
+      padding: 20px;
+      box-shadow: none;
+    }
+
+    .card.green {
+      background: var(--green-soft);
+      border-color: #c6dfd0;
+    }
+
+    .card.blue {
+      background: var(--blue-soft);
+      border-color: #c8dce8;
+    }
+
+    .card.amber {
+      background: var(--amber-soft);
+      border-color: #ead39d;
+    }
+
+    .card.violet {
+      background: var(--violet-soft);
+      border-color: #d7c8ee;
+    }
+
+    .card.red {
+      background: var(--red-soft);
+      border-color: #efc7c1;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .big-number {
+      display: block;
+      margin-top: 8px;
+      font-size: 34px;
+      font-weight: 850;
+      line-height: 1.1;
+    }
+
+    .formula {
+      margin: 14px 0 0;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: #111b18;
+      color: #eaf3ee;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 14px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .wide-table {
+      min-width: 980px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .mini-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      margin: 2px 4px 2px 0;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #eef2ed;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfa;
+    }
+
+    .time {
+      color: var(--green);
+      font-weight: 850;
+    }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .arch-node {
+      min-height: 96px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfa;
+    }
+
+    .arch-node strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .check-list,
+    .plain-list {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .check-list li,
+    .plain-list li {
+      margin: 7px 0;
+    }
+
+    .callout {
+      margin-top: 16px;
+      padding: 18px;
+      border-left: 4px solid var(--green);
+      border-radius: var(--radius);
+      background: #f3f8f4;
+    }
+
+    .quote-pattern {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: start;
+      margin-top: 14px;
+    }
+
+    .quote-panel {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfa;
+    }
+
+    .step-stack {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .step-row {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      color: white;
+      background: var(--violet);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .fake-input {
+      min-height: 42px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .usage-options {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .usage-option {
+      min-height: 46px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      text-align: center;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .usage-option.active {
+      color: white;
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .source-note {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: var(--radius);
+      background: var(--amber-soft);
+      color: #60430f;
+      font-size: 14px;
+    }
+
+    .ui-shell-blueprint {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr) 220px;
+      gap: 12px;
+      margin-top: 16px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #eef3ef;
+    }
+
+    .ui-sidebar,
+    .ui-main,
+    .ui-rightbar {
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+
+    .ui-nav-list,
+    .receipt-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .ui-nav-item,
+    .receipt-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 44px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .ui-nav-item.active,
+    .receipt-item.active {
+      color: var(--green);
+      background: var(--green-soft);
+      border-color: #c6dfd0;
+    }
+
+    .ui-command {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid #c6dfd0;
+      border-radius: var(--radius);
+      background: var(--green-soft);
+    }
+
+    .ui-command .button {
+      min-height: 44px;
+      border: 0;
+    }
+
+    .route-board {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .route-lane {
+      min-height: 126px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfa;
+    }
+
+    .route-lane strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .lane-meter {
+      height: 8px;
+      margin-top: 12px;
+      border-radius: 999px;
+      background: #e7ece7;
+      overflow: hidden;
+    }
+
+    .lane-fill {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--green);
+    }
+
+    .lane-fill.blue {
+      background: var(--blue);
+    }
+
+    .lane-fill.amber {
+      background: var(--amber);
+    }
+
+    .lane-fill.violet {
+      background: var(--violet);
+    }
+
+    .timeline-mini {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .timeline-mini span {
+      min-height: 58px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fbfcfa;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .demo-box {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .phone {
+      min-height: 430px;
+      padding: 18px;
+      border: 10px solid #1b2521;
+      border-radius: 30px;
+      background: #fbfcfa;
+      box-shadow: 0 20px 50px rgba(23, 33, 29, 0.18);
+    }
+
+    .phone-top {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .phone-card {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    .phone-card.primary {
+      color: white;
+      background: #147a4b;
+      border-color: #147a4b;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: #17211d;
+      color: white;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .button.secondary {
+      color: #17211d;
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .demo-box,
+      .quote-pattern {
+        grid-template-columns: 1fr;
+      }
+
+      .grid,
+      .grid.two,
+      .grid.four,
+      .architecture,
+      .usage-options,
+      .ui-shell-blueprint,
+      .route-board,
+      .timeline-mini {
+        grid-template-columns: 1fr;
+      }
+
+      .ui-command {
+        grid-template-columns: 1fr;
+      }
+
+      .ui-main {
+        order: 1;
+      }
+
+      .ui-sidebar {
+        order: 2;
+      }
+
+      .ui-rightbar {
+        order: 3;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .page {
+        max-width: none;
+        padding: 0;
+      }
+
+      .hero-main,
+      .hero-side,
+      .section,
+      .card {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+<main class="page">
+<section class="hero">
+<div class="hero-main">
+<p class="eyebrow">Design Document v0.7 · Germany Profile · Solar Opportunity Optimizer</p>
+<h1>Enpal Smart Energy Companion</h1>
+<p class="lead">
+          An AI energy assistant for everyday German households that translates solar power, batteries, EVs, heat pumps, smart meters, dynamic electricity prices, and contract information into home energy scheduling recommendations users can understand, act on, and trust immediately.
+        </p>
+<div class="meta">
+<span class="pill">Core slogan: Every kWh, routed to its best use.</span>
+<span class="pill">Country profile: Germany</span>
+<span class="pill">Goal: use · store · sell · buy</span>
+</div>
+</div>
+<aside class="hero-side">
+<div class="side-title">One Screen Promise</div>
+<ul class="summary-list">
+<li>
+<span class="summary-number">5.16 €</span>
+<span class="summary-label">Estimated savings from one smart charging session</span>
+</li>
+<li>
+<span class="summary-number">24 kWh</span>
+<span class="summary-label">Translated into range, cost, and everyday context</span>
+</li>
+<li>
+<span class="summary-number">4 routes</span>
+<span class="summary-label">Use solar, store in battery, sell power, buy grid power</span>
+</li>
+<li>
+<span class="summary-number">Trust</span>
+<span class="summary-label">Data sources, formulas, and trustworthy explanations</span>
+</li>
+</ul>
+</aside>
+</section>
+<section class="section" id="strategy">
+<h2>1. Strategic Summary and Reading Path</h2>
+<p>
+        The main thread of this document is to first clarify the product differentiation, user scenario, and demo path that hackathon judges care about most, then move into calculation formulas, data trustworthiness, and engineering implementation, and finally use market research and the Octopus breakdown as evidence appendices. Readers should understand why this solution is worth building without having to read all the research first.
+      </p>
+<div class="callout">
+<strong>One-line strategy:</strong> Enpal Smart Energy Companion is not another energy dashboard. It helps households know the most valuable destination for every kilowatt-hour right now: use it, store it, sell it, or buy cheaper grid power.
+      </div>
+<div class="grid">
+<div class="card green">
+<h3>User Value</h3>
+<p class="muted">Translate kWh, dynamic electricity prices, solar opportunity cost, and device deadlines into “what should I do now?” and “how much can I save?”</p>
+</div>
+<div class="card blue">
+<h3>Technical Core</h3>
+<p class="muted">The backend optimizes use / store / sell / buy in real time, while AI explains formulas, sources, assumptions, and uncertainty.</p>
+</div>
+<div class="card amber">
+<h3>Winning Memory Hook</h3>
+<p class="muted">Upgrade from “charge during cheap hours” to “Every kWh, routed to its best use.” Every number comes with a Trust Receipt.</p>
+</div>
+</div>
+<h3>Quick Navigation</h3>
+<div class="meta">
+<a class="pill" href="#product-positioning">Product Positioning</a>
+<a class="pill" href="#mvp-scenario">MVP Scenario</a>
+<a class="pill" href="#ui-content-blueprint">UI Content</a>
+<a class="pill" href="#optimizer">Core Formulas</a>
+<a class="pill" href="#data-trust">Data Trust</a>
+<a class="pill" href="#backend-architecture">System Architecture</a>
+<a class="pill" href="#judge-highlights">Judge Highlights</a>
+<a class="pill" href="#market-gap">Competitive Analysis</a>
+<a class="pill" href="#octopus-appendix">Research Appendix</a>
+</div>
+<h3>Recommended Reading Order</h3>
+<div class="timeline">
+<div class="timeline-item">
+<div class="time">01</div>
+<div><strong>Start with strategy</strong>: product positioning, pain points, and the MVP scenario to confirm we are solving a real decision problem for everyday households.</div>
+</div>
+<div class="timeline-item">
+<div class="time">02</div>
+<div><strong>Then review the experience</strong>: core pages, homepage information architecture, and the UI content blueprint to clarify how the first demo screen wins over judges.</div>
+</div>
+<div class="timeline-item">
+<div class="time">03</div>
+<div><strong>Then inspect the engine</strong>: Solar Opportunity Optimizer formulas, real-time recalculation flow, and service boundaries.</div>
+</div>
+<div class="timeline-item">
+<div class="time">04</div>
+<div><strong>Finally check trustworthiness</strong>: data sources, German constraints, backend architecture, AI boundaries, implementation roadmap, and research appendix.</div>
+</div>
+</div>
+</section>
+<section class="section" id="product-positioning">
+<h2>2. Product Positioning</h2>
+<p>
+        This is not a traditional energy dashboard. It is a household energy decision layer. The product does not require users to understand engineering terminology; it directly answers three questions:
+      </p>
+<div class="callout">
+<strong>Latest slogan:</strong> Every kWh, routed to its best use.
+      </div>
+<div class="grid">
+<div class="card green">
+<h3>What does this mean?</h3>
+<p class="muted">Translate concepts such as kWh, kW, grid import, and feed-in tariff into cost, driving range, and everyday scenarios.</p>
+</div>
+<div class="card blue">
+<h3>What should I do now?</h3>
+<p class="muted">Give clear action recommendations, such as selling solar power now, charging the battery/EV from the grid during low-price periods, or prioritizing solar self-consumption during high-price periods.</p>
+</div>
+<div class="card amber">
+<h3>Why can I trust it?</h3>
+<p class="muted">Show contracts, meter data, device states, weather forecasts, and formulas so the AI answer has an auditable basis.</p>
+</div>
+</div>
+</section>
+<section class="section" id="user-painpoints">
+<h2>3. User Pain Points and Design Responses</h2>
+<div class="grid">
+<div class="card">
+<h3>Pain point 1: Users do not understand kWh</h3>
+<p class="muted">Users do not care about abstract units. They care what the number means in driving range, money, or dishwasher cycles.</p>
+<div class="formula">Energy use kWh = device power kW × usage time h
+Cost = energy use kWh × electricity price €/kWh</div>
+</div>
+<div class="card">
+<h3>Pain point 2: Users do not know how much planning can save</h3>
+<p class="muted">The UI must directly show the money difference between naive charging, solar self-consumption, selling power and later buying low-price grid power, and storing energy in the battery for later use, instead of merely saying “cheaper.”</p>
+<div class="formula">Charge now directly: 24 kWh × 0.35 €/kWh = 8.40 €
+Smart routing: solar self-use / export opportunity cost + low-price night power = 3.24 €
+Estimated savings: 5.16 €
+
+More advanced decision:
+If P_buy[t] &lt; P_sell[t], it may be better to sell solar power and buy low-price grid power.
+If P_buy[t] &gt; P_sell[t], solar self-consumption is usually more economical.</div>
+</div>
+<div class="card">
+<h3>Pain point 3: Users do not know why it is trustworthy</h3>
+<p class="muted">Every recommendation needs a Why Trust This area that explains data sources, update time, and calculation logic.</p>
+<div class="formula">AI only explains.
+Prices, energy usage, and savings are produced by the backend calculation engine.</div>
+</div>
+</div>
+</section>
+<section class="section" id="mvp-scenario">
+<h2>4. Core MVP Scenario</h2>
+<div class="demo-box">
+<div class="phone">
+<div class="phone-top">
+<span>10:42</span>
+<span>Enpal</span>
+</div>
+<div class="phone-card primary">
+<h3>Today’s Best Move</h3>
+<p>Do not buy grid power to charge the car now. First compare the opportunity cost of solar self-use, selling power, and storing energy in the battery, then use low-price night power to finish charging the EV. Estimated savings: 5.16 €, while still reaching 80% before 08:00 tomorrow morning.</p>
+<div class="button-row">
+<span class="button secondary">Show Calculation</span>
+<span class="button secondary">Ask Why</span>
+</div>
+</div>
+<div class="phone-card">
+<h3>What is a kWh?</h3>
+<p class="muted">Roughly equivalent to 120-160 km of EV range, or about 8.40 € of electricity at the current price.</p>
+</div>
+<div class="phone-card">
+<h3>Use · Store · Sell · Buy</h3>
+<p><strong>Charge now:</strong> 8.40 €</p>
+<p><strong>Smart routing:</strong> 3.24 €</p>
+<span class="big-number">Save 5.16 €</span>
+</div>
+</div>
+<div>
+<h3>Demo Narrative</h3>
+<p>
+            After the user plugs in the EV, the system immediately decides whether each kilowatt-hour should come from solar, be stored in the battery, be sold back to the grid, or wait for low-price grid power. The product must provide the recommendation, price difference, kWh explanation, and trust basis at the same time.
+          </p>
+<div class="timeline">
+<div class="timeline-item">
+<div class="time">10:00</div>
+<div>Current electricity prices are high; high-power grid charging is not recommended.</div>
+</div>
+<div class="timeline-item">
+<div class="time">14:00</div>
+<div>A 6 kWh solar surplus is expected; if export revenue is higher than the future low-price grid cost, prioritize selling power or storing it in the battery.</div>
+</div>
+<div class="timeline-item">
+<div class="time">22:00</div>
+<div>Night prices fall; use low-price grid power to finish EV charging or charge the battery.</div>
+</div>
+<div class="timeline-item">
+<div class="time">08:00</div>
+<div>The vehicle reaches its target charge and meets tomorrow morning's departure constraint.</div>
+</div>
+</div>
+</div>
+</div>
+<h3>Revised Homepage Information Architecture</h3>
+<p>
+        Based on prototype review, the homepage should no longer start with a marketing-style hero, onboarding wizard, or scattered experimental modules. It should become a three-part planning dashboard better suited to real homeowners. At first glance, users should know where their home electricity comes from, what each electricity source really costs, which devices exist at home, which device needs charging, and when charging is cheapest.
+      </p>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>Homepage Section</th>
+<th>Question Answered</th>
+<th>Required Fields</th>
+<th>Why This Order</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Electricity Sources &amp; Price Windows</td>
+<td>What electricity sources does my home currently have? What does each source really cost? When does electricity get more expensive or cheaper during the day?</td>
+<td>Grid import final price、export/feed-in price、solar opportunity cost、battery SOC、battery degradation、hourly final price grid。</td>
+<td>First establish an opportunity-cost map so users can later understand why solar should sometimes be self-consumed and sometimes sold.</td>
+</tr>
+<tr>
+<td>Known Household Devices</td>
+<td>What devices does the system know I have? Where do model and power-consumption details come from?</td>
+<td>Device、model、how we know、energy profile、schedulable/needs charging、confirmation status。</td>
+<td>Place automatic lookup and user-confirmation boundaries next to each device to avoid treating candidate models as facts.</td>
+</tr>
+<tr>
+<td>Charging Plan</td>
+<td>Should I charge now or not? How long will charging take? When is it cheapest? Is the deadline satisfied?</td>
+<td>Required kWh、wallbox max/min、fastest duration、use/store/sell/buy allocation、cash cost、opportunity cost、finish time、slack。</td>
+<td>Combine energy routing, user deadline, cost, and trust explanation into one actionable area, reducing the need to scroll for the answer.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout">
+<strong>Current prototype adjustment:</strong> Energy check, kWh translator, AI prompts, backend console, and detailed timeline are not removed, but are collapsed by default into Advanced prototype panels. They demonstrate capability without taking over the main reading path.
+      </div>
+</section>
+<section class="section" id="core-pages">
+<h2>5. Core Page Design</h2>
+<div class="grid two">
+<div class="card">
+<h3>Today’s Best Move</h3>
+<p class="muted">The top of the homepage shows only the most important action recommendation, so users do not have to read charts first.</p>
+<p><strong>Example:</strong> Do not charge the car now. Waiting until after 14:00 is expected to save 5.16 €.</p>
+</div>
+<div class="card">
+<h3>Energy Translator</h3>
+<p class="muted">Explain kWh, kW, electricity prices, and solar self-consumption value by mapping abstract units to cost and everyday language.</p>
+</div>
+<div class="card">
+<h3>Now vs Smart Plan</h3>
+<p class="muted">Use a side-by-side comparison to show the cost difference between “charge now directly” and “use / store / sell / buy smart routing.”</p>
+</div>
+<div class="card">
+<h3>Ask Enpal AI</h3>
+<p class="muted">Users can ask why the bill is high, why they should not charge now, whether the contract is still economical, and how the 5.16 € is calculated.</p>
+</div>
+<div class="card violet">
+<h3>Energy Check Wizard</h3>
+<p class="muted">Collect address, system type, data confidence, and target needs in four steps. Provide an estimate first, then guide users to connect contracts and devices.</p>
+</div>
+<div class="card amber">
+<h3>Good to Know</h3>
+<p class="muted">Every estimate explains which average or real data it is based on, so users understand accuracy differences.</p>
+</div>
+</div>
+</section>
+<section class="section" id="ui-content-blueprint">
+<h2>6. New UI Content Blueprint: Decision Workbench</h2>
+<p>
+        Combining data-product principles from the UI/UX skill and TypeUI's dual-sidebar application shell template, the new content should not be a marketing homepage, but a quiet, dense, auditable household energy workbench. At first glance, users see what they should do today. At second glance, they see why every kWh is allocated to use / store / sell / buy. At third glance, they can open the Trust Receipt to audit every number.
+      </p>
+<div class="callout">
+<strong>Template adaptation:</strong> TypeUI's left sidebar is used for energy objects and page navigation, the center area for real-time decisions and timelines, and the right sidebar for user constraints, device status, and trust receipts. On mobile, this collapses into a top household switcher + main decision card + expandable Trust bottom sheet.
+      </div>
+<div aria-label="Decision Workbench UI blueprint" class="ui-shell-blueprint">
+<aside class="ui-sidebar">
+<h3>Left Rail</h3>
+<p class="muted">Navigation is not decoration; it is organized around household energy objects.</p>
+<div class="ui-nav-list">
+<div class="ui-nav-item active"><span>Today</span><span>1</span></div>
+<div class="ui-nav-item"><span>Solar</span><span>PV</span></div>
+<div class="ui-nav-item"><span>Battery</span><span>64%</span></div>
+<div class="ui-nav-item"><span>EV</span><span>08:00</span></div>
+<div class="ui-nav-item"><span>Tariff</span><span>Live</span></div>
+<div class="ui-nav-item"><span>Bill</span><span>Audit</span></div>
+</div>
+</aside>
+<div class="ui-main">
+<div class="ui-command">
+<div>
+<h3>Best action now</h3>
+<p>Sell midday surplus if export price beats future grid cost; finish EV with low-price grid power before 08:00.</p>
+</div>
+<button class="button" type="button">Review plan</button>
+</div>
+<div class="route-board">
+<div class="route-lane">
+<span class="mini-tag">Use</span>
+<strong>6.0 kWh</strong>
+<p class="muted">Solar to EV or home load when avoided grid price is higher than export value.</p>
+<div class="lane-meter"><span class="lane-fill" style="width: 74%"></span></div>
+</div>
+<div class="route-lane">
+<span class="mini-tag">Store</span>
+<strong>3.2 kWh</strong>
+<p class="muted">Battery charge only when future avoided cost beats feed-in plus degradation.</p>
+<div class="lane-meter"><span class="lane-fill blue" style="width: 46%"></span></div>
+</div>
+<div class="route-lane">
+<span class="mini-tag">Sell</span>
+<strong>4.8 kWh</strong>
+<p class="muted">Export surplus during high feed-in value or when low-price grid is cheaper later.</p>
+<div class="lane-meter"><span class="lane-fill amber" style="width: 62%"></span></div>
+</div>
+<div class="route-lane">
+<span class="mini-tag">Buy</span>
+<strong>18.0 kWh</strong>
+<p class="muted">Grid power is scheduled in the cheapest window and bounded by EV deadline.</p>
+<div class="lane-meter"><span class="lane-fill violet" style="width: 88%"></span></div>
+</div>
+</div>
+<div aria-label="Price and routing timeline" class="timeline-mini">
+<span>10:00<br/>avoid buy<br/>0.35 €/kWh</span>
+<span>12:00<br/>sell PV<br/>export high</span>
+<span>14:00<br/>use solar<br/>EV/home</span>
+<span>18:00<br/>battery<br/>peak cover</span>
+<span>22:00<br/>buy grid<br/>0.18 €/kWh</span>
+<span>08:00<br/>ready<br/>deadline met</span>
+</div>
+</div>
+<aside class="ui-rightbar">
+<h3>Right Rail</h3>
+<p class="muted">Keep user constraints and trust evidence fixed beside the decision.</p>
+<div class="receipt-list">
+<div class="receipt-item active"><span>Deadline</span><span>08:00</span></div>
+<div class="receipt-item"><span>Contract</span><span>0.35 €/kWh</span></div>
+<div class="receipt-item"><span>Export</span><span>0.08 €/kWh</span></div>
+<div class="receipt-item"><span>Battery</span><span>90% η</span></div>
+<div class="receipt-item"><span>Formula</span><span>v0.1</span></div>
+</div>
+</aside>
+</div>
+<h3>New Content Modules</h3>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>Module</th>
+<th>What Users See</th>
+<th>Design Rule</th>
+<th>Backend Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decision Command</td>
+<td>One-sentence action recommendation, estimated savings, whether the deadline is satisfied, and the primary Review plan button.</td>
+<td>Keep only one primary action per screen; money amounts must come from the backend, not AI copy generation.</td>
+<td><code>decision</code>, <code>savings</code>, <code>valid_until</code></td>
+</tr>
+<tr>
+<td>kWh Routing Board</td>
+<td>Four destinations: Use / Store / Sell / Buy. Each shows kWh, cost basis, and confidence.</td>
+<td>Do not use color alone to convey meaning; every colored block has text labels and units.</td>
+<td><code>energy_routing_plan[]</code>, <code>source_quality[]</code></td>
+</tr>
+<tr>
+<td>Price Timeline</td>
+<td>Show electricity price, solar power, EV deadline, and key actions in 15-minute or 1-hour intervals.</td>
+<td>Use clear labels for time series; avoid dense axes on mobile; support tap-to-view details.</td>
+<td><code>price_intervals[]</code>, <code>power_intervals[]</code></td>
+</tr>
+<tr>
+<td>Constraint Rail</td>
+<td>EV required energy, departure time, Wallbox limit, battery reserve, and heat-pump comfort range.</td>
+<td>Show constraints beside recommendations so users do not think the system greedily optimizes only by price.</td>
+<td><code>device_constraints[]</code>, <code>battery_states[]</code></td>
+</tr>
+<tr>
+<td>Trust Receipt</td>
+<td>Sources, update time, formula version, Actual/Forecast/Estimate labels, and limitations.</td>
+<td>Show a summary by default; expanded view shows formulas and input snapshots, suitable for judge follow-up questions.</td>
+<td><code>calculation</code>, <code>calculation_audits[]</code></td>
+</tr>
+<tr>
+<td>Energy Companion Drawer</td>
+<td>Users ask “Why sell solar?” or “How is 5.16 € calculated?” and see source references.</td>
+<td>AI only explains selected numbers and formulas; answers must include evidence chips.</td>
+<td><code>assistant.answer</code>, <code>evidence[]</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>Interface Copy and States</h3>
+<div class="grid two">
+<div class="card green">
+<h3>Primary copy</h3>
+<p><strong>Headline:</strong> Route today's energy before the price curve moves.</p>
+<p><strong>Action:</strong> Review plan</p>
+<p><strong>Secondary:</strong> Show trust receipt</p>
+<p class="muted">Headlines must be actions, not brand slogans; button copy maps to real tasks.</p>
+</div>
+<div class="card amber">
+<h3>Empty / fallback states</h3>
+<p><strong>No contract:</strong> Upload or paste your tariff to turn estimates into final prices.</p>
+<p><strong>No live meter:</strong> Using forecast and last known household profile.</p>
+<p><strong>No EV deadline:</strong> Add departure time before smart charging can optimize.</p>
+</div>
+<div class="card blue">
+<h3>Interaction rules</h3>
+<ul class="plain-list">
+<li>Every clickable control keeps a touch target above 44 px.</li>
+<li>Charts must support tap / keyboard value inspection in addition to hover.</li>
+<li>Async APIs show three states: checking, live, and fallback.</li>
+<li>All monetary amounts use tabular numbers to reduce visual jumping during refresh.</li>
+</ul>
+</div>
+<div class="card violet">
+<h3>Responsive behavior</h3>
+<ul class="plain-list">
+<li>Desktop: left navigation + center decision area + right Trust Receipt.</li>
+<li>Tablet: the right Trust Receipt becomes an expandable panel.</li>
+<li>Mobile: show Best action first, then the four routing cards, with Trust as a bottom sheet.</li>
+<li>Avoid nested scrolling; keep one main vertical scroll for the page.</li>
+</ul>
+</div>
+</div>
+<h3>Why This UI Has an Advantage</h3>
+<div class="callout">
+<strong>Judge memory hook:</strong> Most teams will build “chat + charts + cheap hours.” Our UI turns household energy directly into an auditable routing problem: should this kWh be used, stored, sold, or bought now? Every option sits beside price, constraints, deadline, and a trust receipt.
+      </div>
+</section>
+<section class="section" id="optimizer">
+<h2>7. Real-Time Calculation Engine and Per-kWh Routing Optimization</h2>
+<p>
+        Power consumption, electricity cost, savings, and scheduling recommendations must be calculated in real time by the backend mathematical engine. AI only explains the results. Whenever device state, electricity price, weather forecast, contract rules, user deadline, or battery state changes, the backend recalculates the recommendation and writes a calculation audit.
+      </p>
+<div class="callout">
+<strong>Core upgrade:</strong> The objective is not “find cheap charging hours,” but to decide in every time interval whether solar power should be self-consumed, stored in the battery, sold back to the grid, or temporarily not used while cheaper grid power is bought.
+      </div>
+<h3>Solar Opportunity Optimizer Formulas</h3>
+<div class="grid two">
+<div class="card green">
+<h3>Time Intervals and Inputs</h3>
+<div class="formula">t = 1...96
+Δt = 0.25 h
+
+P_buy[t] = user's final grid import price EUR/kWh
+P_sell[t] = solar feed-in / export revenue EUR/kWh
+PV[t] = forecast solar generation kWh
+BaseLoad[t] = non-shiftable base load kWh
+
+DeviceUse[i,t] =
+  electricity used by device i in time interval t, kWh</div>
+</div>
+<div class="card amber">
+<h3>True Cost of Each kWh</h3>
+<div class="formula">Solar_direct_cost[t] = P_sell[t]
+
+Solar_battery_cost[t] =
+  P_sell[t] / η_battery_roundtrip
+  + battery_degradation_cost
+
+Grid_direct_cost[t] = P_buy[t]
+
+Grid_battery_cost[t] =
+  P_buy[t] / η_battery_roundtrip
+  + battery_degradation_cost</div>
+</div>
+<div class="card blue">
+<h3>Total Cost Optimization Objective</h3>
+<div class="formula">Minimize TotalCost =
+  Σ_t (
+    Grid_import[t] × P_buy[t]
+    - Grid_export[t] × P_sell[t]
+    + Battery_throughput[t] × battery_degradation_cost
+    + Comfort_penalty[t]
+    + Deadline_miss_penalty[t]
+  )</div>
+</div>
+<div class="card">
+<h3>Energy Balance</h3>
+<div class="formula">PV[t]
+  + Grid_import[t]
+  + Battery_discharge[t]
+= BaseLoad[t]
+  + Σ_i DeviceUse[i,t]
+  + Battery_charge[t]
+  + Grid_export[t]
+  + Curtailment[t]</div>
+</div>
+<div class="card">
+<h3>Battery State and Efficiency</h3>
+<div class="formula">Battery_SOC[t+1] =
+  Battery_SOC[t]
+  + Battery_charge[t] × η_charge
+  - Battery_discharge[t] / η_discharge
+
+Battery_SOC_min ≤ Battery_SOC[t] ≤ Battery_SOC_max
+Battery_charge[t] ≤ Battery_charge_power_max × Δt
+Battery_discharge[t] ≤ Battery_discharge_power_max × Δt</div>
+</div>
+<div class="card">
+<h3>EV and User Deadline</h3>
+<div class="formula">EV_need_kwh =
+  (target_soc - current_soc)
+  × ev_battery_capacity_kwh
+  / charging_efficiency
+
+Σ_t EV_charge[t] ≥ EV_need_kwh
+t ∈ [now, departure_deadline]
+EV_charge[t] ≤ wallbox_power_kw × Δt
+
+Example:
+(80% - 50%) × 75 kWh / 0.94 = 23.94 kWh</div>
+</div>
+<div class="card">
+<h3>Device Usage Constraints</h3>
+<div class="formula">Σ_t DeviceUse[i,t] = Required_energy[i]
+Earliest_start[i] ≤ t ≤ Deadline[i]
+DeviceUse[i,t] ≤ Max_power[i] × Δt
+
+Interruptible devices:
+  EV_charge[t] can be spread across multiple time intervals
+
+Non-interruptible devices:
+  Once started, they must run continuously for duration_i</div>
+</div>
+<div class="card violet">
+<h3>Single-kWh Decision Rules</h3>
+<div class="formula">If P_buy[t] &gt; P_sell[t]:
+  solar self-consumption is usually more economical
+
+If P_buy[t] &lt; P_sell[t]:
+  it may be better to sell solar power and buy low-price grid power
+
+If future_avoided_grid_cost × η_roundtrip
+  &gt; P_sell[t] + battery_degradation_cost:
+  it is worth storing solar power in the battery</div>
+</div>
+</div>
+<div class="grid two">
+<div class="card">
+<h3>Real-Time Power and Energy Calculation</h3>
+<div class="formula">instant_power_kw = watts / 1000
+interval_hours = interval_minutes / 60
+energy_kwh = instant_power_kw × interval_hours
+
+total_device_energy_kwh =
+  sum(power_kw[t] × interval_hours[t])
+
+estimated_device_energy_kwh =
+  rated_power_kw × expected_runtime_hours × usage_count</div>
+</div>
+<div class="card">
+<h3>Electricity Cost Calculation</h3>
+<div class="formula">kWh = kW × h
+cost = kWh × €/kWh
+
+naive_cost = required_kwh × current_price
+
+smart_cost =
+  solar_used_kwh × solar_opportunity_cost
+  + low_price_grid_kwh × low_price
+  + fallback_grid_kwh × fallback_price
+
+saving = naive_cost - smart_cost</div>
+</div>
+<div class="card">
+<h3>Value of Solar Self-Consumption</h3>
+<div class="formula">solar_self_use_saving =
+  import_price - export_price
+
+Example:
+avoided grid purchase 0.35 €
+foregone export revenue 0.08 €
+net benefit = 0.27 €/kWh</div>
+</div>
+<div class="card">
+<h3>Sell vs Self-Consume Example</h3>
+<div class="formula">P_sell = 0.08 €/kWh
+P_buy_low = 0.04 €/kWh
+η_battery_roundtrip = 0.90
+battery_degradation = 0.03 €/kWh
+
+Solar_direct_cost = 0.08 €/kWh
+Grid_direct_cost = 0.04 €/kWh
+Solar_battery_cost = 0.08 / 0.90 + 0.03 = 0.119 €/kWh
+
+Conclusion:
+Selling solar during the day and charging the EV with low-price grid power at night is more economical.</div>
+</div>
+<div class="card">
+<h3>Dynamic Tariff Time-of-Use Cost</h3>
+<div class="formula">interval_cost[t] =
+  import_kwh[t] × final_import_price[t]
+  - export_kwh[t] × export_price[t]
+
+final_import_price[t] =
+  market_price[t]
+  + supplier_fee
+  + network_fee
+  + taxes_and_levies
+  + VAT
+
+day_cost = sum(interval_cost[t]) + daily_base_fee</div>
+</div>
+</div>
+<h3>Backend Real-Time Recalculation Flow</h3>
+<div class="timeline">
+<div class="timeline-item">
+<div class="time">01</div>
+<div><strong>Normalize signals</strong>: normalize meters, inverters, Wallbox, smart plugs, EPREL estimates, and contract prices into kW/kWh/EUR/kWh.</div>
+</div>
+<div class="timeline-item">
+<div class="time">02</div>
+<div><strong>Build intervals</strong>: slice into 15-minute or 1-hour intervals and generate price, load, PV, battery, EV need, and forecast confidence.</div>
+</div>
+<div class="timeline-item">
+<div class="time">03</div>
+<div><strong>Calculate baseline</strong>: calculate the now / normal cost for “no planning” as an explainable baseline.</div>
+</div>
+<div class="timeline-item">
+<div class="time">04</div>
+<div><strong>Optimize schedule</strong>: find the lowest-cost plan under deadline, comfort, power limit, battery reserve, solar forecast, and dynamic electricity price constraints.</div>
+</div>
+<div class="timeline-item">
+<div class="time">05</div>
+<div><strong>Write audit</strong>: save formulas, input values, sources, update time, Actual/Forecast/Estimate labels, and confidence.</div>
+</div>
+</div>
+<h3>Calculation Service Boundaries</h3>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>Service</th>
+<th>Input</th>
+<th>Output</th>
+<th>Real-Time Trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerCalculationService</td>
+<td>instant W/kW、interval length、device runtime、rated power</td>
+<td>interval kWh、device daily/monthly energy</td>
+<td>New meter reading, smart plug reading, or device state change</td>
+</tr>
+<tr>
+<td>TariffCalculationService</td>
+<td>contract rules、market price、tax/network fee、export price</td>
+<td>final import/export price by interval</td>
+<td>New day-ahead price, contract update, or tax/fee rule change</td>
+</tr>
+<tr>
+<td>CostCalculationService</td>
+<td>interval kWh、final price、base fee、export kWh</td>
+<td>cost by interval/day/month、bill forecast</td>
+<td>Electricity price or consumption forecast changes</td>
+</tr>
+<tr>
+<td>DeviceUsageEstimator</td>
+<td>EPREL label、product model、usage frequency、smart plug actuals</td>
+<td>estimated/actual device kWh and cost</td>
+<td>User scans a device, confirms usage frequency, or connects measured data</td>
+</tr>
+<tr>
+<td>OptimizerService</td>
+<td>cost curve、PV surplus、feed-in/export price、battery SOC、battery degradation、EV/heat pump constraints</td>
+<td>use/store/sell/buy schedule、savings、opportunity cost、fallback plan、confidence</td>
+<td>Changes in deadline, SOC, weather, electricity price, or device availability</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout">
+<strong>Real-time calculation principle:</strong> Whenever the backend returns a recommendation, it must also return <code>calculated_at</code>、<code>valid_until</code>、<code>input_snapshot_id</code> and <code>formula_version</code>. The UI does not display savings numbers without audit records.
+      </div>
+</section>
+<section class="section" id="data-trust">
+<h2>8. Data Sources, Trustworthiness, and German Constraints</h2>
+<table>
+<thead>
+<tr>
+<th>Data Type</th>
+<th>What Is Needed</th>
+<th>Source</th>
+<th>MVP Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contracts and Prices</td>
+<td>Arbeitspreis, Grundpreis, dynamic formula, feed-in rate, taxes/fees, contract term</td>
+<td>Contract PDF, bill, supplier API</td>
+<td>Start with contract JSON and a sample PDF parser</td>
+</tr>
+<tr>
+<td>Market Electricity Prices</td>
+<td>German day-ahead or 15-minute market prices</td>
+<td>SMARD、ENTSO-E、EPEX</td>
+<td>Connect SMARD or ENTSO-E and cache prices</td>
+</tr>
+<tr>
+<td>Weather and Solar</td>
+<td>Temperature, cloud cover, solar irradiance, theoretical PV output</td>
+<td>Open-Meteo、DWD、PVGIS</td>
+<td>Open-Meteo + PVGIS</td>
+</tr>
+<tr>
+<td>Real-time consumption</td>
+<td>grid import/export, household load, historical consumption curve</td>
+<td>smart meter, iMSys, MSB, Tibber Pulse-like devices</td>
+<td>Mock smart meter</td>
+</tr>
+<tr>
+<td>Device State</td>
+<td>EV target charge, battery SOC, Wallbox power, heat-pump load, PV generation</td>
+<td>Enpal、Home Assistant、OCPP、Enphase、SolarEdge、SMA、Fronius</td>
+<td>Unified DeviceAdapter + mock data</td>
+</tr>
+</tbody>
+</table>
+<div class="callout">
+<strong>Key principle:</strong> Public market electricity prices cannot be treated as the user's final electricity price. Real bill calculations must prioritize contract pricing rules and supplier tariff.
+      </div>
+<h3>Complete Data Map</h3>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>Layer</th>
+<th>Data Item</th>
+<th>Typical Source</th>
+<th>Public?</th>
+<th>Decision Use</th>
+<th>MVP Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Market and Prices</td>
+<td>Day-ahead price, intraday reference, Germany/DE-LU bidding zone, electricity price intervals</td>
+<td><a href="https://www.smard.de/home/downloadcenter/download-marktdaten/">SMARD</a>、<a href="https://www.entsoe.eu/data/transparency-platform/">ENTSO-E Transparency Platform</a>, EPEX commercial data</td>
+<td>Partly public; deeper EPEX data may require commercial licensing</td>
+<td>Dynamic tariff forecasting, low-price windows, EV/battery/heat-pump scheduling</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Weather and Solar</td>
+<td>Temperature, cloud cover, GHI/DNI/DHI, Global Tilted Radiation, theoretical PV output</td>
+<td><a href="https://open-meteo.com/en/docs">Open-Meteo</a>、<a href="https://opendata.dwd.de/">DWD Open Data</a>、<a href="https://re.jrc.ec.europa.eu/pvg_tools/en/">PVGIS</a></td>
+<td>Public</td>
+<td>Solar surplus forecasting, heat-pump load explanation, tomorrow's schedule</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Contracts and Bills</td>
+<td>Arbeitspreis, Grundpreis, dynamic formula, feed-in price, taxes/fees, network fees, meter fee, contract term, discount/bonus</td>
+<td>Contract PDF, monthly bill, supplier API, Enpal customer contract system</td>
+<td>Private, requires user authorization</td>
+<td>Bill explanation, true cost, whether the contract is economical, trustworthy savings calculation</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Smart Meter</td>
+<td>15-minute/hourly import/export, real-time power, cumulative energy, meter id, MaLo-ID/Marktlokation</td>
+<td>iMSys/MSB, supplier API, Tibber Pulse-like meter-reading hardware, Home Assistant</td>
+<td>Private, requires authorization; iMSys is constrained by German metering and data-protection rules</td>
+<td>Real bill recalculation, anomaly detection, load forecasting, dynamic tariff settlement</td>
+<td>High</td>
+</tr>
+<tr>
+<td>PV and Inverter</td>
+<td>PV real-time generation, historical generation, installed capacity, inverter power, power flow, export/import meter</td>
+<td>Enpal、SolarEdge、Enphase、SMA、Fronius、Home Assistant</td>
+<td>Private, requires device or cloud API authorization</td>
+<td>Solar self-consumption value, surplus power forecasting, battery/EV scheduling</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Battery</td>
+<td>Capacity, SOC, reserve, charge/discharge power, efficiency, cycle limits, current mode</td>
+<td>Battery vendor API, inverter API, Enpal, Home Assistant</td>
+<td>Private</td>
+<td>Avoid high-price electricity, storage value, backup constraints, lifespan protection</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>EV / Wallbox</td>
+<td>Plug-in state, maximum power, current/target SOC, required kWh, departure time, whether smart charging is allowed</td>
+<td><a href="https://openchargealliance.org/protocols/open-charge-point-protocol/">OCPP</a>, Wallbox API, vehicle API, Octopus/Tibber-like integrations</td>
+<td>Private, requires explicit authorization</td>
+<td>Now vs Smart Plan, low-price/solar-window charging, bump charge fallback</td>
+<td>Highest</td>
+</tr>
+<tr>
+<td>Heat Pump</td>
+<td>Electricity use, indoor/target temperature, hot-water state, allowed load-shifting range, COP estimate, outdoor temperature</td>
+<td>Heat-pump API, SG Ready, Home Assistant, Enpal device data</td>
+<td>Private</td>
+<td>Bill anomaly explanation, preheating/load shifting under comfort constraints</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>German Device Registration and Verification</td>
+<td>Registration information for PV/battery and other energy devices, installed capacity, location verification</td>
+<td><a href="https://www.marktstammdatenregister.de/MaStR">Marktstammdatenregister</a></td>
+<td>Partly public / registered data</td>
+<td>System information validation, installed-capacity sanity check, compliance module</td>
+<td>Low</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>Which Data Must Come from Contracts, and Which Can Be Public</h3>
+<div class="grid two">
+<div class="card amber">
+<h3>Must Come from User Contract / Bill / Supplier</h3>
+<ul class="plain-list">
+<li>User's real Arbeitspreis, Grundpreis, meter fee, and tax/fee bundling method</li>
+<li>Dynamic tariff formula: market price + service fee + network fee + taxes/fees + VAT</li>
+<li>Feed-in price, rental/financing fees, bundle discounts, bonuses, price-guarantee period</li>
+<li>meter point, MaLo-ID, meter serial, billing cycle, historical bills</li>
+<li>Any clauses related to contract term, exit fees, or special EV/heat-pump tariffs</li>
+</ul>
+</div>
+<div class="card blue">
+<h3>Can Be Obtained from Public or Semi-Public Sources</h3>
+<ul class="plain-list">
+<li>German market price trends, day-ahead prices, system load, generation mix</li>
+<li>Weather, temperature, cloud cover, solar irradiance, and theoretical PV output</li>
+<li>Public tariff product pages and basic quote entry points</li>
+<li>Public device-vendor API documentation and OCPP protocol capabilities</li>
+<li>Public registration data such as MaStR is used for validation, not real-time control</li>
+</ul>
+</div>
+</div>
+<h3>Connector Priority</h3>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Connector</th>
+<th>Reason</th>
+<th>Demo Fallback</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P0</td>
+<td>MockHouseholdAdapter</td>
+<td>Guarantees a stable end-to-end hackathon demo covering EV, PV, battery, heat pump, contracts, and bills.</td>
+<td>Local JSON / CSV</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>ContractJsonAdapter / PDF Parser</td>
+<td>Savings must be based on real tariff rules; without a contract, only estimates are possible.</td>
+<td>Structured contract JSON + sample PDF</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>OpenMeteo + PVGIS</td>
+<td>Solar forecasting and heat-pump explanation require weather; the API is simple and suitable for a demo.</td>
+<td>Cached forecast file</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>SMARD / ENTSO-E</td>
+<td>German dynamic pricing and day-ahead windows require market data.</td>
+<td>Preloaded 24h price curve</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>OCPPWallboxAdapter</td>
+<td>The EV scenario is strongest; it needs plug-in state, power, deadline, and target charge.</td>
+<td>Wallbox simulator</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>HomeAssistantAdapter</td>
+<td>Covers multi-brand sensors, inverters, and smart plugs as a real-world fallback.</td>
+<td>HA sample export</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>SolarEdge / Enphase / SMA / Fronius</td>
+<td>Retrieves real device data for PV, battery, meter, and power flow.</td>
+<td>Device cloud API mock</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>MaStR / DWD / advanced MSB</td>
+<td>High value for compliance validation, official German weather, and long-term expansion, but not blocking for the MVP.</td>
+<td>Manual installed-capacity entry</td>
+</tr>
+</tbody>
+</table>
+<h3>Real-Time Data Feasibility and Trust Layers</h3>
+<p>
+        The product can aggregate real-time data from multiple platforms, but should not assume a single “fully automatic, fully accurate” unified database exists. The correct strategy is to build a Connector Layer and label every number as <strong>Actual / Forecast / Estimate / User confirmed</strong>, while continuously explaining source and confidence in the UI.
+      </p>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>Data</th>
+<th>Most Reliable Source</th>
+<th>Real-Time?</th>
+<th>Key Limitation</th>
+<th>Product Expression</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Actual Solar Generation</td>
+<td>Inverter/battery API, Enpal system, Home Assistant, SolarEdge, Enphase, SMA, Fronius</td>
+<td>High</td>
+<td>Public weather can only forecast; it cannot know the real generation, shading, inverter power limits, or battery strategy on a user's roof.</td>
+<td>“Actual PV production from inverter” or “Forecast PV from weather model.”</td>
+</tr>
+<tr>
+<td>Final User Electricity Price</td>
+<td>Contract/bill, supplier API, dynamic tariff API</td>
+<td>Medium-High</td>
+<td>SMARD/ENTSO-E provide market or system data and cannot be directly equated with the user's final Arbeitspreis.</td>
+<td>Prioritize “Final contract price”; without a contract, show “market reference estimate.”</td>
+</tr>
+<tr>
+<td>Total Household Consumption</td>
+<td>iMSys/MSB, supplier portal, local smart-meter reading, Home Assistant</td>
+<td>Medium-High</td>
+<td>German iMSys access is limited by MSB, authorization, metering, and data-protection rules; ordinary digital meters may not be remotely readable.</td>
+<td>Show data granularity: real-time, 15-min, hourly, monthly bill.</td>
+</tr>
+<tr>
+<td>EV / Wallbox</td>
+<td>OCPP, Wallbox API, vehicle API, Home Assistant</td>
+<td>Medium-High</td>
+<td>Many household device APIs are private; vehicle SOC may require vendor OAuth, and a Wallbox may not support OCPP.</td>
+<td>Ask for deadline and target charge first; upgrade to automatic planning after connection.</td>
+</tr>
+<tr>
+<td>Appliance / Electronics Power Consumption</td>
+<td>EPREL, product energy label, manual, smart-plug measurements, Home Assistant</td>
+<td>Low to Medium</td>
+<td>Model databases provide standard test values, not the user's actual modes, frequency, or habits.</td>
+<td>Estimate first, then replace with smart plug / meter signature data.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout">
+<strong>Product principle:</strong> Do not promise “automatic precise identification of every device.” A more trustworthy promise is: Start with a quick estimate. Scan your bill or energy label to improve accuracy. Connect live devices when you want real-time recommendations.
+      </div>
+<div class="callout">
+<strong>New product profile input endpoint:</strong> <code>POST /api/products/profile</code> receives model, device category, natural-language description, OCR-derived label text, and user-confirmed power / per-cycle consumption. The backend outputs a normalized energy profile, formulas, current-price cost, smart-window cost, per-run savings, AI prompt facts, and source quality. The key rule is: when there is no energy evidence, show <code>missing_energy_input</code>, and do not treat unknown values as 0 kWh.
+      </div>
+<div class="callout">
+<strong>Confirm and add device:</strong> lookup/profile is only a candidate and preview; after the user clicks <code>Add to home</code>, the frontend calls <code>POST /api/devices</code> and stores the confirmed profile in <code>data/runtime/home-devices.json</code>. The Home Devices panel and Whole-home schedule details read devices from this registry. Devices missing kWh can appear in inventory, but they do not enter savings amounts or scheduling recommendations.
+      </div>
+<h3>Product Models, Energy Labels, and Scan Recognition</h3>
+<p>
+        Device identification can be completed through model input, barcode, nameplate photo, EU energy label QR code, or invoice/manual scan. The public source best suited to Germany/EU is <a href="https://energy-efficient-products.ec.europa.eu/eprel_en">EPREL</a>(European Product Registry for Energy Labelling), which covers product models with EU energy labels and allows consumers to search by brand, model, or registration number.
+      </p>
+<div class="grid two">
+<div class="card blue">
+<h3>Products Suitable for Scanning / Lookup</h3>
+<ul class="plain-list">
+<li>EU energy label categories such as refrigerators, freezers, washing machines, dishwashers, dryers, electronic displays, lamps, smartphones, and tablets.</li>
+<li>Water heaters, space heating, air conditioning, and some B2B energy-related devices can support long-term expansion.</li>
+<li>Product identification fields: brand, model, EPREL registration number, GTIN/barcode, label QR URL, nameplate OCR.</li>
+</ul>
+</div>
+<div class="card amber">
+<h3>Cannot Be Treated as Exact Values</h3>
+<ul class="plain-list">
+<li>EPREL/energy labels usually provide annual or per-cycle consumption under standard test conditions.</li>
+<li>Real consumption is affected by mode, temperature, load, usage frequency, aging, standby state, and user behavior.</li>
+<li>Precise measurement should prioritize smart plugs, circuit-level monitoring, device APIs, or smart-meter load disaggregation.</li>
+</ul>
+</div>
+</div>
+<div class="timeline">
+<div class="timeline-item">
+<div class="time">01</div>
+<div><strong>Scan label</strong>: the user scans an energy label QR code, barcode, or device nameplate.</div>
+</div>
+<div class="timeline-item">
+<div class="time">02</div>
+<div><strong>Retrieve model</strong>: ProductRecognitionService queries EPREL or a brand/model cache and extracts standard energy consumption.</div>
+</div>
+<div class="timeline-item">
+<div class="time">03</div>
+<div><strong>Ask usage</strong>: ask only one everyday question, such as “About how many loads of laundry do you do per week?”</div>
+</div>
+<div class="timeline-item">
+<div class="time">04</div>
+<div><strong>Add to home</strong>: after user confirmation, call <code>POST /api/devices</code>, and the device enters the household device inventory and scheduling candidates.</div>
+</div>
+<div class="timeline-item">
+<div class="time">05</div>
+<div><strong>Upgrade with actuals</strong>: if the user connects a smart plug/Home Assistant, replace the model estimate with measured kWh.</div>
+</div>
+</div>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>User Entry Point</th>
+<th>Backend Fields</th>
+<th>Calculation Use</th>
+<th>Trust Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enter model and category</td>
+<td><code>query</code>, <code>category</code></td>
+<td>Retrieve product candidates and default energy profiles.</td>
+<td>Candidate results must be confirmed by the user and cannot be treated as measured data.</td>
+</tr>
+<tr>
+<td>Natural-language input</td>
+<td><code>natural_text</code></td>
+<td>Parse “1.05 kWh per cycle / 150 min / 5 cycles per week.”</td>
+<td>Treat as user-provided evidence and include it in source quality.</td>
+</tr>
+<tr>
+<td>Photo recognition</td>
+<td><code>photo_ocr_text</code></td>
+<td>Extract brand, model, power, and kWh/cycle first through QR/barcode/OCR/vision.</td>
+<td>Show “scan-derived” and ask the user to confirm key numbers.</td>
+</tr>
+<tr>
+<td>Manually add power</td>
+<td><code>product_details.power_kw</code>, <code>runtime_minutes</code></td>
+<td><code>energy_kwh = power_kw x runtime_hours</code>, then multiply by the real-time electricity price.</td>
+<td>If confirmed by the user, mark as user_confirmed.</td>
+</tr>
+<tr>
+<td>No energy-consumption evidence</td>
+<td><code>missing_energy_input</code></td>
+<td>Do not include it in savings calculations; ask only for missing fields.</td>
+<td>Avoid displaying unknown devices as 0 cost.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="formula">
+<strong>Scheduling formula:</strong> single_run_cost = cycle_kwh × tariff_eur_per_kwh; if only rated power is available, then cycle_kwh = power_kw × runtime_hours. AI can explain this formula, ask for deadline/noise/comfort preference, and add the device to the whole-home schedule; AI is not allowed to invent model consumption or real-time device state.
+      </div>
+<p>
+        Retrievable source priority: 1) EU energy label / EPREL or label QR; 2) brand manual and technical datasheet; 3) retailer specification page; 4) user photo OCR; 5) user manual confirmation. The photo engine should first read QR/barcode, then OCR, and only finally use a vision model to infer field positions, reducing purely visual guessing.
+      </p>
+<h3>Contract Scanning and Better Human-Computer Interaction</h3>
+<p>
+        Contract/bill information can be read through photo capture, PDF upload, email import, or supplier OAuth/API. The experience should not force users to manually fill complex tariff tables; it should be designed as <strong>scan and confirm</strong>: the system automatically extracts fields, highlights the original text location, and asks the user to confirm only key numbers.
+      </p>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>Extracted Field</th>
+<th>Source Location</th>
+<th>Purpose</th>
+<th>Interaction Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arbeitspreis / dynamic formula</td>
+<td>Contract clauses, Preisblatt, monthly bill</td>
+<td>Calculate the true import cost per kWh</td>
+<td>Highlight the original text and ask the user to confirm: “Is this your current import price?”</td>
+</tr>
+<tr>
+<td>Grundpreis / meter fee</td>
+<td>Contract front page, Preisblatt, bill summary</td>
+<td>Bill forecast and fixed-fee explanation</td>
+<td>Display as monthly fixed cost; do not mix into load-shifting savings</td>
+</tr>
+<tr>
+<td>Einspeisevergütung / export value</td>
+<td>PV/feed-in contract, bill, EEG explanation</td>
+<td>Calculate the opportunity cost of solar self-consumption</td>
+<td>Explain that “using solar to charge the car also has the opportunity cost of selling less power”</td>
+</tr>
+<tr>
+<td>MaLo-ID、meter serial、billing period</td>
+<td>Bill, supplier portal, MSB file</td>
+<td>Match meter, billing cycle, and historical consumption</td>
+<td>Hide technical IDs by default; show them only in the audit drawer</td>
+</tr>
+<tr>
+<td>contract end、price guarantee、bonus</td>
+<td>Contract clauses, welcome letter, supplier email</td>
+<td>Determine whether the contract is still economical and whether a price increase/renewal is near</td>
+<td>Use a timeline to show “until when the price guarantee lasts”</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="grid four">
+<div class="card green"><h3>Estimate</h3><p class="muted">Enter only address, system, and rough habits. Output a quick estimate.</p></div>
+<div class="card blue"><h3>Bill Scan</h3><p class="muted">After scanning a bill/contract, prices, fixed fees, and feed-in value become more accurate.</p></div>
+<div class="card amber"><h3>Meter</h3><p class="muted">After connecting a smart meter or Home Assistant, the consumption curve becomes more accurate.</p></div>
+<div class="card violet"><h3>Autopilot</h3><p class="muted">Automatic scheduling is allowed only after connecting and authorizing Wallbox/heat pump.</p></div>
+</div>
+<h3>Retrieval Layer Already Implemented in the Current Prototype</h3>
+<p>
+        The current engineering work has already moved from pure mock data to a <strong>connector-ready retrieval layer</strong>. It has not yet connected to real user accounts or third-party APIs, but the backend already provides unified interfaces so the frontend can truly call “refresh data sources, product model lookup, and contract text parsing,” while labeling results as fixture adapter, demo catalog, or user-supplied text.
+      </p>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>Capability</th>
+<th>Current API</th>
+<th>Current Data Mode</th>
+<th>Next Real Integration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connector status</td>
+<td><code>GET /api/connectors/status</code></td>
+<td>Lists five adapter types: tariff, solar/weather, device telemetry, contract parser, and product lookup.</td>
+<td>Add OAuth/consent status, provider health check, and latest sync time.</td>
+</tr>
+<tr>
+<td>Data source refresh</td>
+<td><code>POST /api/connectors/refresh</code></td>
+<td>Normalize fixtures into normalized signals usable by the calculation engine.</td>
+<td>Replace with Tibber/ENTSO-E, Open-Meteo/PVGIS, inverter, Wallbox, and smart-meter APIs.</td>
+</tr>
+<tr>
+<td>Product model lookup</td>
+<td><code>POST /api/products/lookup</code></td>
+<td>Uses <code>data/product-catalog.json</code> demo catalog to return product candidates, energy profiles, and confirmation requirements.</td>
+<td>Connect EPREL, vendor manuals, barcode/nameplate/energy label OCR.</td>
+</tr>
+<tr>
+<td>Contract text parsing</td>
+<td><code>POST /api/contracts/parse</code></td>
+<td>A rule-based parser extracts Arbeitspreis, Grundpreis, and notice period from user-pasted text.</td>
+<td>Connect PDF/OCR, email bill import, supplier portal, and build a scan-and-confirm UI.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout">
+<strong>Demo boundary:</strong> The Automatic data retrieval panel on the page is now a real backend interaction, but not an external online fetch. All results must show source status and user confirmation requirement, then upgrade to live connectors after real provider credentials are connected.
+      </div>
+</section>
+<section class="section" id="germany-profile">
+<h2>9. Germany Country Profile</h2>
+<p>The backend needs a Germany Profile to unify timezone, currency, electricity market area, default settlement granularity, and localized display.</p>
+<div class="formula">{
+  country: "DE",
+  locale: "de-DE",
+  timezone: "Europe/Berlin",
+  currency: "EUR",
+  energyUnit: "kWh",
+  powerUnit: "kW",
+  marketArea: "DE-LU",
+  biddingZoneEic: "10Y1001A1001A82H",
+  defaultInterval: "PT15M",
+  vatRate: 0.19
+}</div>
+<h3>German Smart Meters and Compliance Reality</h3>
+<div class="grid two">
+<div class="card">
+<h3>Dynamic tariffs require iMSys</h3>
+<p class="muted">Bundesnetzagentur explains that German electricity suppliers must offer dynamic electricity prices from 2025 onward; users who want a dynamic tariff usually need a smart metering system. The backend must clearly separate “price estimate” from “settlement-grade price.”</p>
+</div>
+<div class="card">
+<h3>steuerbare Verbrauchseinrichtungen</h3>
+<p class="muted">Controllable loads such as Wallbox and heat pumps may enter §14a EnWG scenarios. The product must distinguish read-only recommendations, user-confirmed control, and automatic control, while saving authorization records.</p>
+</div>
+<div class="card">
+<h3>User authorization first</h3>
+<p class="muted">Contracts, smart meters, vehicles, Wallbox, and device cloud APIs are all private data. Each connector needs consent scope, data minimization, and revocation mechanisms.</p>
+</div>
+<div class="card">
+<h3>Estimates must not impersonate bills</h3>
+<p class="muted">If contract and settlement-grade meter data are missing, the interface must be labeled Estimate. Accurate or Autopilot can be shown only after contracts/bills and real consumption curves are connected.</p>
+</div>
+</div>
+</section>
+<section class="section" id="backend-architecture">
+<h2>10. Backend Architecture</h2>
+<div class="architecture">
+<div class="arch-node">
+<strong>PublicDataService</strong>
+<span class="muted">SMARD、ENTSO-E、Open-Meteo、DWD、PVGIS</span>
+</div>
+<div class="arch-node">
+<strong>ContractService</strong>
+<span class="muted">Parse contract PDF/JSON and extract tariff rules</span>
+</div>
+<div class="arch-node">
+<strong>HouseholdDataService</strong>
+<span class="muted">Unify meter, PV, battery, EV, and heat-pump data</span>
+</div>
+<div class="arch-node">
+<strong>ProductRecognitionService</strong>
+<span class="muted">EPREL, energy labels, models, nameplate OCR, usage-frequency estimates</span>
+</div>
+<div class="arch-node">
+<strong>OptimizerService</strong>
+<span class="muted">Calculate use/store/sell/buy cost, opportunity cost, and scheduling</span>
+</div>
+<div class="arch-node">
+<strong>TrustAuditService</strong>
+<span class="muted">Record each recommendation's data sources, formulas, and update time</span>
+</div>
+</div>
+<div class="formula">AI Explanation Layer
+  -&gt; calls backend tools
+  -&gt; explains calculation results
+  -&gt; does not directly invent prices, savings, or device states</div>
+</section>
+<section class="section" id="device-adapters">
+<h2>11. Device Adapter Layer</h2>
+<p>Use a Connector Registry to adapt both real platforms and mock data into the same household state.</p>
+<div class="grid four">
+<div class="card"><h3>MockAdapter</h3><p class="muted">Main data source for the hackathon demo.</p></div>
+<div class="card"><h3>ContractScannerAdapter</h3><p class="muted">OCR/PDF extracts contract and bill fields, then stores them after user confirmation.</p></div>
+<div class="card"><h3>EPRELProductAdapter</h3><p class="muted">Look up standard energy consumption through EU energy label, registration number, brand, and model.</p></div>
+<div class="card"><h3>HomeAssistantAdapter</h3><p class="muted">Connect household aggregation systems and MQTT.</p></div>
+<div class="card"><h3>OCPPWallboxAdapter</h3><p class="muted">Connect Wallbox and EV chargers.</p></div>
+<div class="card"><h3>SmartMeterAdapter</h3><p class="muted">Connect smart meters or supplier consumption APIs.</p></div>
+<div class="card"><h3>MarketPriceAdapter</h3><p class="muted">Connect SMARD/ENTSO-E or supplier dynamic-price APIs.</p></div>
+<div class="card"><h3>EnphaseAdapter</h3><p class="muted">Read PV, consumption, and battery telemetry.</p></div>
+<div class="card"><h3>SolarEdgeAdapter</h3><p class="muted">Read inverter, PV, battery, and grid data.</p></div>
+<div class="card"><h3>SMA/FroniusAdapter</h3><p class="muted">Cover common inverter ecosystems in Germany.</p></div>
+<div class="card"><h3>EnpalAdapter</h3><p class="muted">Connect Enpal's own systems in the future.</p></div>
+</div>
+</section>
+<section class="section" id="database-design">
+<h2>12. Database Design</h2>
+<p>Recommended stack: PostgreSQL + TimescaleDB. Time-series data is used for prices, weather, device states, and meter readings.</p>
+<div class="formula">households
+contracts
+contract_documents
+contract_extracted_fields
+tariff_rules
+meter_readings
+appliance_telemetry_readings
+appliance_daily_summaries
+device_registry
+device_states
+power_intervals
+price_intervals
+calculation_runs
+optimizer_input_snapshots
+product_models
+product_usage_assumptions
+source_credentials
+consent_scopes
+market_prices
+weather_forecasts
+solar_forecasts
+battery_states
+device_constraints
+energy_routing_plans
+recommendations
+calculation_audits</div>
+<p class="muted">
+        Contract PDFs, bill PDFs, energy-label photos, and product nameplate photos can be stored in object storage. Contract clause snippets can go into a vector store to answer “what does my contract say?” Product models and EPREL results go into product_models, but every product consumption value must carry a source type: standard label, user confirmed, smart plug measured, or inferred.
+      </p>
+<div class="callout">
+<strong>Real-time consumption data design logic:</strong> The backend should write today's interval kWh for each identifiable appliance into <code>appliance_telemetry_readings</code>, aggregate it by day into <code>appliance_daily_summaries</code>, and then generate <code>optimizer_input_snapshots</code>. The optimizer first uses actual telemetry, then smart plug measured profiles, then falls back to user-confirmed usage and product label estimates.
+      </div>
+<div class="formula">POST /api/appliance-telemetry/readings
+  -&gt; validate source, consent, interval, kWh
+  -&gt; save appliance_telemetry_readings
+  -&gt; update appliance_daily_summaries
+  -&gt; build optimizer_inputs.actual_device_energy_kwh
+  -&gt; recompute use/store/sell/buy routing
+
+GET /api/appliance-telemetry/today
+  -&gt; per-device kWh, flexible-load kWh, source quality, optimizer input snapshot</div>
+<p class="muted">
+        Important boundary: real-time reading is read-only telemetry and does not equal automatic device control. Without device-level readings, the system can only say “estimated” or “not connected”; it must not force total meter data into precise appliance usage.
+      </p>
+</section>
+<section class="section" id="ai-principles">
+<h2>13. AI Design Principles</h2>
+<div class="grid two">
+<div class="card green">
+<h3>AI Should</h3>
+<ul class="check-list">
+<li>Explain kWh and electricity-cost formulas</li>
+<li>Explain the opportunity cost of solar self-consumption, selling power, and battery storage</li>
+<li>Explain bill changes</li>
+<li>Summarize contract clauses</li>
+<li>Translate calculation results into everyday language</li>
+<li>Explain data sources and confidence</li>
+</ul>
+</div>
+<div class="card red">
+<h3>AI Should Not</h3>
+<ul class="check-list">
+<li>Invent prices, savings, or device states</li>
+<li>Skip backend calculations and jump directly to conclusions</li>
+<li>Pretend to be certain when data is missing</li>
+<li>Use complex terminology instead of action recommendations</li>
+</ul>
+</div>
+</div>
+<div class="formula">Callable tools:
+get_current_energy_state()
+get_ev_charging_need()
+get_tariff_windows()
+forecast_solar_surplus()
+calculate_power_intervals()
+calculate_tariff_intervals()
+calculate_bill_forecast()
+calculate_naive_vs_smart_cost()
+calculate_solar_opportunity_cost()
+optimize_energy_routing()
+compare_use_store_sell_buy()
+explain_bill_change()
+summarize_contract()
+extract_contract_fields()
+lookup_product_energy_label()
+estimate_device_usage_cost()
+show_source_audit()</div>
+</section>
+<section class="section" id="implementation-roadmap">
+<h2>14. MVP Implementation Roadmap</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Goal</th>
+<th>Deliverable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Configure German country parameters</td>
+<td>GermanyProfile, price unit, timezone, market area</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Build mock household data</td>
+<td>Sample data for PV, battery, EV, heat pump, and smart meter</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Implement contract pricing rules</td>
+<td>contract JSON parser、tariff rule normalizer</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Connect public data</td>
+<td>Open-Meteo, PVGIS, SMARD or ENTSO-E cache</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Implement the real-time calculation engine and Solar Opportunity Optimizer</td>
+<td>power_intervals, price_intervals, bill forecast, use/store/sell/buy plan, opportunity cost, savings, timeline</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Implement trustworthy explanations</td>
+<td>calculation_audits、Why Trust This、AI tool calling</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Complete frontend demo</td>
+<td>Today’s Best Move、Energy Translator、Ask AI</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section" id="trust-template">
+<h2>15. Trustworthy Explanation Template</h2>
+<div class="card blue">
+<h3>Why Trust This?</h3>
+<p>This number is based on your contract electricity price, feed-in/export value, real-time meter, EV charging need, solar forecast, battery state, and Wallbox power limit.</p>
+<ul class="plain-list">
+<li>EV needs 24 kWh before 08:00 tomorrow morning</li>
+<li>Current contract electricity price: 0.35 €/kWh</li>
+<li>Low-price night window: 0.18 €/kWh</li>
+<li>Solar feed-in revenue: 0.08 €/kWh</li>
+<li>Today's solar surplus forecast: 6 kWh, available for self-use, battery storage, or export</li>
+<li>Battery round-trip efficiency: 90%, degradation cost: 0.03 €/kWh</li>
+<li>Wallbox maximum power: 11 kW</li>
+<li>Data updated at: 10:42</li>
+</ul>
+<p class="muted">AI only explains; amounts are produced by the backend calculation engine.</p>
+</div>
+</section>
+<section class="section" id="judge-highlights">
+<h2>16. Highlights from the Judges' Perspective</h2>
+<div class="grid">
+<div class="card">
+<h3>Clarity &amp; UX</h3>
+<p class="muted">Users immediately see whether each kWh should be used, stored, sold, or bought, instead of being overwhelmed by curves and terminology first.</p>
+</div>
+<div class="card">
+<h3>Smart Use of AI</h3>
+<p class="muted">AI is not a bolted-on chat box; it explains opportunity cost, contract electricity prices, device constraints, and optimization results.</p>
+</div>
+<div class="card">
+<h3>Impact</h3>
+<p class="muted">Every recommendation is tied to savings, export revenue, device constraints, and a concrete action.</p>
+</div>
+<div class="card">
+<h3>Originality</h3>
+<p class="muted">Upgrade from “charge during cheap hours” to “Every kWh, routed to its best use,” covering solar self-consumption, selling power, batteries, and dynamic grid power.</p>
+</div>
+</div>
+<div class="callout">
+<strong>Final pitch:</strong> Every kWh, routed to its best use: use solar, store it, sell it, or wait for cheaper grid power, with a Trust Receipt for every number.
+      </div>
+</section>
+<section class="section" id="market-gap">
+<h2>17. Market Gap and Competitive Analysis</h2>
+<p>
+        Existing products already cover dynamic electricity prices, smart charging, home energy monitoring, and hardware-level load control, but few simultaneously deliver “German-local contract/price explanation + multi-device scheduling + bill attribution + AI dialogue understandable to everyday users.” Enpal's opportunity is not another energy dashboard, but a trustworthy household energy explanation and decision layer.
+      </p>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>Competitor / Category</th>
+<th>Existing Capabilities</th>
+<th>Data It Controls</th>
+<th>Clear Gap</th>
+<th>Implication for Enpal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://1komma5.com/de/heartbeat/">1KOMMA5° Heartbeat AI</a> / <a href="https://1komma5.com/de/heartbeat/dynamischer-stromtarif-dynamic-pulse/">Dynamic Pulse</a></td>
+<td>A direct German HEMS competitor; connects PV, battery, Wallbox, and heat pump into an energy management system, and automatically controls large loads using dynamic electricity prices.</td>
+<td>
+<span class="mini-tag">Device State</span>
+<span class="mini-tag">Smart Meter</span>
+<span class="mini-tag">Day-ahead price</span>
+<span class="mini-tag">Dynamic tariff</span>
+</td>
+<td>It is more like an automated energy system; there is still room for an explanation layer that helps everyday users understand “why this amount is trustworthy, why the bill changed, and whether the contract is worthwhile.”</td>
+<td>The Enpal demo should emphasize explainable calculations, bill attribution, and “AI does not invent prices.”</td>
+</tr>
+<tr>
+<td><a href="https://tibber.com/de/stromtarif">Tibber</a> + <a href="https://tibber.com/de/pulse">Pulse</a></td>
+<td>Dynamic tariff, 15-minute prices, app previews of future prices, Pulse real-time meter reading, Smart Charging, Solar Charging, Smart Battery.</td>
+<td>
+<span class="mini-tag">Real-time consumption</span>
+<span class="mini-tag">Electricity price</span>
+<span class="mini-tag">EV charging</span>
+<span class="mini-tag">PV surplus</span>
+</td>
+<td>Strong in electricity prices and consumption behavior, but may not have Enpal-style full device installation, leasing/financing contracts, and cross-device bill explanation.</td>
+<td>Learn from “price transparency + automatic savings,” but expand the experience to contracts, bills, heat pumps, batteries, and the whole household system.</td>
+</tr>
+<tr>
+<td><a href="https://octopus.energy/smart/intelligent-octopus-go/">Intelligent Octopus Go</a></td>
+<td>Users connect an EV or charger, enter how much energy they need and when they need the car, and the system automatically schedules cheaper/greener charging windows.</td>
+<td>
+<span class="mini-tag">Supplier tariff</span>
+<span class="mini-tag">Half-hourly consumption</span>
+<span class="mini-tag">EV/charger</span>
+<span class="mini-tag">wholesale signal</span>
+</td>
+<td>Strongly tied to the UK supplier context; the product is mainly centered on EV tariffs, not a German multi-device household contract explainer.</td>
+<td>Excellent interaction reference for the EV demo: input deadline/charge need, output schedule, cost, and fallback.</td>
+</tr>
+<tr>
+<td><a href="https://www.home-assistant.io/docs/energy/">Home Assistant Energy</a></td>
+<td>Open ecosystem that can connect grid, solar, battery, individual devices, gas/water, and other data into one energy dashboard.</td>
+<td>
+<span class="mini-tag">Multi-brand sensors</span>
+<span class="mini-tag">PV inverter</span>
+<span class="mini-tag">smart plug</span>
+<span class="mini-tag">utility meter</span>
+</td>
+<td>Friendly to technical users, but high setup cost for ordinary homeowners; contract parsing, bill forecasting, and natural-language explanation are not the default main experience.</td>
+<td>Can serve as a backend fallback connector; the Enpal frontend must have a lower barrier and less configuration.</td>
+</tr>
+<tr>
+<td><a href="https://developer-v4.enphase.com/">Enphase</a> / <a href="https://knowledge-center.solaredge.com/sites/kc/files/se_monitoring_api.pdf">SolarEdge</a></td>
+<td>Device-vendor apps and APIs can monitor PV production, consumption, battery telemetry, power flow, meter data, and more.</td>
+<td>
+<span class="mini-tag">PV</span>
+<span class="mini-tag">battery</span>
+<span class="mini-tag">inverter</span>
+<span class="mini-tag">meters</span>
+</td>
+<td>Usually only controls its own hardware, not the user's real electricity contract, dynamic tariff, or global EV/heat-pump constraints.</td>
+<td>Use as a device data source; do not treat vendor monitoring pages as the final user experience.</td>
+</tr>
+<tr>
+<td><a href="https://www.theverge.com/2025/1/5/24335856/ecoflow-oasis-smart-home-energy-management-system">EcoFlow Oasis</a></td>
+<td>Reference for the AI-powered HEMS direction, emphasizing natural-language questions, predictive analytics, automation, and third-party device integration.</td>
+<td>
+<span class="mini-tag">home power</span>
+<span class="mini-tag">weather</span>
+<span class="mini-tag">rates</span>
+<span class="mini-tag">smart devices</span>
+</td>
+<td>More oriented toward the EcoFlow hardware ecosystem; German electricity contracts, iMSys, feed-in, Netzentgelte, and bill attribution are not core.</td>
+<td>Shows that the “AI energy companion” direction is emerging; Enpal must differentiate through German localization and bill trustworthiness.</td>
+</tr>
+<tr>
+<td><a href="https://www.span.io/panel">SPAN Panel</a> / smart electrical panel</td>
+<td>Circuit-level monitoring and control, supporting EV, heat pump, solar, and battery scenarios, with real-time energy decisions.</td>
+<td>
+<span class="mini-tag">circuit-level load</span>
+<span class="mini-tag">EV</span>
+<span class="mini-tag">battery backup</span>
+</td>
+<td>Hardware-heavy and expensive to install; Europe/Germany market fit and contract explanation are not its main strengths.</td>
+<td>Circuit-level data is valuable, but the MVP should avoid dependence on expensive hardware.</td>
+</tr>
+<tr>
+<td>Sense / Emporia-style energy monitoring</td>
+<td>Household energy monitoring, device recognition, solar or circuit-level energy monitoring.</td>
+<td>
+<span class="mini-tag">load monitoring</span>
+<span class="mini-tag">appliance insight</span>
+<span class="mini-tag">solar add-on</span>
+</td>
+<td>Solves “seeing consumption,” but less often solves “what should I do after combining contracts, prices, and device constraints?”</td>
+<td>Can supplement anomaly detection, but the core value should land on action recommendations and savings calculation.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout">
+<strong>Competitive conclusion:</strong> The strongest gap is the “explanation layer.” Existing players can monitor or control energy, but users still lack an interface that translates kWh, contracts, device states, and bill changes into trustworthy action recommendations.
+      </div>
+</section>
+<section class="section" id="ui-reference">
+<h2>18. Compliant UI Reference and Adaptation</h2>
+<p>
+        When referencing the Octopus Energy quote page, borrow only reusable information architecture and interaction patterns; do not copy brand, visual assets, illustrations, trademarks, or specific marketing expression. The page's strength is breaking complex energy quotes into low-pressure step-by-step input: first locate the address, then choose energy type, then let the user estimate usage with Low/Medium/High/Actual usage, with Good to know beside it explaining estimation basis and why a real bill is more accurate.
+      </p>
+<div class="quote-pattern">
+<div class="quote-panel">
+<h3>Enpal Intake Flow</h3>
+<p class="muted">Translate the quote-wizard pattern into a German household energy onboarding flow.</p>
+<div class="step-stack">
+<div>
+<span class="field-label">Where is your home?</span>
+<div class="fake-input">Berlin, 10405 · Germany</div>
+</div>
+<div>
+<span class="field-label">What system do you have?</span>
+<div class="usage-options">
+<div class="usage-option active">Solar</div>
+<div class="usage-option active">Battery</div>
+<div class="usage-option active">EV</div>
+<div class="usage-option">Heat pump</div>
+</div>
+</div>
+<div>
+<span class="field-label">How precise is your data?</span>
+<div class="usage-options">
+<div class="usage-option">Estimate</div>
+<div class="usage-option active">Bill</div>
+<div class="usage-option">Meter</div>
+<div class="usage-option">Autopilot</div>
+</div>
+</div>
+<div class="source-note">
+              If the user has no bill or device connection, start with German average households and public market data for estimation; upgrade to precise recommendations after contracts, meters, and devices are connected.
+            </div>
+</div>
+</div>
+<div>
+<h3>Design Principles Learned from the Octopus Pattern</h3>
+<div class="step-stack">
+<div class="step-row">
+<span class="step-number">1</span>
+<div>
+<strong>Collect the minimum necessary information first</strong>
+<p class="muted">Similar to asking postcode/address first, Enpal should first ask for German address or postal code to determine timezone, weather, PVGIS, regional price, and network-fee context.</p>
+</div>
+</div>
+<div class="step-row">
+<span class="step-number">2</span>
+<div>
+<strong>Allow users to start with estimate levels</strong>
+<p class="muted">The Low/Medium/High/Actual usage pattern can be translated into Estimate/Bill/Meter/Autopilot, so users do not need to connect every device at the beginning.</p>
+</div>
+</div>
+<div class="step-row">
+<span class="step-number">3</span>
+<div>
+<strong>Every estimate must explain its source</strong>
+<p class="muted">Keep a Good to know module explaining whether the current result is based on German averages, contracts, smart meters, or device telemetry.</p>
+</div>
+</div>
+<div class="step-row">
+<span class="step-number">4</span>
+<div>
+<strong>Reduce perceived onboarding risk</strong>
+<p class="muted">Borrow the reassurance pattern of “switching is simple”: Enpal should explain that it will not interrupt power supply, will not change contracts, reads data first, and enables automatic control only after user confirmation.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout">
+<strong>UI update direction:</strong> Move the homepage toward lightweight onboarding + a quote-style energy check. Users first receive an “estimated recommendation,” then gradually improve trustworthiness by uploading contracts, connecting meters, and connecting Wallbox.
+      </div>
+</section>
+<section class="section" id="octopus-appendix">
+<h2>19. Research Appendix: Deep Breakdown of Octopus Energy Explore</h2>
+<p>
+        Research target: <a href="https://octopus.energy/energy-explore/">Octopus Energy Explore</a>. As of 2026-06-20, this page itself is not a real-time energy data dashboard. It is a CMS-driven energy-topic entry page: with a clear topic index, postcode quote entry, and repeated image/text sections, it guides users toward deeper pages on home energy, business energy, smart tariffs, rewards, energy saving, and green energy.
+      </p>
+<div class="callout">
+<strong>Reproduction boundary:</strong> We may learn from and reproduce information architecture, component patterns, data trust expression, SSR/CMS technical approach, and accessibility details; we do not copy Octopus's brand, trademarks, mascot, fonts, color palette, illustrations, photos, original copy, or page source.
+      </div>
+<h3>Page Skeleton and Section Order</h3>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>Order</th>
+<th>Page Module</th>
+<th>Role on the Octopus Page</th>
+<th>Reusable Design Pattern</th>
+<th>Enpal Adaptation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Skip link + Global Header</td>
+<td>The top provides skip navigation, main site navigation, Support, and login entry; desktop shows main navigation, mobile collapses into a menu.</td>
+<td>Semantic header/nav/main; logo, product navigation, help entry, account-state skeleton.</td>
+<td>Enpal header includes Solar, Battery, Heat Pump, Wallbox, Energy Manager, Support, Login.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Hero Intro</td>
+<td>Use a large headline and top visual element to confirm “this is an energy product entry point.”</td>
+<td>One H1 + short explanation + optional scenario image; do not fill the first viewport with complex tables.</td>
+<td>Focus the headline on “Home Energy Check,” so users know this is where they can see how their home can save money.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Anchor Topic Nav</td>
+<td>Six anchors: Home, Business, Smart tariffs, Perks &amp; Rewards, Saving energy, Green energy.</td>
+<td>Sticky/horizontal chip navigation; click scrolls to section; scroll-spy active state can be added.</td>
+<td>Change topics to Today, Solar, Battery, EV, Heat Pump, Tariff, Bill, Trust.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Quick Quote Form</td>
+<td>Postcode input + Get a quote CTA converts exploration traffic into a quote flow.</td>
+<td>One short title, one input, and one clear CTA; the input includes a label, error area, and loading state.</td>
+<td>For Germany, change this to PLZ/Adresse + Haushaltstyp + Start Energy Check.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Repeated Topic Sections</td>
+<td>Six image/text sections, each explaining one energy topic and providing one or two CTAs.</td>
+<td>Two-column image/text, alternating layout, short title, 1-2 explanatory paragraphs, primary/secondary CTAs.</td>
+<td>Adapt into device and decision sections: PV surplus, EV charging, heat pump shift, bill forecast.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Mega Footer</td>
+<td>Supports secondary exploration: company, smart home, support, country sites, app downloads, social links.</td>
+<td>Multi-column footer retaining legal, support, region, app, and privacy links.</td>
+<td>Add German legal, privacy, connector consent, and data source explanation.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>Page Themes and Adaptable Data Logic</h3>
+<p>
+        The Energy Explore entry page does not directly show much data, but every theme maps to a data logic. When adapting it, translate “marketing themes” into “calculable household energy questions.”
+      </p>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>Octopus Theme</th>
+<th>Information Shown on Page</th>
+<th>Implied Underlying Data</th>
+<th>Data Enpal Should Show</th>
+<th>Recommended Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Home energy</td>
+<td>Standard fixed/floating tariffs, price fairness, quick quote entry.</td>
+<td>postcode, tariff, standing charge, unit rate, regulated price cap or market benchmark.</td>
+<td>User contract price, Grundpreis, Arbeitspreis, monthly bill forecast, dynamic tariff formula.</td>
+<td>“Your final electricity price is not the market price; it is the contract formula + taxes/fees + network fees.”</td>
+</tr>
+<tr>
+<td>Business energy</td>
+<td>Business-user entry, cost control, referral incentives.</td>
+<td>Business consumption profile, contract type, consumption scale, billing cycle.</td>
+<td>Can be de-emphasized in the MVP; keep “future expansion to multi-home/commercial buildings.”</td>
+<td>Treat this as a later B2B roadmap item, not part of the core hackathon demo.</td>
+</tr>
+<tr>
+<td>Smart tariffs</td>
+<td>EV, heat pump, solar, and battery users can save money through load shifting.</td>
+<td>Half-hour prices, smart-meter readings, device controllability, flexibility in usage time.</td>
+<td>15-minute/hourly electricity prices, PV surplus, EV deadline, battery SOC, heat-pump load-shifting window.</td>
+<td>Recommend only when “low price + high solar + no impact on life constraints” are all satisfied.</td>
+</tr>
+<tr>
+<td>Perks &amp; Rewards</td>
+<td>Member benefits, rewards, sense of participation.</td>
+<td>Account eligibility, participation records, points/cash rewards, campaign inventory.</td>
+<td>Can be adapted into Enpal Savings Badges: this month's solar self-use value, peak-avoidance value, automatic scheduling value.</td>
+<td>Do not make gamified points; build a “trusted savings log.”</td>
+</tr>
+<tr>
+<td>Saving energy</td>
+<td>Power Up/Power Down: use more electricity when renewables are abundant, reduce use during peaks to earn rewards.</td>
+<td>Grid load, renewable generation, regional flexibility events, smart-meter baseline.</td>
+<td>German low-price/high-renewable windows, heat-pump preheating, EV charging, laundry/dryer recommendations, carbon-intensity estimate.</td>
+<td>“Why using more/less electricity now matters for both you and the grid.”</td>
+</tr>
+<tr>
+<td>Green energy</td>
+<td>Renewable investment, PPA, green electricity, system-transition narrative.</td>
+<td>Annual fuel mix, PPA/certificate matching, investment projects, generation volume, carbon intensity.</td>
+<td>German real-time grid mix, actual rooftop PV self-consumption, supplier green-electricity matching, avoided CO2.</td>
+<td>Clearly distinguish “real-time grid mix,” “contract green electricity,” and “rooftop self-generation/self-consumption,” avoiding vague claims of 100% green.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>Data Sources and Trust Mechanisms in Extension Pages</h3>
+<div class="grid two">
+<div class="card blue">
+<h3>Trustworthy Expression of Dynamic Electricity Prices</h3>
+<p class="muted">The Octopus Agile extension page explains half-hour prices, wholesale-market linkage, daily updates, next-day prices, and billing based on half-hour smart-meter readings. This pattern should be translated into German dynamic tariff 15-minute/hourly price windows, update time, eligibility conditions, and price-cap/risk explanations.</p>
+</div>
+<div class="card green">
+<h3>Trustworthy Expression of Green Energy</h3>
+<p class="muted">The Octopus Green page places annual electricity sources, statistical period, g/kWh, renewable/nuclear shares, and UK overall comparison into one narrative. Enpal should use the same structure to explain real-time German grid mix, rooftop PV self-consumption, supplier green electricity, and Guarantees of Origin/PPA.</p>
+</div>
+<div class="card amber">
+<h3>Trustworthy Expression of Flexibility Events</h3>
+<p class="muted">Saving Sessions explain Power Up/Power Down, smart-meter readings, regional events, and reward settlement. Enpal can adapt this into “low-price/high-solar window alerts” and “peak-avoidance savings logs.”</p>
+</div>
+<div class="card">
+<h3>Weaknesses of the Entry Page</h3>
+<p class="muted">Energy Explore itself has no source badge, last updated, methodology, or calculation audit. Our product should add these, especially showing source, unit, time range, and confidence beside every savings amount.</p>
+</div>
+</div>
+<h3>Mapping UK Data Sources to German Data Sources</h3>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>Octopus / UK Scenario</th>
+<th>Data Source</th>
+<th>Data Content</th>
+<th>German Enpal Alternative</th>
+<th>Product Display</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regulated price benchmark</td>
+<td><a href="https://www.ofgem.gov.uk/energy-price-cap">Ofgem Energy Price Cap</a></td>
+<td>unit rate, standing charge, regional and payment-method differences; price cap updated every 3 months.</td>
+<td>Germany has no exact equivalent to the price cap; use contract prices, BNetzA/public tariff comparison, and regional network-fee explanation.</td>
+<td>Show “your contract price vs reference market price / standard tariff,” without inventing a German price cap.</td>
+</tr>
+<tr>
+<td>Wholesale / system data</td>
+<td><a href="https://developer.data.elexon.co.uk/">Elexon BMRS API</a></td>
+<td>Half-hour generation, fuel mix, demand, market data, wind forecast, etc.</td>
+<td><a href="https://www.smard.de/home/downloadcenter/download-marktdaten/">SMARD</a>、<a href="https://www.entsoe.eu/data/transparency-platform/">ENTSO-E</a></td>
+<td>Low-price windows, renewable windows, grid tightness/looseness explanations.</td>
+</tr>
+<tr>
+<td>Carbon intensity</td>
+<td><a href="https://carbonintensity.org.uk/">NESO Carbon Intensity API</a></td>
+<td>GB regional carbon intensity, generation mix, 96+ hour forecast, gCO2/kWh, 30-minute granularity.</td>
+<td>SMARD generation mix + ENTSO-E + UBA / custom emission-factor model.</td>
+<td>Label as “estimated carbon intensity,” and show methodology and uncertainty.</td>
+</tr>
+<tr>
+<td>Annual energy statistics</td>
+<td><a href="https://www.gov.uk/government/collections/digest-of-uk-energy-statistics-dukes">DESNZ DUKES</a></td>
+<td>Energy production/use, fuel, renewables, long-term trends, official statistics.</td>
+<td>Destatis, UBA, BNetzA, SMARD annual data.</td>
+<td>Used only as background benchmark, not for real-time recommendations.</td>
+</tr>
+<tr>
+<td>User consumption settlement</td>
+<td><a href="https://docs.octopus.energy/rest/guides/endpoints/">Octopus API</a></td>
+<td>Product, tariff, meter point, half-hour consumption, export MPAN, etc.</td>
+<td>Enpal/supplier API, iMSys/MSB, Tibber Pulse-like hardware, Home Assistant.</td>
+<td>Requires authorization; used for bill recalculation and recommendation audit.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>Reusable Component Blueprint</h3>
+<div class="formula">GlobalHeader
+  props: logo, primaryNav[], supportHref, accountState, mobileMenu
+  states: default, mobileOpen, accountLoading, loggedIn, loggedOut
+
+HeroIntro
+  props: eyebrow?, title, summary?, media?, primaryAction?
+
+AnchorTopicNav
+  props: topics[{label,targetId}], stickyOffset
+  behavior: click scroll, keyboard focus, scroll-spy active state
+
+QuickQuoteForm
+  props: title, inputLabel, placeholder, submitLabel, targetPath
+  states: empty, focused, invalid, submitting, success
+
+TopicFeatureSection
+  props: id, navLabel, title, body, media, mediaSide, actions[]
+  layout: mobile single-column, desktop alternating two-column
+
+SourceBadge
+  props: sourceName, sourceUrl, unit, interval, lastUpdated, confidence
+
+FooterMegaLinks
+  props: columns[], legalLinks[], countryLinks[], appLinks[], socialLinks[]</div>
+<h3>Page Data Contract</h3>
+<p>To reproduce a similar experience, content should be driven by structured data rather than hardcoded into the page. Below is a suggested proprietary data model.</p>
+<div class="formula">type ExplorePage = {
+  slug: string
+  seo: {
+    title: string
+    description: string
+    canonical: string
+    ogImage?: string
+  }
+  hero: {
+    title: string
+    summary?: string
+    media?: ImageAsset
+  }
+  nav: { label: string; targetId: string }[]
+  quoteCta: {
+    title: string
+    inputLabel: string
+    submitLabel: string
+    targetPath: string
+  }
+  sections: ExploreSection[]
+}
+
+type ExploreSection = {
+  id: string
+  navLabel: string
+  title: string
+  body: RichTextBlock[]
+  media?: ImageAsset
+  layout: "image-left" | "image-right"
+  actions: { label: string; href: string; variant?: "primary" | "secondary" }[]
+  dataDisclosure?: SourceBadge[]
+}
+
+type EnergyOffer = {
+  id: string
+  audience: "home" | "business"
+  category: "standard" | "smart" | "solar" | "ev" | "heat-pump" | "saving" | "green"
+  eligibility: string[]
+  summary: string
+  ctaHref: string
+  priority: number
+}</div>
+<h3>Technical Implementation Clues and Our Recommendations</h3>
+<div class="table-scroll">
+<table class="wide-table">
+<thead>
+<tr>
+<th>Observed Clue</th>
+<th>Explanation</th>
+<th>Our Reproducible Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Next.js / React Server Components</td>
+<td>The HTML contains <code>/_next/static/chunks/</code>、<code>self.__next_f.push</code>, Turbopack chunks, and hydration payload.</td>
+<td>Production can use Next.js App Router; the hackathon prototype can start with static HTML + a small amount of JS.</td>
+</tr>
+<tr>
+<td>Vercel / CDN caching</td>
+<td>Response headers show Vercel, cache hit, Next stale time, and RSC vary.</td>
+<td>Marketing/explanation pages use SSG/ISR; real-time energy APIs do not use page static caching.</td>
+</tr>
+<tr>
+<td>CMS content</td>
+<td>The source payload contains story/content/blok clues, indicating sections are CMS-driven.</td>
+<td>Manage ExplorePage with local JSON or CMS; energy calculation data still comes from backend services.</td>
+</tr>
+<tr>
+<td>Component system</td>
+<td>The page heavily uses component-system clues such as data-part, button-root, card-root, and panda-compiled-styles.</td>
+<td>Build Enpal's own design tokens: spacing, radius, button, card, source badge, timeline.</td>
+</tr>
+<tr>
+<td>Main content SSR</td>
+<td>H1, section text, image alt, and footer links are directly in HTML and indexable.</td>
+<td>Important explanatory content must be server-rendered; AI answers and calculation results are interactive enhancements.</td>
+</tr>
+<tr>
+<td>Light client-side interaction</td>
+<td>The page's main interactions are menu, anchors, account state, and postcode form.</td>
+<td>Our landing/overview page hydrates only forms, active anchors, and estimators; the dashboard then loads real-time data.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>Accessibility, SEO, and Performance Checklist</h3>
+<div class="grid three">
+<div class="card">
+<h3>Accessibility</h3>
+<ul class="plain-list">
+<li>Keep skip link, a unique H1, and clear H2/H3 hierarchy.</li>
+<li>Inputs use real labels, and error messages use <code>role="alert"</code>。</li>
+<li>Add <code>scroll-margin-top</code>to anchor jumps, and focus-visible must be visible.</li>
+<li>Decorative images use <code>alt=""</code>, while content images use specific alt text.</li>
+<li>Respect <code>prefers-reduced-motion</code>。</li>
+</ul>
+</div>
+<div class="card">
+<h3>SEO</h3>
+<ul class="plain-list">
+<li>Write title, description, canonical, OpenGraph, and Twitter card.</li>
+<li>Core body content goes into HTML, not client-only rendering.</li>
+<li>Product/data pages link to each other to form a clear information hierarchy.</li>
+<li>Every data claim provides a source or methodology link.</li>
+</ul>
+</div>
+<div class="card">
+<h3>Performance</h3>
+<ul class="plain-list">
+<li>Inline or prioritize first-screen critical CSS.</li>
+<li>Lazy-load below-the-fold images and use responsive images.</li>
+<li>Dynamically load charts and maps on demand.</li>
+<li>Marketing entry pages avoid loading large real-time dashboard bundles.</li>
+</ul>
+</div>
+</div>
+<h3>Suggested Enpal Page Order</h3>
+<div class="timeline">
+<div class="timeline-item">
+<div class="time">01</div>
+<div><strong>Ihr Energieplan</strong>: enter PLZ/address, roof/household type, whether PV/battery/EV/heat pump exists, and first show estimate confidence.</div>
+</div>
+<div class="timeline-item">
+<div class="time">02</div>
+<div><strong>Today’s Best Move</strong>: show the one best thing to do today, such as charging the EV later, how much it saves, and why it is trustworthy.</div>
+</div>
+<div class="timeline-item">
+<div class="time">03</div>
+<div><strong>Solar &amp; Battery</strong>: explain solar self-consumption, export opportunity cost, and battery peak-avoidance value.</div>
+</div>
+<div class="timeline-item">
+<div class="time">04</div>
+<div><strong>EV &amp; Wallbox</strong>：deadline、required kWh、use/store/sell/buy plan、start smart charging。</div>
+</div>
+<div class="timeline-item">
+<div class="time">05</div>
+<div><strong>Heat Pump</strong>: temperature, comfort, preheating window, abnormal bill explanation.</div>
+</div>
+<div class="timeline-item">
+<div class="time">06</div>
+<div><strong>Tariff &amp; Contract</strong>: contract clauses, dynamic pricing formula, and the difference between public market price and final electricity price.</div>
+</div>
+<div class="timeline-item">
+<div class="time">07</div>
+<div><strong>Why Trust This?</strong>: source badge, last updated, units, time granularity, prediction/actual, audit trail.</div>
+</div>
+</div>
+<h3>Misreadings to Avoid</h3>
+<div class="grid two">
+<div class="card red">
+<h3>Do not treat the entry page as a data dashboard</h3>
+<p class="muted">The core value of Energy Explore is topic routing and education, not real-time data visualization. Enpal's dashboard needs a separate real-time data layer.</p>
+</div>
+<div class="card red">
+<h3>Do not copy the playful brand tone</h3>
+<p class="muted">Enpal's German context is better suited to a “household energy planning advisor”: trustworthy, clear, restrained, emphasizing regulation, contracts, installation, and long-term value.</p>
+</div>
+<div class="card red">
+<h3>Do not copy assets</h3>
+<p class="muted">Images, illustrations, fonts, mascot, colors, and original copy belong to Octopus brand expression; only the structure should be learned from.</p>
+</div>
+<div class="card red">
+<h3>Do not hide data uncertainty</h3>
+<p class="muted">Public market prices, weather, PV forecasts, and carbon intensity are all estimates; the interface must label Actual / Forecast / Estimate.</p>
+</div>
+</div>
+</section>
+<section class="section" id="sources">
+<h2>20. Reference Data Sources</h2>
+<ul class="plain-list">
+<li><a href="https://1komma5.com/de/heartbeat/">1KOMMA5° Heartbeat AI</a></li>
+<li><a href="https://1komma5.com/de/heartbeat/dynamischer-stromtarif-dynamic-pulse/">1KOMMA5° Dynamic Pulse</a></li>
+<li><a href="https://tibber.com/de/stromtarif">Tibber Stromtarif</a></li>
+<li><a href="https://tibber.com/de/pulse">Tibber Pulse</a></li>
+<li><a href="https://octopus.energy/energy-explore/">Octopus Energy Explore</a></li>
+<li><a href="https://octopus.energy/quote/?smart_product=INTELLIGENT_OCTOPUS">Octopus Energy quote flow reference</a></li>
+<li><a href="https://octopus.energy/smart/intelligent-octopus-go/">Intelligent Octopus Go</a></li>
+<li><a href="https://octopus.energy/smart/agile/">Agile Octopus</a></li>
+<li><a href="https://octopus.energy/green/">Octopus Green Energy</a></li>
+<li><a href="https://octopus.energy/saving-sessions/">Octopus Saving Sessions</a></li>
+<li><a href="https://docs.octopus.energy/rest/guides/endpoints/">Octopus Energy REST API docs</a></li>
+<li><a href="https://www.ofgem.gov.uk/energy-price-cap">Ofgem Energy Price Cap</a></li>
+<li><a href="https://developer.data.elexon.co.uk/">Elexon BMRS API Developer Portal</a></li>
+<li><a href="https://carbonintensity.org.uk/">NESO Carbon Intensity API</a></li>
+<li><a href="https://www.gov.uk/government/collections/digest-of-uk-energy-statistics-dukes">Digest of UK Energy Statistics (DUKES)</a></li>
+<li><a href="https://www.home-assistant.io/docs/energy/">Home Assistant Energy Management</a></li>
+<li><a href="https://developers.home-assistant.io/docs/api/rest/">Home Assistant REST API</a></li>
+<li><a href="https://developer-v4.enphase.com/">Enphase API v4</a></li>
+<li><a href="https://knowledge-center.solaredge.com/sites/kc/files/se_monitoring_api.pdf">SolarEdge Monitoring API</a></li>
+<li><a href="https://openchargealliance.org/protocols/open-charge-point-protocol/">Open Charge Alliance OCPP</a></li>
+<li><a href="https://energy-efficient-products.ec.europa.eu/eprel_en">European Commission EPREL</a></li>
+<li><a href="https://energy-efficient-products.ec.europa.eu/product-list_en">European Commission Energy Efficient Products list</a></li>
+<li><a href="https://www.span.io/panel">SPAN Panel</a></li>
+<li><a href="https://www.theverge.com/2025/1/5/24335856/ecoflow-oasis-smart-home-energy-management-system">EcoFlow Oasis coverage</a></li>
+<li><a href="https://www.smard.de/home/downloadcenter/download-marktdaten/">SMARD Marktdata Download</a></li>
+<li><a href="https://www.entsoe.eu/data/transparency-platform/">ENTSO-E Transparency Platform</a></li>
+<li><a href="https://open-meteo.com/en/docs">Open-Meteo API Documentation</a></li>
+<li><a href="https://opendata.dwd.de/">DWD Open Data</a></li>
+<li><a href="https://re.jrc.ec.europa.eu/pvg_tools/en/">EU JRC PVGIS</a></li>
+<li><a href="https://www.marktstammdatenregister.de/MaStR">Marktstammdatenregister</a></li>
+<li><a href="https://www.marktstammdatenregister.de/MaStRHilfe/subpages/webdienst.html">MaStR Webdienst documentation</a></li>
+<li><a href="https://www.bundesnetzagentur.de/DE/Vportal/Energie/Metering/start.html">Bundesnetzagentur: Messeinrichtungen / Intelligente Messsysteme</a></li>
+</ul>
+</section>
+<p class="footer">Prepared for Enpal Smart Energy Companion prototype planning · HTML document</p>
+</main>
+</body>
+</html>
