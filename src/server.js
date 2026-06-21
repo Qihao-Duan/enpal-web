@@ -14,7 +14,11 @@ const CONTENT_TYPES = {
   ".js": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".md": "text/markdown; charset=utf-8",
-  ".svg": "image/svg+xml"
+  ".svg": "image/svg+xml",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".webp": "image/webp"
 };
 
 const STATIC_ALLOWLIST = [
@@ -22,6 +26,7 @@ const STATIC_ALLOWLIST = [
   "enpal-smart-energy-companion-design.html",
   "ENGINEERING_ALIGNMENT.md",
   "requirement.md",
+  "assets",
   "data",
   "docs"
 ];

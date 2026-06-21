@@ -23,6 +23,17 @@ const {
   parseContractText,
   refreshConnectors
 } = require("./connectors");
+const {
+  buildContractUpload,
+  buildDeviceReadiness,
+  buildProfileCurrent,
+  buildProfileReadiness,
+  calculateOptimizationPlan,
+  confirmContract,
+  findDevice,
+  getCurrentPlan,
+  scanProduct
+} = require("./energy-plans");
 
 function sendJson(res, statusCode, payload) {
   const body = JSON.stringify(payload, null, 2);
@@ -31,7 +42,7 @@ function sendJson(res, statusCode, payload) {
     "Cache-Control": "no-store",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type, Accept",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS"
+    "Access-Control-Allow-Methods": "GET, POST, PATCH, OPTIONS"
   });
   res.end(body);
 }
@@ -91,6 +102,43 @@ function createApiHandlers(rootDir) {
         }));
       }
 
+      if (req.method === "GET" && url.pathname === "/api/plan/current") {
+        return sendJson(res, 200, getCurrentPlan(fixtures));
+      }
+
+      if (req.method === "POST" && (url.pathname === "/api/plans/optimize" || url.pathname === "/api/plan/simulate")) {
+        const body = await readRequestJson(req);
+        const routingPlan = loadEnergyRoutingPlan(rootDir);
+        const applianceTelemetry = getTodayApplianceTelemetry(rootDir, fixtures, {
+          date: body.date || url.searchParams.get("date") || undefined
+        });
+        const optimizedPlan = calculateOptimizationPlan(fixtures, body, {
+          rootDir,
+          routingPlan,
+          applianceTelemetry
+        });
+        const homeDevices = listHomeDevices(rootDir, fixtures);
+        return sendJson(res, 200, {
+          ...optimizedPlan,
+          status: url.pathname === "/api/plan/simulate" ? "simulated" : "optimized",
+          profile_readiness: buildProfileReadiness(fixtures, homeDevices),
+          home_devices: homeDevices
+        });
+      }
+
+      if (req.method === "GET" && url.pathname === "/api/profile/current") {
+        return sendJson(res, 200, buildProfileCurrent(fixtures));
+      }
+
+      if (req.method === "PATCH" && url.pathname === "/api/profile/current") {
+        const body = await readRequestJson(req);
+        return sendJson(res, 200, buildProfileCurrent(fixtures, body));
+      }
+
+      if (req.method === "GET" && url.pathname === "/api/profile/readiness") {
+        return sendJson(res, 200, buildProfileReadiness(fixtures, listHomeDevices(rootDir, fixtures)));
+      }
+
       if (req.method === "GET" && url.pathname === "/api/appliance-telemetry/today") {
         return sendJson(res, 200, getTodayApplianceTelemetry(rootDir, fixtures, {
           date: url.searchParams.get("date") || undefined
@@ -129,9 +177,71 @@ function createApiHandlers(rootDir) {
         return sendJson(res, 200, buildProductUsageProfile(fixtures, body));
       }
 
+      if (req.method === "POST" && url.pathname === "/api/products/scan") {
+        const body = await readRequestJson(req);
+        return sendJson(res, 200, scanProduct(fixtures, body));
+      }
+
       if (req.method === "POST" && url.pathname === "/api/contracts/parse") {
         const body = await readRequestJson(req);
         return sendJson(res, 200, parseContractText(fixtures, body));
+      }
+
+      if (req.method === "POST" && url.pathname === "/api/contracts/upload") {
+        const body = await readRequestJson(req);
+        return sendJson(res, 200, buildContractUpload(fixtures, body));
+      }
+
+      const contractConfirmMatch = url.pathname.match(/^\/api\/contracts\/([^/]+)\/confirm$/);
+      if (req.method === "POST" && contractConfirmMatch) {
+        const body = await readRequestJson(req);
+        return sendJson(res, 200, confirmContract(fixtures, contractConfirmMatch[1], body));
+      }
+
+      const deviceReadinessMatch = url.pathname.match(/^\/api\/devices\/([^/]+)\/readiness$/);
+      if (req.method === "GET" && deviceReadinessMatch) {
+        const registry = listHomeDevices(rootDir, fixtures);
+        const device = findDevice(registry, decodeURIComponent(deviceReadinessMatch[1]));
+        return sendJson(res, device ? 200 : 404, buildDeviceReadiness(device));
+      }
+
+      const deviceConfirmMatch = url.pathname.match(/^\/api\/devices\/([^/]+)\/confirm$/);
+      if (req.method === "POST" && deviceConfirmMatch) {
+        const body = await readRequestJson(req);
+        const registry = listHomeDevices(rootDir, fixtures);
+        const device = findDevice(registry, decodeURIComponent(deviceConfirmMatch[1]));
+        if (!device) return sendJson(res, 404, buildDeviceReadiness(null));
+        const confirmedDevice = {
+          ...device,
+          user_confirmation_required: false,
+          data_quality: "User confirmed",
+          confirmed_at: fixtures.forecast.generated_at || new Date().toISOString(),
+          confirmation_note: body.confirmation_note || "Confirmed in demo API."
+        };
+        return sendJson(res, 200, {
+          schema_version: "0.1.0",
+          status: "confirmed_for_planning_demo",
+          device: confirmedDevice,
+          readiness: buildDeviceReadiness(confirmedDevice)
+        });
+      }
+
+      const auditMatch = url.pathname.match(/^\/api\/audit\/calculations\/([^/]+)$/);
+      if (req.method === "GET" && auditMatch) {
+        const routingPlan = loadEnergyRoutingPlan(rootDir);
+        const applianceTelemetry = getTodayApplianceTelemetry(rootDir, fixtures);
+        const optimizedPlan = calculateOptimizationPlan(fixtures, {
+          plan_tier: url.searchParams.get("plan_tier") || "premium"
+        }, {
+          rootDir,
+          routingPlan,
+          applianceTelemetry
+        });
+        return sendJson(res, 200, {
+          ...optimizedPlan.audit,
+          requested_snapshot_id: decodeURIComponent(auditMatch[1]),
+          matched_current_snapshot: optimizedPlan.audit.input_snapshot_id === decodeURIComponent(auditMatch[1])
+        });
       }
 
       if (req.method === "POST" && url.pathname === "/api/assistant/ask") {

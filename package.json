@@ -6,7 +6,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "test": "node tests/energy-calculations.test.js && node tests/energy-routing.test.js && node tests/appliance-telemetry.test.js && node tests/product-profile.test.js && node tests/home-device-store.test.js"
+    "test": "node tests/energy-calculations.test.js && node tests/energy-routing.test.js && node tests/energy-plans.test.js && node tests/api-handlers.test.js && node tests/appliance-telemetry.test.js && node tests/product-profile.test.js && node tests/home-device-store.test.js"
   },
   "engines": {
     "node": ">=18"

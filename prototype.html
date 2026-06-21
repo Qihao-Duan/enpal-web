@@ -35,6 +35,7 @@
 
     html {
       scroll-behavior: smooth;
+      overflow-x: hidden;
     }
 
     * {
@@ -48,6 +49,7 @@
         var(--soft);
       color: var(--ink);
       min-width: 320px;
+      overflow-x: hidden;
       line-height: 1.5;
     }
 
@@ -78,7 +80,8 @@
     }
 
     .app-shell {
-      max-width: 1440px;
+      width: 100%;
+      max-width: none;
       margin: 0 auto;
       padding: 18px clamp(16px, 3vw, 34px) 40px;
     }
@@ -181,6 +184,40 @@
         calc(100% - 12px) 15px;
       background-size: 5px 5px, 5px 5px;
       background-repeat: no-repeat;
+    }
+
+    .profile-menu {
+      position: relative;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(10, 122, 85, 0.18);
+      background: rgba(255, 255, 255, 0.86);
+      border-radius: 999px;
+      padding: 7px 11px 7px 13px;
+      color: var(--green-dark);
+      font-size: 0.86rem;
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .profile-menu svg {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .profile-select {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
     }
 
     .hero {
@@ -1846,6 +1883,8 @@
       display: grid;
       gap: 14px;
       margin: 16px 0 18px;
+      min-width: 0;
+      max-width: 100%;
     }
 
     .advice-hero {
@@ -1860,6 +1899,8 @@
       gap: 18px;
       position: relative;
       overflow: hidden;
+      min-width: 0;
+      max-width: 100%;
     }
 
     .advice-layout {
@@ -1867,20 +1908,26 @@
       grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
       gap: clamp(18px, 3vw, 34px);
       align-items: start;
+      min-width: 0;
+      max-width: 100%;
     }
 
     .advice-copy {
       display: grid;
       gap: 13px;
       align-content: start;
+      min-width: 0;
     }
 
+    .advice-copy h1,
     .advice-copy h2 {
       margin: 0;
       max-width: 820px;
       font-size: clamp(2rem, 3.15vw, 3.05rem);
       line-height: 1.05;
       letter-spacing: 0;
+      min-width: 0;
+      overflow-wrap: anywhere;
     }
 
     .advice-copy p {
@@ -1889,6 +1936,8 @@
       color: #46514e;
       font-size: clamp(1rem, 1.4vw, 1.16rem);
       line-height: 1.5;
+      min-width: 0;
+      overflow-wrap: anywhere;
     }
 
     .decision-meta {
@@ -1939,6 +1988,49 @@
       font-size: 0.96rem;
       line-height: 1.2;
       overflow-wrap: anywhere;
+    }
+
+    .plan-tier-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 880px;
+    }
+
+    .plan-tier-card {
+      min-height: 104px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.84);
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      color: var(--muted);
+    }
+
+    .plan-tier-card.active {
+      border-color: rgba(10, 122, 85, 0.28);
+      background: var(--panel-strong);
+    }
+
+    .plan-tier-card span {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 780;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .plan-tier-card strong {
+      color: var(--ink);
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    .plan-tier-card small {
+      color: inherit;
+      line-height: 1.35;
     }
 
     .advice-actions {
@@ -2058,6 +2150,109 @@
     .decision-disclosures {
       display: grid;
       gap: 10px;
+    }
+
+    .decision-support {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .support-section {
+      border: 1px solid var(--ds-border-default);
+      border-radius: var(--ds-radius-base);
+      background: var(--ds-neutral-primary-soft);
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+      box-shadow: none;
+    }
+
+    .support-section.emphasis {
+      background: color-mix(in srgb, var(--ds-brand-softer) 46%, var(--ds-neutral-primary-soft));
+      border-color: var(--ds-border-brand-subtle);
+    }
+
+    .support-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .support-title {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .support-title h2,
+    .support-title h3 {
+      margin: 0;
+      color: var(--ds-heading);
+      font-size: clamp(1.1rem, 1.5vw, 1.45rem);
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .support-title p {
+      margin: 0;
+      max-width: 760px;
+      color: var(--ds-body);
+      font-size: 0.94rem;
+      line-height: 1.45;
+    }
+
+    .support-badge {
+      min-height: 34px;
+      border: 1px solid var(--ds-border-default);
+      border-radius: var(--ds-radius-full);
+      background: var(--ds-neutral-secondary-soft);
+      color: var(--ds-heading);
+      padding: 7px 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      font-weight: 650;
+      line-height: 1.15;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .evidence-column {
+      display: grid;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .support-divider {
+      height: 1px;
+      background: var(--ds-border-default);
+      opacity: 0.9;
+    }
+
+    #priceDetails .source-price-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #trustReceiptDetails .receipt-detail-grid {
+      grid-template-columns: 1fr;
     }
 
     .insight-panel {
@@ -2655,6 +2850,7 @@
       .cost-cards,
       .advice-scoreboard,
       .decision-meta,
+      .plan-tier-strip,
       .equiv-grid,
       .timeline-detail,
       .trust-grid,
@@ -2703,6 +2899,7 @@
       .cost-cards,
       .advice-scoreboard,
       .decision-meta,
+      .plan-tier-strip,
       .readout,
       .equiv-grid,
       .timeline-detail,
@@ -2884,26 +3081,35 @@
     }
 
     .app-shell {
-      max-width: 1440px;
-      padding: 24px clamp(24px, 3vw, 48px) 96px;
+      width: 100%;
+      max-width: none;
+      padding: 24px clamp(24px, 2.8vw, 72px) 96px;
     }
 
     .topbar {
-      border: 1px solid var(--ds-border-default-subtle);
-      border-radius: var(--ds-radius-full);
-      background: color-mix(in srgb, var(--ds-neutral-secondary-soft) 78%, transparent);
-      padding: 12px;
-      min-height: 72px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      padding: 0 0 10px;
+      min-height: 54px;
       box-shadow: none;
     }
 
     .brand-mark {
-      width: 48px;
-      height: 48px;
+      width: 42px;
+      height: 42px;
       border-radius: var(--ds-radius-default);
       background: var(--ds-brand);
       color: var(--ds-black);
       box-shadow: none;
+    }
+
+    .brand-title {
+      gap: 0;
+    }
+
+    .brand-title span {
+      display: none;
     }
 
     .brand-title strong,
@@ -2970,6 +3176,28 @@
       min-height: 44px;
     }
 
+    .topbar .status-pill {
+      border-color: transparent;
+      background: transparent;
+      min-height: 34px;
+      padding: 0;
+      color: var(--ds-body);
+    }
+
+    .profile-menu {
+      min-height: 38px;
+      border: 1px solid var(--ds-border-default-subtle);
+      background: color-mix(in srgb, var(--ds-neutral-secondary-soft) 66%, transparent);
+      color: var(--ds-heading);
+      box-shadow: none;
+    }
+
+    .profile-menu:hover,
+    .profile-menu:focus-within {
+      border-color: var(--ds-border-default);
+      background: var(--ds-neutral-primary-soft);
+    }
+
     .advice-hero,
     .panel,
     .decision-panel,
@@ -2996,10 +3224,11 @@
         var(--ds-neutral-primary-soft);
     }
 
+    .advice-copy h1,
     .advice-copy h2 {
       font-size: clamp(32px, 5vw, 60px);
       line-height: 1;
-      letter-spacing: -0.8px;
+      letter-spacing: 0;
       max-width: 760px;
     }
 
@@ -3011,6 +3240,34 @@
 
     .decision-meta {
       gap: 16px;
+    }
+
+    .plan-tier-strip {
+      max-width: 980px;
+    }
+
+    .plan-tier-card {
+      border-color: var(--ds-border-default);
+      background: var(--ds-neutral-secondary-soft);
+      color: var(--ds-body);
+      border-radius: var(--ds-radius-base);
+      padding: 18px;
+    }
+
+    .plan-tier-card.active {
+      border-color: var(--ds-border-brand-light);
+      background: var(--ds-brand-softer);
+    }
+
+    .plan-tier-card span,
+    .plan-tier-card small {
+      color: var(--ds-body-subtle);
+      letter-spacing: 0;
+    }
+
+    .plan-tier-card strong {
+      color: var(--ds-heading);
+      font-weight: 650;
     }
 
     .decision-meta-item,
@@ -3421,15 +3678,22 @@
 
     .advanced-panels {
       color: var(--ds-body);
+      margin-top: 18px;
     }
 
     .advanced-panels > summary {
-      background: var(--ds-neutral-primary-soft);
+      background: var(--ds-neutral-secondary-soft);
+      border-color: var(--ds-border-default);
+      border-radius: var(--ds-radius-base);
+      box-shadow: none;
       color: var(--ds-heading);
+      display: grid;
+      gap: 4px;
     }
 
     .advanced-panels > summary span {
-      color: var(--ds-body);
+      color: var(--ds-body-subtle);
+      line-height: 1.4;
     }
 
     .home-visual,
@@ -3711,6 +3975,7 @@
       align-items: start;
     }
 
+    .advice-hero .advice-copy h1,
     .advice-hero .advice-copy h2 {
       font-size: clamp(2.55rem, 5vw, 3.75rem);
       line-height: 1.05;
@@ -3813,6 +4078,242 @@
       align-content: start;
     }
 
+    .product-story-banner {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+      order: -1;
+    }
+
+    .story-banner-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .story-banner-copy {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .story-banner-copy h1,
+    .story-banner-copy h2 {
+      margin: 0;
+      color: var(--ds-heading);
+      font-size: clamp(1.45rem, 2.4vw, 2.25rem);
+      line-height: 1.14;
+      letter-spacing: 0;
+    }
+
+    .story-banner-copy p {
+      margin: 0;
+      max-width: 68ch;
+      color: var(--ds-body);
+      line-height: 1.55;
+    }
+
+    .story-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .story-control {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--ds-border-default);
+      border-radius: var(--ds-radius-full);
+      background: var(--ds-neutral-secondary-soft);
+      color: var(--ds-heading);
+      display: grid;
+      place-items: center;
+      padding: 0;
+      transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+    }
+
+    .story-control:hover,
+    .story-control:focus-visible {
+      background: var(--ds-neutral-tertiary-soft);
+      border-color: var(--ds-border-brand-light);
+    }
+
+    .story-control:active {
+      transform: scale(0.96);
+    }
+
+    .story-control svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .story-slider-shell {
+      position: relative;
+      min-width: 0;
+    }
+
+    .story-slider {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(72%, 1fr);
+      gap: 18px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: 2px;
+      scrollbar-width: none;
+      min-width: 0;
+    }
+
+    .story-slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .story-slide {
+      position: relative;
+      min-height: clamp(320px, 36vw, 460px);
+      border: 1px solid var(--ds-border-default);
+      border-radius: var(--ds-radius-base);
+      overflow: hidden;
+      color: var(--ds-heading);
+      padding: 0;
+      text-align: left;
+      background: var(--ds-neutral-secondary-soft);
+      scroll-snap-align: start;
+      cursor: pointer;
+      isolation: isolate;
+    }
+
+    .story-slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(16, 37, 0, 0.9) 0%, rgba(16, 37, 0, 0.62) 42%, rgba(16, 37, 0, 0.08) 78%),
+        var(--story-image);
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.01);
+      z-index: -2;
+    }
+
+    .story-slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(164, 239, 0, 0.22), transparent 34%),
+        linear-gradient(180deg, transparent 55%, rgba(12, 27, 0, 0.74));
+      z-index: -1;
+    }
+
+    .story-slide:focus-visible {
+      outline: 3px solid var(--ds-brand);
+      outline-offset: 4px;
+    }
+
+    .story-slide-content {
+      min-height: inherit;
+      display: grid;
+      align-content: space-between;
+      gap: 24px;
+      padding: clamp(24px, 4vw, 46px);
+      max-width: min(620px, 72%);
+    }
+
+    .story-slide-top {
+      display: grid;
+      gap: 12px;
+    }
+
+    .story-slide-kicker {
+      color: var(--ds-brand);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .story-slide h3 {
+      margin: 0;
+      color: var(--ds-heading);
+      font-size: clamp(1.85rem, 4vw, 3.4rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+      max-width: 12ch;
+    }
+
+    .story-slide p {
+      margin: 0;
+      color: color-mix(in srgb, var(--ds-heading) 78%, var(--ds-body));
+      font-size: clamp(1rem, 1.4vw, 1.18rem);
+      line-height: 1.58;
+      max-width: 40ch;
+    }
+
+    .story-slide-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .story-metric {
+      min-height: 44px;
+      border: 1px solid var(--ds-border-brand-light);
+      border-radius: var(--ds-radius-full);
+      background: color-mix(in srgb, var(--ds-neutral-secondary-soft) 84%, transparent);
+      color: var(--ds-heading);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-weight: 650;
+    }
+
+    .story-link {
+      min-height: 44px;
+      border-radius: var(--ds-radius-full);
+      background: var(--ds-brand);
+      color: var(--ds-black);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      font-weight: 700;
+    }
+
+    .story-link svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .story-dots {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .story-dot {
+      width: 34px;
+      height: 8px;
+      border: 0;
+      border-radius: var(--ds-radius-full);
+      background: var(--ds-border-default-medium);
+      padding: 0;
+      opacity: 0.72;
+      transition: background-color 150ms ease, opacity 150ms ease, transform 150ms ease;
+    }
+
+    .story-dot[aria-current="true"] {
+      background: var(--ds-brand);
+      opacity: 1;
+      transform: scaleX(1.08);
+    }
+
     .routing-intro {
       border: 1px solid var(--ds-border-default);
       border-radius: var(--ds-radius-base);
@@ -3840,28 +4341,28 @@
       border: 1px solid var(--ds-border-default);
       border-radius: var(--ds-radius-base);
       background: var(--ds-neutral-secondary-soft);
-      padding: 24px;
+      padding: clamp(20px, 2.2vw, 32px);
       display: grid;
-      gap: 24px;
+      gap: 22px;
     }
 
     .route-flow {
       position: relative;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 20px;
+      gap: clamp(14px, 1.8vw, 28px);
       align-items: start;
     }
 
     .route-flow::before {
       content: "";
       position: absolute;
-      top: 26px;
-      left: 36px;
-      right: 36px;
+      top: 32px;
+      left: 40px;
+      right: 40px;
       height: 2px;
       background: linear-gradient(90deg, var(--ds-brand), var(--ds-fg-brand-strong), var(--ds-warning), var(--ds-fg-danger-strong));
-      opacity: 0.78;
+      opacity: 0.42;
     }
 
     .route-step {
@@ -3869,28 +4370,52 @@
       z-index: 1;
       min-width: 0;
       display: grid;
-      gap: 8px;
+      gap: 12px;
       justify-items: start;
       color: var(--ds-body);
     }
 
     .route-node {
-      width: 52px;
-      height: 52px;
+      position: relative;
+      width: 64px;
+      height: 64px;
       border-radius: var(--ds-radius-full);
-      border: 2px solid var(--ds-neutral-secondary-soft);
+      border: 3px solid var(--ds-neutral-secondary-soft);
       background: var(--route-color, var(--ds-brand));
       color: var(--route-node-fg, var(--ds-black));
       display: grid;
       place-items: center;
       font-weight: 700;
-      font-size: 1rem;
       font-variant-numeric: tabular-nums;
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--route-color, var(--ds-brand)) 38%, transparent);
+    }
+
+    .route-node svg {
+      width: 26px;
+      height: 26px;
+      stroke: currentColor;
+    }
+
+    .route-index {
+      position: absolute;
+      right: -4px;
+      bottom: -4px;
+      width: 24px;
+      height: 24px;
+      border-radius: var(--ds-radius-full);
+      background: var(--ds-neutral-secondary-soft);
+      border: 1px solid var(--ds-border-default);
+      color: var(--ds-heading);
+      display: grid;
+      place-items: center;
+      font-size: 0.78rem;
+      font-weight: 750;
+      line-height: 1;
     }
 
     .route-step-copy {
       display: grid;
-      gap: 4px;
+      gap: 7px;
       min-width: 0;
     }
 
@@ -3911,27 +4436,48 @@
     .route-detail-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      gap: 12px;
     }
 
     .route-detail-card {
-      min-height: 126px;
+      min-height: 0;
       border: 1px solid var(--ds-border-default);
       border-radius: var(--ds-radius-default);
-      background: var(--ds-neutral-primary-soft);
-      padding: 13px;
+      background: color-mix(in srgb, var(--ds-neutral-primary-soft) 78%, var(--ds-neutral-secondary-soft));
+      padding: 16px;
       display: grid;
-      gap: 9px;
+      gap: 12px;
       align-content: start;
       color: var(--ds-body);
     }
 
     .route-detail-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
       gap: 10px;
-      flex-wrap: wrap;
+      align-items: start;
+    }
+
+    .route-detail-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--ds-radius-default);
+      background: var(--route-color, var(--ds-brand));
+      color: var(--route-node-fg, var(--ds-black));
+      display: grid;
+      place-items: center;
+    }
+
+    .route-detail-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+    }
+
+    .route-detail-copy {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
     }
 
     .route-detail-title {
@@ -3949,17 +4495,7 @@
     }
 
     .route-source {
-      min-height: 32px;
-      border-radius: var(--ds-radius-full);
-      border: 1px solid var(--ds-border-default-medium);
-      background: var(--ds-neutral-primary-soft);
-      color: var(--ds-fg-brand);
-      padding: 5px 10px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
-      max-width: 100%;
+      color: var(--ds-body-subtle);
       font-size: 0.78rem;
       font-weight: 600;
       line-height: 1.2;
@@ -4013,7 +4549,7 @@
       .route-flow::before {
         top: 24px;
         bottom: 24px;
-        left: 25px;
+        left: 31px;
         right: auto;
         width: 2px;
         height: auto;
@@ -4021,7 +4557,7 @@
       }
 
       .route-step {
-        grid-template-columns: 52px minmax(0, 1fr);
+        grid-template-columns: 64px minmax(0, 1fr);
         align-items: start;
         column-gap: 12px;
       }
@@ -4108,6 +4644,12 @@
       color: var(--ds-fg-warning);
       border-color: var(--ds-border-warning-subtle);
       background: var(--ds-warning-soft);
+    }
+
+    .api-status.live {
+      color: var(--ds-heading);
+      border-color: var(--ds-border-brand-light);
+      background: var(--ds-neutral-secondary-soft);
     }
 
     .route-time-pill {
@@ -4723,14 +5265,6 @@
       margin-top: 4px;
     }
 
-    .route-step {
-      gap: 12px;
-    }
-
-    .route-step-copy {
-      gap: 8px;
-    }
-
     .route-step strong {
       font-size: clamp(1.4rem, 2vw, 1.75rem);
     }
@@ -4746,13 +5280,9 @@
     }
 
     .route-detail-card {
-      min-height: 164px;
+      min-height: 0;
       border-radius: var(--ds-radius-base);
-      padding: 20px;
-      gap: 14px;
-    }
-
-    .route-detail-head {
+      padding: 16px;
       gap: 12px;
     }
 
@@ -4881,11 +5411,24 @@
       .receipt-detail-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+
+      .support-grid,
+      .evidence-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 899px) {
       .advice-layout {
         grid-template-columns: 1fr;
+      }
+
+      .story-banner-header {
+        align-items: start;
+      }
+
+      .story-slider {
+        grid-auto-columns: minmax(86%, 1fr);
       }
 
       .workbench-rail {
@@ -4912,6 +5455,7 @@
       .routing-board,
       .advice-scoreboard,
       .decision-meta,
+      .plan-tier-strip,
       .receipt-list,
       .receipt-detail-grid {
         grid-template-columns: 1fr;
@@ -4926,8 +5470,22 @@
         text-align: left;
       }
 
+      .support-section {
+        padding: 16px;
+      }
+
+      .support-header {
+        grid-template-columns: 1fr;
+      }
+
+      #priceDetails .source-price-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .advice-hero .advice-copy h1,
       .advice-hero .advice-copy h2 {
-        font-size: 1.9rem;
+        font-size: clamp(2rem, 9vw, 2.45rem);
+        line-height: 1.08;
       }
     }
 
@@ -4937,7 +5495,8 @@
       }
 
       .topbar {
-        border-radius: var(--ds-radius-base);
+        border-radius: 0;
+        padding-bottom: 8px;
       }
 
       .companion-drawer {
@@ -4948,15 +5507,238 @@
     }
 
     @media (max-width: 560px) {
+      html,
+      body,
+      .app-shell,
+      .decision-board,
+      .advice-hero,
+      .advice-layout,
+      .workbench-center,
+      .receipt-rail,
+      .workbench-rail,
+      .routing-board {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .app-shell {
+        padding-inline: 16px;
+      }
+
+      .advice-layout,
+      .workbench-center,
+      .advice-copy,
+      .routing-intro,
+      .routing-board,
+      .decision-support,
+      .support-section,
+      .support-header,
+      .support-title,
+      .support-grid,
+      .evidence-grid,
+      .evidence-column,
+      .charge-metrics,
+      .appliance-schedule-grid,
+      .plan-steps,
+      .device-grid,
+      .source-price-grid,
+      .receipt-detail-grid {
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+      }
+
       .advice-hero,
       .insight-body,
       .insight-panel > summary {
         padding-inline: 20px;
       }
 
+      .advice-hero .advice-copy h1,
+      .advice-hero .advice-copy h2 {
+        max-width: 100%;
+        font-size: 2rem;
+        line-height: 1.08;
+      }
+
+      .advice-hero .advice-copy p {
+        max-width: 100%;
+        font-size: 1rem;
+        line-height: 1.55;
+      }
+
+      .story-banner-header {
+        display: grid;
+        align-items: start;
+      }
+
+      .product-story-banner,
+      .story-banner-header,
+      .story-banner-copy {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+      }
+
+      .story-banner-copy h1,
+      .story-banner-copy h2,
+      .story-banner-copy p {
+        max-width: calc(100vw - 32px);
+      }
+
+      .story-controls {
+        justify-self: start;
+      }
+
+      .story-slider {
+        grid-auto-columns: minmax(100%, 1fr);
+        gap: 12px;
+      }
+
+      .story-slide {
+        min-height: 420px;
+        border-radius: var(--ds-radius-base);
+      }
+
+      .story-slide::before {
+        background:
+          linear-gradient(180deg, rgba(16, 37, 0, 0.92) 0%, rgba(16, 37, 0, 0.7) 52%, rgba(16, 37, 0, 0.2) 100%),
+          var(--story-image);
+        background-size: cover;
+        background-position: center;
+      }
+
+      .story-slide-content {
+        max-width: 100%;
+        padding: 22px;
+      }
+
+      .story-slide h3 {
+        max-width: 11ch;
+        font-size: 2rem;
+      }
+
+      .story-slide p {
+        max-width: 30ch;
+        font-size: 1rem;
+      }
+
+      .story-slide-bottom {
+        display: grid;
+        justify-items: start;
+      }
+
+      .decision-meta,
+      .plan-tier-strip,
+      .advice-scoreboard,
+      .receipt-list,
+      .receipt-detail-grid,
+      .route-detail-grid,
+      .support-grid,
+      .evidence-grid,
+      .charge-metrics,
+      .appliance-schedule-grid,
+      .plan-steps,
+      .device-grid,
+      .source-price-grid {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 100%;
+      }
+
+      .support-section,
+      .support-section.emphasis {
+        padding: 16px;
+      }
+
+      .support-badge {
+        justify-content: flex-start;
+        width: 100%;
+        white-space: normal;
+      }
+
+      .plan-step {
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+      }
+
+      .price-window-grid {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        grid-template-columns: repeat(12, minmax(58px, 1fr));
+      }
+
+      .decision-meta-item {
+        min-height: auto;
+        padding: 16px;
+      }
+
+      .route-flow {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+      }
+
+      .route-flow::before {
+        display: none;
+      }
+
+      .route-step {
+        grid-template-columns: 48px minmax(0, 1fr);
+        align-items: start;
+      }
+
+      .route-node {
+        width: 48px;
+        height: 48px;
+      }
+
+      .route-node svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .advice-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+      }
+
       .primary-button,
       .ghost-button {
         justify-content: center;
+        width: 100%;
+        min-width: 0;
+        white-space: normal;
+      }
+
+      .topbar {
+        align-items: stretch;
+      }
+
+      .top-actions,
+      .status-pill {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .status-pill {
+        justify-content: flex-start;
+        white-space: normal;
+      }
+
+      .profile-menu {
+        width: auto;
+        max-width: 100%;
+      }
+
+      .brand-title strong {
+        white-space: normal;
+        line-height: 1.2;
       }
 
       .companion-drawer {
@@ -4966,6 +5748,18 @@
       .companion-evidence,
       .companion-input-row {
         grid-template-columns: 1fr;
+      }
+
+      .assistant-fab {
+        right: 14px;
+        bottom: 14px;
+        min-width: 54px;
+        height: 54px;
+        padding: 0 14px;
+      }
+
+      .assistant-fab span {
+        display: none;
       }
     }
 
@@ -4998,27 +5792,32 @@
         </div>
         <div class="brand-title">
           <strong>Enpal Smart Energy Companion</strong>
-          <span id="householdLabel">Berlin whole-home profile</span>
         </div>
       </div>
       <div class="top-actions">
         <div class="status-pill"><span class="status-dot"></span><span id="syncStatus">Smart meter synced 8 min ago</span></div>
-        <select class="mini-select" id="scenarioSelect" aria-label="Household scenario">
-          <option value="berlin">Berlin whole-home profile</option>
-          <option value="hamburg">Hamburg family home</option>
-          <option value="munich">Munich apartment</option>
-          <option value="leipzig">Leipzig EV household</option>
-        </select>
+        <label class="profile-menu" aria-label="Household profile">
+          <span id="profileMenuLabel">Berlin</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+          <select class="profile-select" id="scenarioSelect" aria-label="Household scenario">
+            <option value="berlin">Berlin whole-home profile</option>
+            <option value="hamburg">Hamburg family home</option>
+            <option value="munich">Munich apartment</option>
+            <option value="leipzig">Leipzig EV household</option>
+          </select>
+        </label>
       </div>
     </header>
 
-    <section class="decision-board" aria-labelledby="decisionBoardTitle">
+    <main class="decision-board" aria-labelledby="storyBannerTitle">
       <article class="advice-hero" aria-labelledby="decisionBoardTitle">
         <div class="advice-layout">
           <div class="workbench-center">
             <div class="advice-copy">
               <p class="section-kicker">Best action now</p>
-              <h2 id="decisionBoardTitle">Every kWh, routed to its best use.</h2>
+              <h2 id="decisionBoardTitle">Best action now: use clean energy first.</h2>
               <p id="adviceHeroCopy">The optimizer checks EV charging, dishwasher timing, heat-pump comfort, battery reserve, and flexible appliances. EV charging is the top action today, while smaller appliances stay in the plan with user-friendly deadlines.</p>
               <div class="decision-meta" aria-label="Current planning context">
                 <div class="decision-meta-item">
@@ -5047,6 +5846,18 @@
                   </span>
                   <span>Low-price window<strong id="contextWindow">22:00-01:00</strong></span>
                 </div>
+              </div>
+              <div class="plan-tier-strip" aria-label="Plan service level">
+                <article class="plan-tier-card">
+                  <span>Basic</span>
+                  <strong>EV smart charging</strong>
+                  <small>Find the cheapest safe charging window before departure.</small>
+                </article>
+                <article class="plan-tier-card active">
+                  <span>Premium active</span>
+                  <strong>Solar use, store, sell, buy</strong>
+                  <small>Include feed-in value, battery reserve, and low-price grid buys.</small>
+                </article>
               </div>
               <div class="advice-actions">
                 <button class="primary-button" type="button" onclick="openPanel('chargingDetails')">
@@ -5087,7 +5898,10 @@
             <section class="routing-board" id="routingBoard" aria-label="Today’s energy route from solar first to cheap grid power later">
               <div class="route-flow" role="list" aria-label="Energy route steps">
                 <article class="route-step route-use" role="listitem">
-                  <span class="route-node" aria-hidden="true">1</span>
+                  <span class="route-node" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path></svg>
+                    <span class="route-index">1</span>
+                  </span>
                   <span class="route-step-copy">
                     <span class="route-label">Use solar now</span>
                     <strong>6 kWh</strong>
@@ -5095,25 +5909,34 @@
                   </span>
                 </article>
                 <article class="route-step route-store" role="listitem">
-                  <span class="route-node" aria-hidden="true">2</span>
+                  <span class="route-node" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="16" height="10" rx="2"></rect><path d="M21 11v2"></path><path d="M7 11h3"></path><path d="M8.5 9.5v3"></path><path d="M12 11h3"></path></svg>
+                    <span class="route-index">2</span>
+                  </span>
                   <span class="route-step-copy">
-                    <span class="route-label">Save in battery</span>
+                    <span class="route-label">Store solar for evening</span>
                     <strong>2.9 kWh</strong>
-                    <small>Evening reserve</small>
+                    <small>Evening peak reserve</small>
                   </span>
                 </article>
                 <article class="route-step route-sell" role="listitem">
-                  <span class="route-node" aria-hidden="true">3</span>
+                  <span class="route-node" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"></path><path d="M9 7h8v8"></path><path d="M4 20h16"></path></svg>
+                    <span class="route-index">3</span>
+                  </span>
                   <span class="route-step-copy">
-                    <span class="route-label">Sell leftovers</span>
+                    <span class="route-label">Sell extra solar</span>
                     <strong>3 kWh</strong>
                     <small>After home needs</small>
                   </span>
                 </article>
                 <article class="route-step route-buy" role="listitem">
-                  <span class="route-node" aria-hidden="true">4</span>
+                  <span class="route-node" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 10-13h-7l0-7Z"></path></svg>
+                    <span class="route-index">4</span>
+                  </span>
                   <span class="route-step-copy">
-                    <span class="route-label">Buy cheap power later</span>
+                    <span class="route-label">Buy low-price grid later</span>
                     <strong>18 kWh</strong>
                     <small>22:00-01:00</small>
                   </span>
@@ -5122,32 +5945,44 @@
               <div class="route-detail-grid" aria-label="Energy route details">
                 <article class="route-detail-card route-use">
                   <div class="route-detail-head">
-                    <span class="route-detail-title">Use solar now</span>
-                    <span class="route-source">From solar forecast</span>
+                    <span class="route-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path></svg></span>
+                    <span class="route-detail-copy">
+                      <span class="route-detail-title">Use solar now</span>
+                      <span class="route-source">Solar forecast</span>
+                    </span>
                   </div>
                   <p>Solar to EV and home load before buying from the grid.</p>
                   <div class="route-meter" aria-hidden="true"><span style="width: 38%"></span></div>
                 </article>
                 <article class="route-detail-card route-store">
                   <div class="route-detail-head">
-                    <span class="route-detail-title">Save in battery</span>
-                    <span class="route-source">Battery estimate</span>
+                    <span class="route-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="16" height="10" rx="2"></rect><path d="M21 11v2"></path><path d="M7 11h3"></path><path d="M8.5 9.5v3"></path><path d="M12 11h3"></path></svg></span>
+                    <span class="route-detail-copy">
+                      <span class="route-detail-title">Store solar for evening</span>
+                      <span class="route-source">Battery reserve</span>
+                    </span>
                   </div>
-                  <p>Battery headroom held for evening peak cover.</p>
+                  <p>Keep surplus solar in the home battery for tonight’s higher demand.</p>
                   <div class="route-meter" aria-hidden="true"><span style="width: 18%"></span></div>
                 </article>
                 <article class="route-detail-card route-sell">
                   <div class="route-detail-head">
-                    <span class="route-detail-title">Sell leftovers</span>
-                    <span class="route-source">Export estimate</span>
+                    <span class="route-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"></path><path d="M9 7h8v8"></path><path d="M4 20h16"></path></svg></span>
+                    <span class="route-detail-copy">
+                      <span class="route-detail-title">Sell extra solar</span>
+                      <span class="route-source">Export estimate</span>
+                    </span>
                   </div>
                   <p>Export only after home, EV, and reserve needs are covered.</p>
                   <div class="route-meter" aria-hidden="true"><span style="width: 19%"></span></div>
                 </article>
                 <article class="route-detail-card route-buy">
                   <div class="route-detail-head">
-                    <span class="route-detail-title">Buy cheap power later</span>
-                    <span class="route-source">Low-price tariff</span>
+                    <span class="route-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 10-13h-7l0-7Z"></path></svg></span>
+                    <span class="route-detail-copy">
+                      <span class="route-detail-title">Buy low-price grid later</span>
+                      <span class="route-source">Low-price tariff</span>
+                    </span>
                   </div>
                   <p>Grid power waits for the low-price window.</p>
                   <div class="route-meter" aria-hidden="true"><span style="width: 100%"></span></div>
@@ -5238,121 +6073,150 @@
         </div>
       </article>
 
-      <div class="decision-disclosures">
-        <details class="insight-panel" id="trustReceiptDetails">
-          <summary>
-            <span class="summary-main">
-              <span class="summary-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7Z"></path>
-                  <path d="M14 2v5h5"></path>
-                  <path d="m9 15 2 2 4-5"></path>
-                </svg>
-              </span>
-              <span class="summary-title">
-                <strong>Trust receipt</strong>
-                <span id="trustReceiptSummary">Open for sources, formulas, timestamps, and source status.</span>
-              </span>
-            </span>
-            <span class="summary-chevron" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            </span>
-          </summary>
-          <div class="insight-body">
-            <div class="receipt-detail-grid" id="trustReceiptGrid" aria-label="Trust receipt fields"></div>
-            <div class="formula-box" id="trustReceiptFormula">Trust receipt will use the same calculation currently visible in the EV plan.</div>
+      <section class="product-story-banner" aria-labelledby="storyBannerTitle">
+        <div class="story-banner-header">
+          <div class="story-banner-copy">
+            <p class="section-kicker">Energy intelligence updates</p>
+            <h1 id="storyBannerTitle">Every kWh, routed to its best use.</h1>
+            <p>Swipe the story cards: route energy, inspect the plan, unlock Premium solar optimization, and audit savings.</p>
           </div>
-        </details>
-
-        <details class="insight-panel" id="priceDetails">
-          <summary>
-            <span class="summary-main">
-              <span class="summary-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 19h16"></path>
-                  <path d="M7 15V9"></path>
-                  <path d="M12 15V5"></path>
-                  <path d="M17 15v-3"></path>
-                </svg>
-              </span>
-              <span class="summary-title">
-                <strong>Electricity sources and price windows</strong>
-                <span id="priceDetailsSummary">See where electricity can come from and when grid power gets cheaper.</span>
-              </span>
-            </span>
-            <span class="summary-chevron" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m6 9 6 6 6-6"></path>
+          <div class="story-controls" aria-label="Product story carousel controls">
+            <button class="story-control" id="storyPrev" type="button" aria-label="Previous product story">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m15 18-6-6 6-6"></path>
               </svg>
-            </span>
-          </summary>
-          <div class="insight-body">
+            </button>
+            <button class="story-control" id="storyNext" type="button" aria-label="Next product story">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m9 18 6-6-6-6"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="story-slider-shell">
+          <div class="story-slider" id="productStorySlider" tabindex="0" aria-label="Clickable product story slides">
+            <button class="story-slide" type="button" data-open-panel="chargingDetails" style="--story-image: url('assets/banner-energy-home.png')">
+              <span class="story-slide-content">
+                <span class="story-slide-top">
+                  <span class="story-slide-kicker">Decision engine</span>
+                  <h3>Route every kWh before prices move.</h3>
+                  <p>Solar, battery, EV, home load, export, and grid purchases are planned as one household decision.</p>
+                </span>
+                <span class="story-slide-bottom">
+                  <span class="story-metric">EUR 5.16 saved today</span>
+                  <span class="story-link">Open plan <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span>
+                </span>
+              </span>
+            </button>
+
+            <button class="story-slide" type="button" data-open-panel="deviceDetails" style="--story-image: url('assets/banner-product-ui.png')">
+              <span class="story-slide-content">
+                <span class="story-slide-top">
+                  <span class="story-slide-kicker">Profile intelligence</span>
+                  <h3>Turn device profiles into smarter schedules.</h3>
+                  <p>Product choice, contract terms, and connector status become inputs the user can inspect and confirm.</p>
+                </span>
+                <span class="story-slide-bottom">
+                  <span class="story-metric">Profile readiness 75%</span>
+                  <span class="story-link">Improve accuracy <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span>
+                </span>
+              </span>
+            </button>
+
+            <button class="story-slide" type="button" data-open-panel="priceDetails" style="--story-image: url('assets/banner-solar-optimizer.png')">
+              <span class="story-slide-content">
+                <span class="story-slide-top">
+                  <span class="story-slide-kicker">Premium optimizer</span>
+                  <h3>Use, store, sell, or buy at the right time.</h3>
+                  <p>Premium weighs feed-in value, battery reserve, low-price grid windows, and comfort risk before recommending an action.</p>
+                </span>
+                <span class="story-slide-bottom">
+                  <span class="story-metric">Solar opportunity cost included</span>
+                  <span class="story-link">See sources <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span>
+                </span>
+              </span>
+            </button>
+
+            <button class="story-slide" type="button" data-open-panel="trustReceiptDetails" style="--story-image: url('assets/banner-product-ui.png')">
+              <span class="story-slide-content">
+                <span class="story-slide-top">
+                  <span class="story-slide-kicker">Trust receipt</span>
+                  <h3>Show why the number is credible.</h3>
+                  <p>Every recommendation links back to formula version, data freshness, source quality, and limitations.</p>
+                </span>
+                <span class="story-slide-bottom">
+                  <span class="story-metric">Formula energy-engine.v0.1.0</span>
+                  <span class="story-link">Audit numbers <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span>
+                </span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="story-dots" id="storyDots" aria-label="Product story slide position"></div>
+      </section>
+
+      <div class="decision-support" aria-label="Decision support">
+        <section class="support-section emphasis" id="chargingDetails" aria-labelledby="scheduleTitle">
+          <div class="support-header">
+            <div class="support-title">
+              <p class="section-kicker">Flexible schedule</p>
+              <h2 id="scheduleTitle">Today's flexible device plan</h2>
+              <p>One schedule for the EV, appliances, and battery reserve, ordered by savings, comfort, and deadline risk.</p>
+            </div>
+            <span class="support-badge" id="chargingDetailsSummary">24 kWh needed, finish 01:00, EUR 5.16 saved.</span>
+          </div>
+
+          <div class="support-grid">
+            <div class="charge-metrics" id="chargeMetricGrid" aria-label="Charging calculation inputs"></div>
+            <div>
+              <div class="appliance-schedule-grid" id="applianceScheduleGrid" aria-label="Flexible appliance schedule"></div>
+              <div class="plan-steps" id="chargingPlanSteps" aria-label="Recommended charging schedule"></div>
+              <p class="planner-summary" id="chargingPlannerSummary">Loading charging plan.</p>
+            </div>
+          </div>
+
+          <div class="support-divider"></div>
+          <div class="evidence-column" id="deviceDetails">
+            <div class="support-header">
+              <div class="support-title">
+                <h3>Device context used by the plan</h3>
+                <p>Model, energy assumption, source, and confidence for the devices that can move today.</p>
+              </div>
+            </div>
+            <div class="device-grid" id="deviceInventoryGrid" aria-label="Home device inventory"></div>
+          </div>
+        </section>
+
+        <div class="evidence-grid" aria-label="Evidence and source details">
+          <section class="support-section" id="priceDetails" aria-labelledby="priceEvidenceTitle">
+            <div class="support-header">
+              <div class="support-title">
+                <p class="section-kicker">Price evidence</p>
+                <h2 id="priceEvidenceTitle">Sources and price windows</h2>
+                <p id="priceDetailsSummary">See where electricity can come from and when grid power gets cheaper.</p>
+              </div>
+            </div>
             <div class="source-price-grid" id="energySourceGrid" aria-label="Household electricity sources and prices"></div>
             <p class="unit-note">Prices are shown as EUR per kilowatt-hour. Example: EUR 0.35/kWh means 35 cents for one kWh.</p>
             <div class="price-window-grid" id="priceWindowGrid" aria-label="Price changes by time"></div>
-          </div>
-        </details>
+          </section>
 
-        <details class="insight-panel" id="deviceDetails">
-          <summary>
-            <span class="summary-main">
-              <span class="summary-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 10.5 12 4l8 6.5"></path>
-                  <path d="M6.5 9.5V20h11V9.5"></path>
-                  <path d="M9 20v-5h6v5"></path>
-                </svg>
-              </span>
-              <span class="summary-title">
-                <strong>Known home devices</strong>
-                <span>Select a device tag to inspect model, energy assumption, data source, and confidence.</span>
-              </span>
-            </span>
-            <span class="summary-chevron" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            </span>
-          </summary>
-          <div class="insight-body">
-            <div class="device-grid" id="deviceInventoryGrid" aria-label="Home device inventory"></div>
-          </div>
-        </details>
-
-        <details class="insight-panel" id="chargingDetails">
-          <summary>
-            <span class="summary-main">
-              <span class="summary-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M13 2 3 14h8l-1 8 11-13h-8l0-7Z"></path>
-                </svg>
-              </span>
-              <span class="summary-title">
-                <strong>Today's flexible device schedule</strong>
-                <span id="chargingDetailsSummary">Open for the EV, dishwasher, heat pump, battery reserve, and why each action matters.</span>
-              </span>
-            </span>
-            <span class="summary-chevron" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            </span>
-          </summary>
-          <div class="insight-body">
-            <div class="charging-grid">
-              <div class="charge-metrics" id="chargeMetricGrid" aria-label="Charging calculation inputs"></div>
-              <div>
-                <div class="appliance-schedule-grid" id="applianceScheduleGrid" aria-label="Flexible appliance schedule"></div>
-                <div class="plan-steps" id="chargingPlanSteps" aria-label="Recommended charging schedule"></div>
-                <p class="planner-summary" id="chargingPlannerSummary">Loading charging plan.</p>
+          <section class="support-section" id="trustReceiptDetails" aria-labelledby="trustReceiptTitle">
+            <div class="support-header">
+              <div class="support-title">
+                <p class="section-kicker">Trust receipt</p>
+                <h2 id="trustReceiptTitle">Why this recommendation is credible</h2>
+                <p id="trustReceiptSummary">Sources, formulas, timestamps, and source status are visible here.</p>
               </div>
             </div>
-          </div>
-        </details>
+            <div class="receipt-detail-grid" id="trustReceiptGrid" aria-label="Trust receipt fields"></div>
+            <div class="formula-box" id="trustReceiptFormula">Trust receipt will use the same calculation currently visible in the EV plan.</div>
+          </section>
+        </div>
       </div>
-    </section>
+    </main>
 
     <div class="companion-backdrop" id="companionBackdrop" hidden></div>
     <aside class="companion-drawer" id="companionDrawer" role="dialog" aria-modal="true" aria-labelledby="companionTitle" hidden>
@@ -5469,10 +6333,10 @@
 
     <details class="advanced-panels">
       <summary>
-        More energy controls
-        <span>Energy check, connector console, scenario simulator, and detailed timeline are available here.</span>
+        Advanced setup and data tools
+        <span>Household profile, connector console, scenario simulator, contract parser, and developer diagnostics.</span>
       </summary>
-      <main class="main-grid">
+      <div class="main-grid">
       <section class="stack">
         <article class="panel energy-check" aria-labelledby="wizardTitle">
           <div class="panel-header">
@@ -5938,7 +6802,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
           </div>
         </article>
       </section>
-      </main>
+      </div>
     </details>
   </div>
 
@@ -6268,7 +7132,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
 
     const backendState = {
       method: "GET",
-      endpoint: "/api/demo-state",
+      endpoint: "/api/plans/optimize",
       latencyText: "No refresh yet.",
       inputSummary: "24 kWh EV request",
       snapshot: "home-snapshot-berlin-1042",
@@ -6322,6 +7186,77 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       panel.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
     }
 
+    function initProductStoryBanner() {
+      const slider = byId("productStorySlider");
+      const dots = byId("storyDots");
+      const prev = byId("storyPrev");
+      const next = byId("storyNext");
+      if (!slider || !dots || !prev || !next) return;
+
+      const slides = Array.from(slider.querySelectorAll(".story-slide"));
+      if (!slides.length) return;
+
+      dots.innerHTML = "";
+      const dotButtons = slides.map((slide, index) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "story-dot";
+        dot.setAttribute("aria-label", `Go to product story ${index + 1}`);
+        dot.addEventListener("click", () => scrollStoryTo(index));
+        dots.appendChild(dot);
+        return dot;
+      });
+
+      function currentStoryIndex() {
+        const sliderLeft = slider.getBoundingClientRect().left;
+        return slides.reduce((nearest, slide, index) => {
+          const distance = Math.abs(slide.getBoundingClientRect().left - sliderLeft);
+          return distance < nearest.distance ? { index, distance } : nearest;
+        }, { index: 0, distance: Number.POSITIVE_INFINITY }).index;
+      }
+
+      function updateDots() {
+        const activeIndex = currentStoryIndex();
+        dotButtons.forEach((dot, index) => {
+          dot.setAttribute("aria-current", String(index === activeIndex));
+        });
+      }
+
+      function scrollStoryTo(index) {
+        const boundedIndex = Math.max(0, Math.min(index, slides.length - 1));
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        slider.scrollTo({
+          left: slides[boundedIndex].offsetLeft - slider.offsetLeft,
+          behavior: prefersReducedMotion ? "auto" : "smooth"
+        });
+      }
+
+      prev.addEventListener("click", () => scrollStoryTo(currentStoryIndex() - 1));
+      next.addEventListener("click", () => scrollStoryTo(currentStoryIndex() + 1));
+
+      let pendingFrame = 0;
+      slider.addEventListener("scroll", () => {
+        if (pendingFrame) return;
+        pendingFrame = window.requestAnimationFrame(() => {
+          pendingFrame = 0;
+          updateDots();
+        });
+      }, { passive: true });
+
+      slider.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          scrollStoryTo(currentStoryIndex() - 1);
+        }
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          scrollStoryTo(currentStoryIndex() + 1);
+        }
+      });
+
+      updateDots();
+    }
+
     function setCompanionToggleState(isOpen) {
       const toggle = byId("openCompanion");
       if (!toggle) return;
@@ -6356,6 +7291,14 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
 
     function currentHousehold() {
       return households[state.householdKey];
+    }
+
+    function updateProfileMenuLabel() {
+      const label = byId("profileMenuLabel");
+      if (!label) return;
+      const data = currentHousehold();
+      label.textContent = data.city || data.label || "Profile";
+      label.title = `${data.label} profile`;
     }
 
     function currentEvPlan() {
@@ -6996,6 +7939,15 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const hasApiValues = [requiredEnergyKwh, naiveCostEur, smartCostEur, savingsEur].some((value) => value !== null);
       if (!hasApiValues) return null;
 
+      const routingGridRange = rangeFromRouteAllocations(
+        energyRouting?.route_allocations,
+        "grid",
+        "ev_charging",
+        "2026-06-20T22:00:00+02:00",
+        "2026-06-21T01:00:00+02:00"
+      );
+      const finalAllocationEnd = energyRouting?.deadline_notes?.[0]?.final_allocation_end;
+
       const plan = {
         ...fallback,
         requiredEnergyKwh: requiredEnergyKwh ?? fallback.requiredEnergyKwh,
@@ -7008,6 +7960,8 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         inputSnapshotId: calculation.input_snapshot_id || fallback.inputSnapshotId,
         formulaVersion: calculation.formula_version || recommendation.trust?.auditability?.calculation_engine || fallback.formulaVersion,
         routingFormulaVersion: energyRouting.calculation?.routing_version || fallback.routingFormulaVersion,
+        planAccess: payload?.plan_access || fallback.planAccess,
+        planTier: payload?.plan_tier || fallback.planTier || "premium",
         economicCostEur: numberOrNull(recommendation.smart_plan?.economic_cost_including_solar_opportunity_eur) ?? fallback.economicCostEur,
         economicSavingsEur: numberOrNull(recommendation.savings?.economic_savings_including_solar_opportunity_eur) ?? fallback.economicSavingsEur,
         solarOpportunityCostEur: numberOrNull(recommendation.smart_plan?.solar_opportunity_cost_eur) ?? fallback.solarOpportunityCostEur,
@@ -7015,6 +7969,9 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         wallboxMaxPowerKw: numberOrNull(recommendation.ev_request?.wallbox_max_power_kw) ?? fallback.wallboxMaxPowerKw,
         wallboxMinimumStablePowerKw: numberOrNull(recommendation.ev_request?.wallbox_minimum_stable_power_kw) ?? fallback.wallboxMinimumStablePowerKw,
         departureDeadline: recommendation.ev_request?.departure_deadline || fallback.departureDeadline,
+        finishBy: payload?.optimized_plan?.finish_by || finalAllocationEnd || fallback.finishBy,
+        gridWindowStart: routingGridRange.start || fallback.gridWindowStart,
+        gridWindowEnd: routingGridRange.end || fallback.gridWindowEnd,
         controlMode: recommendation.decision?.control_mode || fallback.controlMode,
         schedule: Array.isArray(recommendation.smart_plan?.schedule) ? recommendation.smart_plan.schedule : fallback.schedule,
         energyRoutingPlan: normalizeEnergyRoutingPlan(energyRouting, recommendation, payload, fallback)
@@ -7479,8 +8436,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const data = currentHousehold();
       const plan = currentEvPlan();
       const schedule = Array.isArray(plan.schedule) ? plan.schedule : [];
-      const gridItems = schedule.filter((item) => item.source === "grid_low_price");
-      const gridRange = scheduleRange(gridItems, "2026-06-20T22:00:00+02:00", "2026-06-21T01:00:00+02:00");
+      const gridRange = preferredGridRange(plan, schedule);
       const batteryHeadroomKwh = Math.max(0, (0.9 - data.battery / 100) * 10.2);
       const forecastSurplusKwh = Math.max(0, data.solar - data.todayUse);
       const useKwh = Math.max(0, plan.solarSurplusKwh || 0);
@@ -7493,23 +8449,23 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
           key: "use",
           label: "Use solar now",
           value: routeKwhFromOverride(routingOverride(plan, "use"), useKwh),
-          basis: "From solar forecast",
+          basis: "Solar forecast",
           summary: "14:00-18:00",
-          copy: `Use rooftop power for the EV or home when it beats the ${formatEurPerKwh(plan.solarOpportunityCostEurPerKwh || 0.081)} export value.`,
+          copy: `Send rooftop solar to the EV or home first, because using it is worth more than selling it for ${formatEurPerKwh(plan.solarOpportunityCostEurPerKwh || 0.081)}.`,
           className: "route-use"
         },
         {
           key: "store",
-          label: "Save in battery",
+          label: "Store solar for evening",
           value: routeKwhFromOverride(routingOverride(plan, "store"), storeKwh),
-          basis: "Battery estimate",
-          summary: "Evening reserve",
-          copy: `Battery reserve protects evening demand; current charge is ${data.battery}% full.`,
+          basis: "Battery reserve",
+          summary: "Evening peak reserve",
+          copy: `Keep surplus solar in the home battery for tonight's higher demand; current charge is ${data.battery}% full.`,
           className: "route-store"
         },
         {
           key: "sell",
-          label: "Sell leftovers",
+          label: "Sell extra solar",
           value: routeKwhFromOverride(routingOverride(plan, "sell"), sellKwh),
           basis: "Export estimate",
           summary: "After home needs",
@@ -7518,7 +8474,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         },
         {
           key: "buy",
-          label: "Buy cheap power later",
+          label: "Buy low-price grid later",
           value: routeKwhFromOverride(routingOverride(plan, "buy"), buyKwh),
           basis: "Low-price tariff",
           summary: formatTimeRange(gridRange.start, gridRange.end),
@@ -7532,6 +8488,16 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         ...route,
         meter: Math.max(6, Math.round((route.value / maxValue) * 100))
       }));
+    }
+
+    function routeIconSvg(key) {
+      const icons = {
+        use: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path></svg>',
+        store: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="16" height="10" rx="2"></rect><path d="M21 11v2"></path><path d="M7 11h3"></path><path d="M8.5 9.5v3"></path><path d="M12 11h3"></path></svg>',
+        sell: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M9 7h8v8"></path><path d="M4 20h16"></path></svg>',
+        buy: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 10-13h-7l0-7Z"></path></svg>'
+      };
+      return icons[key] || icons.use;
     }
 
     function renderRoutingBoard() {
@@ -7552,12 +8518,15 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       routes.forEach((route, index) => {
         const step = document.createElement("article");
         const node = document.createElement("span");
+        const indexBadge = document.createElement("span");
         const stepCopy = document.createElement("span");
         const stepLabel = document.createElement("span");
         const stepValue = document.createElement("strong");
         const stepSummary = document.createElement("span");
         const detail = document.createElement("article");
         const detailHead = document.createElement("div");
+        const detailIcon = document.createElement("span");
+        const detailCopy = document.createElement("span");
         const detailTitle = document.createElement("span");
         const label = document.createElement("span");
         const copy = document.createElement("p");
@@ -7568,7 +8537,10 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         step.setAttribute("role", "listitem");
         node.className = "route-node";
         node.setAttribute("aria-hidden", "true");
-        node.textContent = String(index + 1);
+        node.innerHTML = routeIconSvg(route.key);
+        indexBadge.className = "route-index";
+        indexBadge.textContent = String(index + 1);
+        node.appendChild(indexBadge);
         stepCopy.className = "route-step-copy";
         stepLabel.className = "route-label";
         stepLabel.textContent = route.label;
@@ -7580,11 +8552,16 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
 
         detail.className = `route-detail-card ${route.className}`;
         detailHead.className = "route-detail-head";
+        detailIcon.className = "route-detail-icon";
+        detailIcon.setAttribute("aria-hidden", "true");
+        detailIcon.innerHTML = routeIconSvg(route.key);
+        detailCopy.className = "route-detail-copy";
         detailTitle.className = "route-detail-title";
         detailTitle.textContent = route.label;
         label.className = "route-source";
         label.textContent = route.basis;
-        detailHead.append(detailTitle, label);
+        detailCopy.append(detailTitle, label);
+        detailHead.append(detailIcon, detailCopy);
         copy.textContent = route.copy;
         meter.className = "route-meter";
         meter.setAttribute("aria-hidden", "true");
@@ -7722,6 +8699,40 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const start = items[0].start;
       const end = items[items.length - 1].end;
       return { start, end, hours: hoursBetween(start, end) };
+    }
+
+    function rangeFromRouteAllocations(allocations, source, target, fallbackStart, fallbackEnd) {
+      const matches = Array.isArray(allocations)
+        ? allocations.filter((allocation) => allocation?.source === source && allocation?.target === target)
+        : [];
+      if (!matches.length) {
+        return { start: fallbackStart, end: fallbackEnd, hours: hoursBetween(fallbackStart, fallbackEnd) };
+      }
+      const intervals = matches
+        .map((allocation) => ({
+          start: allocation.interval_start || allocation.start,
+          end: allocation.interval_end || allocation.end
+        }))
+        .filter((interval) => interval.start && interval.end)
+        .sort((a, b) => new Date(a.start) - new Date(b.start));
+      if (!intervals.length) {
+        return { start: fallbackStart, end: fallbackEnd, hours: hoursBetween(fallbackStart, fallbackEnd) };
+      }
+      const start = intervals[0].start;
+      const end = intervals[intervals.length - 1].end;
+      return { start, end, hours: hoursBetween(start, end) };
+    }
+
+    function preferredGridRange(plan, schedule) {
+      if (plan?.gridWindowStart && plan?.gridWindowEnd) {
+        return {
+          start: plan.gridWindowStart,
+          end: plan.gridWindowEnd,
+          hours: hoursBetween(plan.gridWindowStart, plan.gridWindowEnd)
+        };
+      }
+      const gridItems = (Array.isArray(schedule) ? schedule : []).filter((item) => item.source === "grid_low_price");
+      return scheduleRange(gridItems, "2026-06-20T22:00:00+02:00", "2026-06-21T01:00:00+02:00");
     }
 
     function renderEnergySourceGrid() {
@@ -8149,6 +9160,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
     }
 
     function getChargingFinishTime(plan) {
+      if (plan?.finishBy) return plan.finishBy;
       const schedule = Array.isArray(plan.schedule) ? plan.schedule : [];
       if (!schedule.length) return "2026-06-21T01:00:00+02:00";
       return schedule.reduce((latest, item) => (
@@ -8164,7 +9176,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const solarItems = schedule.filter((item) => item.source === "solar_surplus");
       const gridItems = schedule.filter((item) => item.source === "grid_low_price");
       const solarRange = scheduleRange(solarItems, "2026-06-20T14:00:00+02:00", "2026-06-20T18:00:00+02:00");
-      const gridRange = scheduleRange(gridItems, "2026-06-20T22:00:00+02:00", "2026-06-21T01:00:00+02:00");
+      const gridRange = preferredGridRange(plan, schedule);
       const solarEnergy = sumScheduleEnergy(solarItems) || plan.solarSurplusKwh;
       const gridEnergy = sumScheduleEnergy(gridItems) || plan.lowPriceGridKwh;
       const solarAverageKw = solarRange.hours ? solarEnergy / solarRange.hours : 0;
@@ -8228,23 +9240,25 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const plan = currentEvPlan();
       const finishAt = getChargingFinishTime(plan);
       const schedule = Array.isArray(plan.schedule) ? plan.schedule : [];
-      const gridItems = schedule.filter((item) => item.source === "grid_low_price");
-      const gridRange = scheduleRange(gridItems, "2026-06-20T22:00:00+02:00", "2026-06-21T01:00:00+02:00");
+      const gridRange = preferredGridRange(plan, schedule);
       const slackHours = Math.max(0, hoursBetween(finishAt, plan.departureDeadline));
       const savingsPercent = plan.naiveCostEur > 0
         ? Math.round((plan.savingsEur / plan.naiveCostEur) * 100)
         : Math.round(plan.savingsPercent || 0);
       const routes = buildEnergyRoutingPlan();
       const routeValue = (key) => routes.find((route) => route.key === key)?.value || 0;
+      const isCompactHero = window.matchMedia("(max-width: 560px)").matches;
 
-      byId("decisionBoardTitle").textContent = "Every kWh, routed to its best use.";
+      byId("decisionBoardTitle").textContent = "Best action now: use clean energy first.";
       byId("adviceSavings").textContent = formatEuro(plan.savingsEur);
       byId("adviceSmartCost").textContent = formatEuro(plan.smartCostEur);
       byId("adviceReadyBy").textContent = formatTimeLabel(finishAt);
       byId("adviceSavingsCopy").textContent = `Charging now would cost ${formatEuro(plan.naiveCostEur)}. This plan costs ${formatEuro(plan.smartCostEur)}.`;
       byId("advicePlanCopy").textContent = `${formatKwhCompact(plan.solarSurplusKwh)} solar + ${formatKwhCompact(plan.lowPriceGridKwh)} cheaper grid electricity.`;
       byId("adviceDeadlineCopy").textContent = `${formatHours(slackHours)} before the ${formatTimeLabel(plan.departureDeadline)} departure deadline.`;
-      byId("adviceHeroCopy").textContent = `The optimizer checks EV charging, dishwasher timing, heat-pump comfort, battery reserve, and flexible appliances. EV charging is today's top action because ${formatKwhCompact(plan.requiredEnergyKwh)} can safely move before departure, while smaller appliances stay inside user-friendly deadlines.`;
+      byId("adviceHeroCopy").textContent = isCompactHero
+        ? `Plan EV charging, solar storage, export value, and comfort loads before prices move. The EV gets ${formatKwhCompact(plan.requiredEnergyKwh)} before departure.`
+        : `The optimizer checks EV charging, dishwasher timing, heat-pump comfort, battery reserve, and flexible appliances. EV charging is today's top action because ${formatKwhCompact(plan.requiredEnergyKwh)} can safely move before departure, while smaller appliances stay inside user-friendly deadlines.`;
       byId("contextGridPrice").textContent = formatEurPerKwh(plan.currentPriceEurPerKwh);
       byId("contextSolar").textContent = formatKwhCompact(plan.solarSurplusKwh);
       byId("contextWindow").textContent = formatTimeRange(gridRange.start, gridRange.end);
@@ -8282,7 +9296,9 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
 
     function updateSnapshot() {
       const data = currentHousehold();
-      byId("householdLabel").textContent = `${data.label} profile`;
+      const householdLabel = byId("householdLabel");
+      if (householdLabel) householdLabel.textContent = `${data.label} profile`;
+      updateProfileMenuLabel();
       byId("syncStatus").textContent = data.sync;
       byId("todayUse").textContent = formatKwh(data.todayUse);
       byId("todayUseHint").textContent = data.lastHint;
@@ -8940,8 +9956,8 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       if (window.location.protocol === "file:") {
         setApiStatus("fallback", "Recent values", "Recent household values are shown while connected data is unavailable.");
         setBackendState({
-          method: "GET",
-          endpoint: "/api/demo-state",
+          method: "POST",
+          endpoint: "/api/plans/optimize",
           latencyText: "No HTTP server in file mode.",
           inputSummary: "24 kWh EV request",
           snapshot: "home-snapshot-berlin-1042",
@@ -8956,10 +9972,17 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const startedAt = performance.now();
 
       try {
-        const response = await fetch("/api/demo-state", {
-          headers: { Accept: "application/json" },
+        const response = await fetch("/api/plans/optimize", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
           cache: "no-store",
-          signal: controller.signal
+          signal: controller.signal,
+          body: JSON.stringify({
+            plan_tier: "premium"
+          })
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
@@ -8971,8 +9994,8 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
         syncDeviceRegistry(payload.home_devices);
         setApiStatus("live", "Connected data", buildApiSourceNote(plan));
         updateBackendStateFromPlan(plan, {
-          method: "GET",
-          endpoint: "/api/demo-state",
+          method: "POST",
+          endpoint: "/api/plans/optimize",
           latencyMs: performance.now() - startedAt,
           inputSummary: `${formatKwhCompact(plan.requiredEnergyKwh)} from EV state`
         });
@@ -8980,8 +10003,8 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       } catch (error) {
         setApiStatus("fallback", "Recent values", "Connected data is unavailable. Recent household values remain visible.");
         setBackendState({
-          method: "GET",
-          endpoint: "/api/demo-state",
+          method: "POST",
+          endpoint: "/api/plans/optimize",
           latencyText: "The refresh request failed; recent values remain visible.",
           inputSummary: "24 kWh EV request",
           snapshot: "home-snapshot-berlin-1042",
@@ -8997,7 +10020,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       const input = byId("backendEnergyInput");
       const button = byId("backendRecalculate");
       const requestedKwh = Number(input?.value);
-      const endpoint = "/api/recommendations/ev-charging";
+      const endpoint = "/api/plans/optimize";
 
       if (!Number.isFinite(requestedKwh) || requestedKwh <= 0) {
         showToast("Enter a positive kWh value before recalculating.");
@@ -9035,6 +10058,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
           },
           cache: "no-store",
           body: JSON.stringify({
+            plan_tier: "premium",
             ev_request: {
               required_energy_kwh: requestedKwh
             }
@@ -9213,6 +10237,7 @@ Savings: EUR 8.40 - EUR 3.24 = EUR 5.16</div>
       });
     });
 
+    initProductStoryBanner();
     renderProductAddPanel();
     updateComputedSections();
     loadEnergyState();
