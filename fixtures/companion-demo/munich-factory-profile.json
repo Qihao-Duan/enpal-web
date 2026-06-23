@@ -1,0 +1,283 @@
+{
+  "schema_version": "0.1.0",
+  "profile_id": "factory_de_munich_001",
+  "profile_type": "synthetic_industrial_demo",
+  "created_at": "2026-06-21T09:30:00+02:00",
+  "locale": "en-DE",
+  "timezone": "Europe/Berlin",
+  "currency": "EUR",
+  "unit_system": {
+    "energy": "kWh",
+    "power": "kW",
+    "price": "EUR/kWh",
+    "demand_charge": "EUR/kW-month"
+  },
+  "factory": {
+    "display_name": "Munich precision components factory",
+    "country": "Germany",
+    "city": "Munich",
+    "region": "Bavaria",
+    "site_type": "light industrial manufacturing",
+    "floor_area_m2": 18400,
+    "operating_pattern": "two production shifts plus overnight charging and thermal recovery",
+    "working_days_per_month": 22,
+    "annual_grid_consumption_estimate_kwh": 1620000,
+    "privacy_note": "All facility names, meter identifiers, loads, prices, and production values are synthetic."
+  },
+  "industrial_profile_metadata": {
+    "demo_role": "factory-scale premium optimization profile",
+    "narrative": "Basic only shifts forklift charging into a cheaper window. Premium coordinates PV self-consumption, battery storage, export timing, flexible process loads, overnight imports, and demand-peak control across the full factory.",
+    "baseline_day_type": "sunny weekday with high evening import prices",
+    "forecast_granularity": "PT1H",
+    "planning_horizon_hours": 24
+  },
+  "factory_equipment": [
+    {
+      "equipment_id": "cnc_cluster_a",
+      "label": "CNC machining line A",
+      "category": "production",
+      "rated_power_kw": 360,
+      "daily_energy_kwh": 2100,
+      "flexibility": "fixed during booked production slots"
+    },
+    {
+      "equipment_id": "compressed_air",
+      "label": "Compressed air system",
+      "category": "utility",
+      "rated_power_kw": 180,
+      "daily_energy_kwh": 620,
+      "flexibility": "pressure band allows limited load shifting"
+    },
+    {
+      "equipment_id": "process_heat",
+      "label": "Low-temperature process heat",
+      "category": "thermal",
+      "rated_power_kw": 420,
+      "daily_energy_kwh": 960,
+      "flexibility": "thermal buffer can pre-heat during solar or low-price hours"
+    },
+    {
+      "equipment_id": "cold_storage",
+      "label": "Cold storage and process cooling",
+      "category": "thermal",
+      "rated_power_kw": 240,
+      "daily_energy_kwh": 740,
+      "flexibility": "pre-cooling window with temperature limits"
+    },
+    {
+      "equipment_id": "forklift_fleet",
+      "label": "Electric forklift fleet",
+      "category": "charging",
+      "rated_power_kw": 160,
+      "daily_energy_kwh": 480,
+      "flexibility": "must complete before first shift"
+    }
+  ],
+  "flexible_industrial_loads": {
+    "total_flexible_energy_kwh": 2420,
+    "loads": [
+      {
+        "load_id": "forklift_fleet_charging",
+        "label": "Forklift fleet charging",
+        "energy_required_kwh": 480,
+        "max_power_kw": 160,
+        "earliest_start": "2026-06-21T20:00:00+02:00",
+        "latest_finish": "2026-06-22T06:00:00+02:00",
+        "basic_eligible": true,
+        "premium_eligible": true
+      },
+      {
+        "load_id": "thermal_pre_heat",
+        "label": "Process heat pre-heating",
+        "energy_required_kwh": 740,
+        "max_power_kw": 420,
+        "earliest_start": "2026-06-21T10:00:00+02:00",
+        "latest_finish": "2026-06-21T16:00:00+02:00",
+        "basic_eligible": false,
+        "premium_eligible": true
+      },
+      {
+        "load_id": "cold_storage_precool",
+        "label": "Cold storage pre-cooling",
+        "energy_required_kwh": 420,
+        "max_power_kw": 210,
+        "earliest_start": "2026-06-21T11:00:00+02:00",
+        "latest_finish": "2026-06-21T17:00:00+02:00",
+        "basic_eligible": false,
+        "premium_eligible": true
+      },
+      {
+        "load_id": "compressed_air_buffering",
+        "label": "Compressed air pressure buffering",
+        "energy_required_kwh": 260,
+        "max_power_kw": 130,
+        "earliest_start": "2026-06-21T09:00:00+02:00",
+        "latest_finish": "2026-06-21T18:00:00+02:00",
+        "basic_eligible": false,
+        "premium_eligible": true
+      },
+      {
+        "load_id": "water_treatment_batch",
+        "label": "Water treatment batch",
+        "energy_required_kwh": 220,
+        "max_power_kw": 110,
+        "earliest_start": "2026-06-21T00:00:00+02:00",
+        "latest_finish": "2026-06-21T05:00:00+02:00",
+        "basic_eligible": false,
+        "premium_eligible": true
+      },
+      {
+        "load_id": "yard_truck_charging",
+        "label": "Electric yard truck charging",
+        "energy_required_kwh": 300,
+        "max_power_kw": 150,
+        "earliest_start": "2026-06-21T12:00:00+02:00",
+        "latest_finish": "2026-06-22T06:00:00+02:00",
+        "basic_eligible": false,
+        "premium_eligible": true
+      }
+    ]
+  },
+  "pv_generation": {
+    "installed": true,
+    "capacity_kwp": 980,
+    "orientation": "mixed roof, south and south-west",
+    "inverter_limit_kw": 840,
+    "forecast_day_generation_kwh": 4480,
+    "self_consumption_priority": "serve production load, then flexible thermal loads, then battery, then export",
+    "hourly_forecast_kwh": [0, 0, 0, 0, 0, 20, 90, 210, 380, 560, 690, 760, 810, 760, 620, 390, 150, 30, 0, 0, 0, 0, 0, 0]
+  },
+  "battery_storage": {
+    "installed": true,
+    "usable_capacity_kwh": 1200,
+    "max_charge_power_kw": 600,
+    "max_discharge_power_kw": 600,
+    "round_trip_efficiency_percent": 90,
+    "reserve_min_soc_percent": 12,
+    "premium_cycle_plan": {
+      "solar_charged_kwh": 900,
+      "evening_discharge_delivered_kwh": 810,
+      "target_discharge_window": "2026-06-21T18:00:00+02:00/2026-06-21T22:00:00+02:00",
+      "formula": "evening_discharge_delivered_kwh = solar_charged_kwh * round_trip_efficiency_percent / 100"
+    }
+  },
+  "dynamic_tariff_import_prices": {
+    "price_basis": "synthetic final bill price, VAT included",
+    "standard_factory_tariff_benchmark_eur_per_kwh": 0.34,
+    "lowest_import_price_eur_per_kwh": 0.18,
+    "highest_import_price_eur_per_kwh": 0.46,
+    "demand_charge_eur_per_kw_month": 9.0,
+    "hourly_final_import_price_eur_per_kwh": [0.20, 0.18, 0.18, 0.19, 0.22, 0.26, 0.32, 0.38, 0.42, 0.39, 0.31, 0.24, 0.21, 0.20, 0.22, 0.27, 0.36, 0.44, 0.46, 0.43, 0.37, 0.30, 0.25, 0.22],
+    "premium_low_price_import_windows": [
+      "2026-06-21T01:00:00+02:00/2026-06-21T04:00:00+02:00",
+      "2026-06-21T12:00:00+02:00/2026-06-21T15:00:00+02:00"
+    ]
+  },
+  "feed_in_export_value": {
+    "fixed_feed_in_credit_eur_per_kwh": 0.075,
+    "industrial_export_premium_eur_per_kwh": 0.02,
+    "premium_export_price_eur_per_kwh": 0.095,
+    "premium_exported_surplus_kwh": 610,
+    "daily_export_value_eur": 57.95,
+    "formula": "daily_export_value_eur = premium_exported_surplus_kwh * premium_export_price_eur_per_kwh"
+  },
+  "result_summary": {
+    "basic": {
+      "plan_name": "Basic: shift one charging load",
+      "optimized_scope": "Forklift fleet charging only",
+      "energy_shifted_kwh": 480,
+      "from_average_price_eur_per_kwh": 0.34,
+      "to_average_price_eur_per_kwh": 0.21,
+      "daily_profit_impact_eur": 62.4,
+      "monthly_profit_impact_eur": 1372.8,
+      "formula": "daily_profit_impact_eur = energy_shifted_kwh * (from_average_price_eur_per_kwh - to_average_price_eur_per_kwh); monthly = daily * 22 working days"
+    },
+    "premium": {
+      "plan_name": "Premium: factory energy profit orchestration",
+      "optimized_scope": "PV use, battery storage, flexible process loads, import timing, export value, and monthly demand peak",
+      "daily_profit_impact_eur": 876.73,
+      "monthly_profit_impact_eur": 19288.06,
+      "monthly_lift_vs_basic_eur": 17915.26,
+      "premium_to_basic_multiple": 14.05,
+      "profit_components": [
+        {
+          "component": "PV self-consumption for flexible factory loads",
+          "energy_kwh": 1760,
+          "average_avoided_import_price_eur_per_kwh": 0.31,
+          "feed_in_opportunity_cost_eur_per_kwh": 0.075,
+          "daily_value_eur": 413.6,
+          "formula": "1760 * (0.31 - 0.075)"
+        },
+        {
+          "component": "Battery charge from solar and discharge during evening peak",
+          "solar_charged_kwh": 900,
+          "delivered_kwh": 810,
+          "average_peak_import_price_eur_per_kwh": 0.42,
+          "feed_in_opportunity_cost_eur_per_kwh": 0.075,
+          "daily_value_eur": 272.7,
+          "formula": "(810 * 0.42) - (900 * 0.075)"
+        },
+        {
+          "component": "Low-price imports for overnight batch and charging loads",
+          "energy_shifted_kwh": 620,
+          "from_average_price_eur_per_kwh": 0.38,
+          "to_average_price_eur_per_kwh": 0.18,
+          "daily_value_eur": 124.0,
+          "formula": "620 * (0.38 - 0.18)"
+        },
+        {
+          "component": "Higher-value export after internal needs and storage are satisfied",
+          "exported_kwh": 610,
+          "export_price_eur_per_kwh": 0.095,
+          "daily_value_eur": 57.95,
+          "formula": "610 * 0.095"
+        },
+        {
+          "component": "Demand peak reduction",
+          "avoided_peak_kw": 210,
+          "demand_charge_eur_per_kw_month": 9.0,
+          "working_days_per_month": 22,
+          "daily_value_eur": 85.91,
+          "formula": "(210 * 9.0) / 22"
+        },
+        {
+          "component": "Battery cycling degradation allowance",
+          "daily_value_eur": -77.43,
+          "formula": "-0.086 EUR/kWh throughput * 900 kWh charged"
+        }
+      ],
+      "formula": "daily_profit_impact_eur = sum(profit_components.daily_value_eur); monthly = daily * 22 working days; monthly_lift_vs_basic = premium_monthly - basic_monthly"
+    }
+  },
+  "trust_source_quality": {
+    "status": "synthetic demo fixture",
+    "confidence_score": 0.86,
+    "source_quality_level": "prototype-grade synthetic",
+    "sources": [
+      {
+        "name": "Synthetic factory load model",
+        "source_type": "mock_operational_profile",
+        "status": "synthetic",
+        "confidence": 0.84
+      },
+      {
+        "name": "Synthetic Munich PV forecast",
+        "source_type": "mock_weather_and_pv_model",
+        "status": "forecast",
+        "confidence": 0.82
+      },
+      {
+        "name": "Synthetic industrial dynamic tariff",
+        "source_type": "mock_contract_rule",
+        "status": "synthetic",
+        "confidence": 0.9
+      }
+    ],
+    "limitations": [
+      "This fixture is designed for a factory-scale product demo, not billing or dispatch.",
+      "Profit impact excludes taxes beyond the synthetic final import price and excludes production throughput changes.",
+      "Equipment limits are simplified and assume the factory has already approved the listed flexible operating windows.",
+      "Battery degradation is represented as a simple daily allowance rather than a cell-level model."
+    ]
+  }
+}

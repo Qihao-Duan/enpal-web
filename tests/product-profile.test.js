@@ -1,7 +1,7 @@
 const assert = require("assert");
 const path = require("path");
-const { loadFixtures } = require("../src/lib/fixture-store");
-const { buildProductUsageProfile } = require("../src/lib/connectors");
+const { loadFixtures } = require("../packages/energy-engine/fixture-store");
+const { buildProductUsageProfile } = require("../packages/energy-engine/connectors");
 
 const rootDir = path.resolve(__dirname, "..");
 const fixtures = loadFixtures(rootDir);

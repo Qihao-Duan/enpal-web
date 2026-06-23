@@ -1,7 +1,7 @@
 const assert = require("assert");
 const path = require("path");
-const { loadFixtures } = require("../src/lib/fixture-store");
-const { listHomeDevices } = require("../src/lib/home-device-store");
+const { loadFixtures } = require("../packages/energy-engine/fixture-store");
+const { listHomeDevices } = require("../packages/energy-engine/home-device-store");
 const {
   PLAN_VERSION,
   buildContractUpload,
@@ -14,7 +14,7 @@ const {
   getCurrentPlan,
   loadMunichFactoryProfile,
   scanProduct
-} = require("../src/lib/energy-plans");
+} = require("../packages/energy-engine/energy-plans");
 
 const rootDir = path.resolve(__dirname, "..");
 const fixtures = loadFixtures(rootDir);

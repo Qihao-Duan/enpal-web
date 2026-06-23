@@ -2,14 +2,14 @@ const assert = require("assert");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const { loadFixtures } = require("../src/lib/fixture-store");
-const { buildProductUsageProfile } = require("../src/lib/connectors");
+const { loadFixtures } = require("../packages/energy-engine/fixture-store");
+const { buildProductUsageProfile } = require("../packages/energy-engine/connectors");
 const {
   STORE_RELATIVE_PATH,
   addHomeDevice,
   listHomeDevices,
   normalizeDeviceFromPayload
-} = require("../src/lib/home-device-store");
+} = require("../packages/energy-engine/home-device-store");
 
 const repoRoot = path.resolve(__dirname, "..");
 const fixtures = loadFixtures(repoRoot);

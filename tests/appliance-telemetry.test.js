@@ -2,14 +2,14 @@ const assert = require("assert");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const { loadFixtures } = require("../src/lib/fixture-store");
+const { loadFixtures } = require("../packages/energy-engine/fixture-store");
 const {
   STORE_RELATIVE_PATH,
   getTodayApplianceTelemetry,
   ingestApplianceTelemetry,
   normalizeReading
-} = require("../src/lib/appliance-telemetry-store");
-const { calculateEnergyRouting, loadEnergyRoutingPlan } = require("../src/lib/energy-routing");
+} = require("../packages/energy-engine/appliance-telemetry-store");
+const { calculateEnergyRouting, loadEnergyRoutingPlan } = require("../packages/energy-engine/energy-routing");
 
 const repoRoot = path.resolve(__dirname, "..");
 const fixtures = loadFixtures(repoRoot);

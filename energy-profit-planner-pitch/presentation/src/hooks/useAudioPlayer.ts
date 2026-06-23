@@ -49,7 +49,10 @@ export function useAudioPlayer({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   // Latest callback ref so timers don't capture stale closures.
   const onAdvanceRef = useRef(onAutoAdvance);
-  onAdvanceRef.current = onAutoAdvance;
+
+  useEffect(() => {
+    onAdvanceRef.current = onAutoAdvance;
+  }, [onAutoAdvance]);
 
   useEffect(() => {
     const prev = audioRef.current;

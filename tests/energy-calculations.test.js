@@ -1,6 +1,6 @@
 const assert = require("assert");
 const path = require("path");
-const { loadFixtures } = require("../src/lib/fixture-store");
+const { loadFixtures } = require("../packages/energy-engine/fixture-store");
 const {
   FORMULA_VERSION,
   calculateBillForecast,
@@ -8,19 +8,19 @@ const {
   calculateLiveState,
   calculatePowerIntervals,
   calculateTariffIntervals
-} = require("../src/lib/energy-calculations");
+} = require("../packages/energy-engine/energy-calculations");
 const {
   CONNECTOR_VERSION,
   lookupProduct,
   makeConnectorStatus,
   parseContractText,
   refreshConnectors
-} = require("../src/lib/connectors");
+} = require("../packages/energy-engine/connectors");
 const {
   PROMPT_VERSION,
   answerEnergyQuestion,
   detectIntent
-} = require("../src/lib/assistant");
+} = require("../packages/energy-engine/assistant");
 
 const fixtures = loadFixtures(path.resolve(__dirname, ".."));
 

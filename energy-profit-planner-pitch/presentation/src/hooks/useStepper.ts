@@ -51,25 +51,15 @@ export function useStepper(chapters: ChapterDef[]): StepperState {
     return fallback;
   });
 
-  // Re-sanitize if the chapter list shape changes after mount (e.g. HMR
-  // updates `chapters.ts`) — keeps a stale persisted cursor from leaking
-  // into a render where it's now out of range.
-  useEffect(() => {
-    setCursor((cur) => {
-      const next = sanitize(cur, chapters);
-      return next.chapter === cur.chapter && next.step === cur.step
-        ? cur
-        : next;
-    });
-  }, [chapters]);
+  const activeCursor = useMemo(() => sanitize(cursor, chapters), [cursor, chapters]);
 
   useEffect(() => {
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cursor));
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(activeCursor));
     } catch {
       /* ignore */
     }
-  }, [cursor]);
+  }, [activeCursor]);
 
   const offsets = useMemo(() => {
     const arr: number[] = [];
@@ -84,10 +74,11 @@ export function useStepper(chapters: ChapterDef[]): StepperState {
     () => chapters.reduce((s, c) => s + c.narrations.length, 0),
     [chapters],
   );
-  const globalIndex = (offsets[cursor.chapter] ?? 0) + cursor.step;
+  const globalIndex = (offsets[activeCursor.chapter] ?? 0) + activeCursor.step;
 
   const next = useCallback(() => {
-    setCursor((cur) => {
+    setCursor((current) => {
+      const cur = sanitize(current, chapters);
       const c = chapters[cur.chapter]!;
       if (cur.step < c.narrations.length - 1)
         return { ...cur, step: cur.step + 1 };
@@ -98,7 +89,8 @@ export function useStepper(chapters: ChapterDef[]): StepperState {
   }, [chapters]);
 
   const prev = useCallback(() => {
-    setCursor((cur) => {
+    setCursor((current) => {
+      const cur = sanitize(current, chapters);
       if (cur.step > 0) return { ...cur, step: cur.step - 1 };
       if (cur.chapter > 0) {
         const p = chapters[cur.chapter - 1]!;
@@ -159,9 +151,9 @@ export function useStepper(chapters: ChapterDef[]): StepperState {
     return () => window.removeEventListener("keydown", onKey);
   }, [next, prev, jumpToChapter, chapters]);
 
-  const ch = chapters[cursor.chapter]!;
+  const ch = chapters[activeCursor.chapter]!;
   return {
-    cursor,
+    cursor: activeCursor,
     totalChapters: chapters.length,
     chapterTotalSteps: ch.narrations.length,
     globalIndex,

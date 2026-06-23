@@ -1,11 +1,11 @@
 {
-  "name": "enpal-smart-energy-companion",
+  "name": "enpal-smart-energy-companion-release",
   "version": "0.1.0",
   "private": true,
-  "description": "No-dependency prototype API for the Enpal Smart Energy Companion demo.",
-  "main": "src/server.js",
+  "description": "Structured release copy for the Enpal Smart Energy Companion demo and pitch materials.",
+  "main": "apps/companion-web/server/server.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node apps/companion-web/server/server.js",
     "test": "node tests/energy-calculations.test.js && node tests/energy-routing.test.js && node tests/energy-plans.test.js && node tests/api-handlers.test.js && node tests/appliance-telemetry.test.js && node tests/product-profile.test.js && node tests/home-device-store.test.js"
   },
   "engines": {

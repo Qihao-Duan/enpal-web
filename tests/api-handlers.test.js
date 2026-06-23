@@ -1,7 +1,7 @@
 const assert = require("assert");
 const path = require("path");
 const { Readable } = require("stream");
-const { createApiHandlers } = require("../src/lib/api-handlers");
+const { createApiHandlers } = require("../packages/energy-engine/api-handlers");
 
 const rootDir = path.resolve(__dirname, "..");
 const handleApi = createApiHandlers(rootDir);

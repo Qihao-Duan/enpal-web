@@ -1,0 +1,71 @@
+{
+  "schema_version": "0.1.0",
+  "household_id": "hh_de_berlin_001",
+  "profile_type": "synthetic_demo",
+  "observed_at": "2026-06-20T10:42:00+02:00",
+  "timezone": "Europe/Berlin",
+  "source": {
+    "name": "Synthetic DeviceAdapter",
+    "status": "mock_actual",
+    "latency_seconds": 8
+  },
+  "current_power_flow_kw": {
+    "pv_generation": 3.0,
+    "household_load_excluding_ev": 1.4,
+    "battery_charge": 1.2,
+    "battery_discharge": 0.0,
+    "ev_charging": 0.0,
+    "grid_import": 0.0,
+    "grid_export": 0.4
+  },
+  "battery": {
+    "device_id": "battery_demo_001",
+    "soc_percent": 62,
+    "usable_capacity_kwh": 10.2,
+    "available_energy_kwh": 6.3,
+    "reserve_min_soc_percent": 15,
+    "mode": "solar_self_consumption",
+    "max_charge_power_kw": 5.0,
+    "max_discharge_power_kw": 5.0
+  },
+  "ev": {
+    "device_id": "ev_demo_001",
+    "connection_state": "plugged_in",
+    "charging_state": "paused_by_smart_charging",
+    "current_soc_percent": 40,
+    "target_soc_percent": 80,
+    "usable_battery_capacity_kwh": 60,
+    "required_energy_kwh": 24.0,
+    "estimated_range_added_km": {
+      "min": 120,
+      "max": 160
+    },
+    "departure_deadline": "2026-06-21T08:00:00+02:00",
+    "user_priority": "lowest_cost_before_deadline"
+  },
+  "wallbox": {
+    "device_id": "wallbox_demo_001",
+    "connection_state": "connected",
+    "max_power_kw": 11,
+    "phase_mode": "three_phase",
+    "smart_charging_enabled": true,
+    "solar_charging_enabled": true,
+    "minimum_stable_power_kw": 1.4
+  },
+  "heat_pump": {
+    "device_id": "heatpump_demo_001",
+    "operating_state": "standby",
+    "current_power_kw": 0.1,
+    "indoor_temperature_c": 21.1,
+    "target_temperature_c": 21.0,
+    "shiftable_until": "2026-06-20T17:00:00+02:00"
+  },
+  "smart_meter": {
+    "device_id": "meter_demo_001",
+    "last_interval_start": "2026-06-20T10:30:00+02:00",
+    "last_interval_import_kwh": 0.0,
+    "last_interval_export_kwh": 0.1,
+    "cumulative_import_today_kwh": 3.8,
+    "cumulative_export_today_kwh": 4.2
+  }
+}
